@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Comentarios</title>
+</head>
+<body>
+
+<h1>Comentarios</h1>
+
+<table border="1">
+    <tr>
+        <th>Usuario</th>
+        <th>Propiedad</th>
+        <th>Comentario</th>
+        <th>Puntuación</th>
+    </tr>
+
+    <tr th:each="c : ${comentarios}">
+        <td th:text="${c.id_usuario}"></td>
+        <td th:text="${c.id_propiedad}"></td>
+        <td th:text="${c.comentario}"></td>
+        <td th:text="${c.puntuacion}"></td>
+    </tr>
+
+</table>
+
+</body>
+</html>
