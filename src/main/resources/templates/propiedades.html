@@ -7,20 +7,28 @@
 
 <h1>Lista de Propiedades</h1>
 
+<a href="/crearPropiedad">
+<button>➕ Crear propiedad</button></a>
+
 <table border="1">
     <tr>
         <th>Título</th>
         <th>Ubicación</th>
         <th>Precio</th>
+        <th>Capacidad</th>
     </tr>
 
     <tr th:each="p : ${propiedades}">
         <td th:text="${p.titulo}"></td>
         <td th:text="${p.ubicacion}"></td>
         <td th:text="${p.precio_noche}"></td>
+        <td th:text="${p.capacidad}"></td>
     </tr>
 
 </table>
+
+<a href="/">
+    <button>➕ ⬅ Volver al inicio</button></a>
 
 </body>
 </html>

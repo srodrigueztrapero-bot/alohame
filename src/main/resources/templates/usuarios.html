@@ -6,7 +6,10 @@
 <body>
 
 <h1>Lista de Usuarios</h1>
-<a href="/usuarios">Ver usuarios</a>
+
+<a href="/Añadir usuario">
+    <button>➕ Añadir usuario</button></a>
+
 <table border="1">
     <tr>
         <th>Nombre</th>
@@ -23,9 +26,13 @@
         <td th:text="${u.password}"></td>
         <td th:text="${u.telefono}"></td>
         <td th:text="${u.fecha_registro}"></td>
+        <td th:text="${u.tipo_usuario}"></td>
     </tr>
 
 </table>
+
+<a href="/">
+    <button>➕ ⬅ Volver al inicio</button></a>
 
 </body>
 </html>

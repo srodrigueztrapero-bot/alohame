@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Crear Reserva</title>
+</head>
+<body>
+
+<h1>Nueva Reserva</h1>
+
+<form action="/guardarReserva" method="post">
+
+  <label>ID Usuario:</label>
+  <input type="number" name="id_usuario"><br>
+
+  <label>ID Propiedad:</label>
+  <input type="number" name="id_propiedad"><br>
+
+  <label>Fecha inicio:</label>
+  <input type="date" name="fecha_inicio"><br>
+
+  <label>Fecha fin:</label>
+  <input type="date" name="fecha_fin"><br>
+
+  <button type="submit">Guardar</button>
+
+</form>
+
+</body>
+</html>

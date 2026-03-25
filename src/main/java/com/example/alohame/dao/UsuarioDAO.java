@@ -17,4 +17,10 @@ public class UsuarioDAO {
         String sql = "SELECT * FROM usuarios";
         return jdbcTemplate.queryForList(sql);
     }
-}
+    public void guardarUsuario(String nombre, String email, int password, int telefono, String tipo) {
+        String sql = "INSERT INTO usuarios (nombre, email, password, telefono, fecha_registro, tipo_usuario) VALUES (?, ?, ?, ?, NOW(), ?)";
+        jdbcTemplate.update(sql, nombre, email, password, telefono, tipo);
+    }
+
+    }
+

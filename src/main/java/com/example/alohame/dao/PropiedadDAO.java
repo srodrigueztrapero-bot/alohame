@@ -17,4 +17,8 @@ public class PropiedadDAO {
         String sql = "SELECT * FROM propiedades";
         return jdbcTemplate.queryForList(sql);
     }
+    public void guardarPropiedad(String titulo, String descripcion, double precio, String ubicacion, int capacidad, int idUsuario) {
+        String sql = "INSERT INTO propiedades (titulo, descripcion, precio_noche, ubicacion, capacidad, id_usuario, fecha_publicacion) VALUES (?, ?, ?, ?, ?, ?, NOW())";
+        jdbcTemplate.update(sql, titulo, descripcion, precio, ubicacion, capacidad, idUsuario);
+    }
 }

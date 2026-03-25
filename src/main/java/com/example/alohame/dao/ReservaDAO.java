@@ -17,4 +17,8 @@ public class ReservaDAO {
         String sql = "SELECT * FROM reservas";
         return jdbcTemplate.queryForList(sql);
     }
+    public void guardarReserva(int idUsuario, int idPropiedad, String fechaInicio, String fechaFin) {
+        String sql = "INSERT INTO reservas (id_usuario, id_propiedad, fecha_inicio, fecha_fin, precio_total, estado) VALUES (?, ?, ?, ?, 0, 'confirmada')";
+        jdbcTemplate.update(sql, idUsuario, idPropiedad, fechaInicio, fechaFin);
+    }
 }

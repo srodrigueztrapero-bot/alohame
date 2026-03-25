@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Añadir Comentario</title>
+</head>
+<body>
+
+<h1>Nuevo Comentario</h1>
+
+<form action="/guardarComentario" method="post">
+
+    <label>ID Usuario:</label>
+    <input type="number" name="id_usuario"><br>
+
+    <label>ID Propiedad:</label>
+    <input type="number" name="id_propiedad"><br>
+
+    <label>Comentario:</label>
+    <input type="text" name="comentario"><br>
+
+    <label>Puntuación (1-5):</label>
+    <input type="number" name="puntuacion"><br>
+
+    <button type="submit">Guardar</button>
+
+</form>
+
+<br>
+<a href="/">⬅ Volver al inicio</a>
+
+</body>
+</html>
