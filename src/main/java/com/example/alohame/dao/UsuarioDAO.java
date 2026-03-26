@@ -14,12 +14,19 @@ public class UsuarioDAO {
     private JdbcTemplate jdbcTemplate;
 
     public List<Map<String, Object>> listarUsuarios() {
-        String sql = "SELECT * FROM usuarios";
+        String sql = "SELECT u.*, t.nombre AS tipo " +
+                "FROM usuarios u " +
+                "JOIN tipos_usuario t ON u.id_tipo = t.id";;
         return jdbcTemplate.queryForList(sql);
     }
-    public void guardarUsuario(String nombre, String email, int password, int telefono, String tipo) {
-        String sql = "INSERT INTO usuarios (nombre, email, password, telefono, fecha_registro, tipo_usuario) VALUES (?, ?, ?, ?, NOW(), ?)";
-        jdbcTemplate.update(sql, nombre, email, password, telefono, tipo);
+    public void guardarUsuario(String nombre, String email, String password, String telefono, int idTipo) {
+        String sql = "INSERT INTO usuarios (nombre, email, password, telefono, id_tipo) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, nombre, email, password, telefono, idTipo);
+    }
+    public List<Map<String, Object>> listarPropietarios() {
+
+        String sql = "SELECT * FROM usuarios WHERE id_tipo = 2";
+        return jdbcTemplate.queryForList(sql);
     }
 
     }

@@ -24,8 +24,15 @@
   <label>Capacidad:</label>
   <input type="number" name="capacidad"><br>
 
-  <label>ID Usuario:</label>
-  <input type="number" name="id_usuario"><br>
+  <label>Propietario:</label>
+  <select name="id_usuario">
+
+    <option th:each="u : ${propietarios}"
+            th:value="${u.id}"
+            th:text="${u.nombre}">
+    </option>
+
+  </select>
 
   <button type="submit">Guardar</button>
 

@@ -123,3 +123,11 @@ VALUES
 ('David Moreno', 'david@gmail.com', '005005', '600666777', 'cliente'),
 ('Paula Navarro', 'paula@gmail.com', '990800', '600777888', 'propietario');
 
+INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz1.jpg');
+INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz2.jpg');
+INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz3.jpg');
+INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz4.jpg');
+INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz5.jpg');
+INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz6.jpg');
+INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz7.jpg');
+

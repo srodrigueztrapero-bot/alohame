@@ -19,10 +19,21 @@
     </tr>
 
     <tr th:each="p : ${propiedades}">
-        <td th:text="${p.titulo}"></td>
+
+        <td>
+            <a th:href="@{'/propiedad/' + ${p.id}}">
+                <span th:text="${p.titulo}"></span>
+            </a>
+        </td>
+
         <td th:text="${p.ubicacion}"></td>
         <td th:text="${p.precio_noche}"></td>
         <td th:text="${p.capacidad}"></td>
+
+        <td>
+            <a th:href="@{'/propiedad/' + ${p.id}}">
+                <img th:src="@{${p.url}}" width="150"/>
+            </a>
     </tr>
 
 </table>

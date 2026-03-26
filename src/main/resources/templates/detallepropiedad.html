@@ -1,0 +1,32 @@
+<h1 th:text="${propiedad.titulo}"></h1>
+
+<p th:text="${propiedad.descripcion}"></p>
+<p>Precio: <span th:text="${propiedad.precio_noche}"></span> €</p>
+<p>Ubicación: <span th:text="${propiedad.ubicacion}"></span></p>
+
+<h3>Imágenes</h3>
+
+<div>
+  <img th:each="img : ${imagenes}"
+       th:src="@{${img.url}}"
+       width="200"
+       style="margin:10px; border-radius:10px;">
+</div>
+<h3>Reservar</h3>
+
+<form action="/guardarReserva" method="post">
+
+  <input type="hidden" name="id_propiedad" th:value="${propiedad.id}">
+
+  <label>Fecha inicio:</label>
+  <input type="date" name="fecha_inicio" required>
+
+  <label>Fecha fin:</label>
+  <input type="date" name="fecha_fin" required>
+
+  <!-- usuario fijo de prueba -->
+  <input type="hidden" name="id_usuario" value="1">
+
+  <button type="submit">Reservar</button>
+
+</form>

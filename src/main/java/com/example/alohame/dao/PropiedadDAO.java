@@ -21,4 +21,18 @@ public class PropiedadDAO {
         String sql = "INSERT INTO propiedades (titulo, descripcion, precio_noche, ubicacion, capacidad, id_usuario, fecha_publicacion) VALUES (?, ?, ?, ?, ?, ?, NOW())";
         jdbcTemplate.update(sql, titulo, descripcion, precio, ubicacion, capacidad, idUsuario);
     }
+    public List<Map<String, Object>> listarPropiedadesConImagen() {
+
+        String sql = "SELECT p.id, p.titulo, p.ubicacion, p.precio_noche, p.capacidad, i.url " +
+                "FROM propiedades p " +
+                "LEFT JOIN imagenes i ON p.id = i.id_propiedad " +
+                "GROUP BY p.id";
+
+        return jdbcTemplate.queryForList(sql);
+    }
+    public Map<String, Object> obtenerPorId(int id) {
+
+        String sql = "SELECT * FROM propiedades WHERE id = ?";
+        return jdbcTemplate.queryForMap(sql, id);
+    }
 }
