@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <h1>👤 Zona Cliente</h1>
+    </title>
+</head>
+<body>
+<h1>👤 Zona Cliente</h1>
+
+<p th:text="'Bienvenido ' + ${session.usuario['nombre']}"></p>
+
+<hr>
+
+<ul>
+    <li><a href="/propiedades">Ver propiedades</a></li>
+    <li><a href="/reservas">Mis reservas</a></li>
+</ul>
+<a href="/logout">
+    <button>🚪 Cerrar sesión</button>
+</a>
+</body>
+</html>

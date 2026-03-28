@@ -1,6 +1,7 @@
 package com.example.alohame.controller;
 
 import com.example.alohame.dao.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,90 @@ public class AlohameController {
     @GetMapping("/")
     public String inicio() {
         return "index";
+    }
+
+    // 👉 LOGIN
+    @GetMapping("/login")
+    public String mostrarLogin() {
+        return "login";
+    }
+    @PostMapping("/login")
+    public String login(@RequestParam String email,
+                        @RequestParam String password,
+                        HttpSession session,   // 👈 AÑADE ESTO
+                        Model model) {
+
+        Map<String, Object> usuario = usuarioDAO.login(email, password);
+
+        if(usuario == null){
+            model.addAttribute("error", "Usuario o contraseña incorrectos");
+            return "login";
+        }
+
+        session.setAttribute("usuario", usuario);
+
+        String tipo = usuario.get("tipo").toString();
+
+        if(tipo.equals("admin")){
+            return "admin";
+        } else if(tipo.equals("propietario")){
+            return "propietario";
+        } else {
+            return "cliente";
+        }
+    }
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate(); // borra la sesión
+        return "redirect:/login";
+    }
+    // PROTEGER ADMIN
+    @GetMapping("/admin")
+    public String admin(HttpSession session){
+
+        Map<String, Object> usuario = (Map<String, Object>) session.getAttribute("usuario");
+
+        if(usuario == null){
+            return "redirect:/login";
+        }
+
+        if(!usuario.get("tipo").toString().equals("admin")){
+            return "redirect:/login";
+        }
+
+        return "admin";
+    }
+    // PROTEGER PROPIETARIO
+    @GetMapping("/propietario")
+    public String propietario(HttpSession session){
+
+        Map<String, Object> usuario = (Map<String, Object>) session.getAttribute("usuario");
+
+        if(usuario == null){
+            return "redirect:/login";
+        }
+
+        if(!usuario.get("tipo").toString().equals("propietario")){
+            return "redirect:/login";
+        }
+
+        return "propietario";
+    }
+    // PROTEGER CLIENTE
+    @GetMapping("/cliente")
+    public String cliente(HttpSession session){
+
+        Map<String, Object> usuario = (Map<String, Object>) session.getAttribute("usuario");
+
+        if(usuario == null){
+            return "redirect:/login";
+        }
+
+        if(!usuario.get("tipo").toString().equals("cliente")){
+            return "redirect:/login";
+        }
+
+        return "cliente";
     }
 
     // 👉 USUARIOS

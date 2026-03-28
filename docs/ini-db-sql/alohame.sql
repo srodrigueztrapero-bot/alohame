@@ -131,3 +131,11 @@ INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz5.jpg');
 INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz6.jpg');
 INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz7.jpg');
 
+CREATE TABLE tipos_usuario (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50)
+);
+
+INSERT INTO tipos_usuario (nombre) VALUES ('admin'), ('usuario'), ('propietario');
+ALTER TABLE usuarios ADD id_tipo INT;
+UPDATE usuarios SET id_tipo = 1 WHERE tipo_usuario = 'admin';

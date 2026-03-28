@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Zona Propietario</title>
+</head>
+<body>
+
+<h1>🏠 Zona Propietario</h1>
+
+<p th:text="'Bienvenido ' + ${session.usuario['nombre']}"></p>
+
+<a href="/logout">
+    <button>🚪 Cerrar sesión</button>
+</a>
+
+<hr>
+
+<ul>
+    <li>
+        Propiedades
+        <ul>
+            <li><a href="/propiedades">Ver propiedades</a></li>
+            <li><a href="/crearPropiedad">Crear propiedad</a></li>
+        </ul>
+    </li>
+</ul>
+
+</body>
+</html>

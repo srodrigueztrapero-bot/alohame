@@ -13,6 +13,21 @@ public class UsuarioDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    public Map<String, Object> login(String email, String password) {
+        String sql = "SELECT u.*, t.nombre AS tipo " +
+                "FROM usuarios u " +
+                "JOIN tipos_usuario t ON u.id_tipo = t.id " +
+                "WHERE u.email = ? AND u.password = ?";
+
+        List<Map<String, Object>> lista = jdbcTemplate.queryForList(sql, email, password);
+
+        if(lista.isEmpty()){
+            return null;
+        } else {
+            return lista.get(0);
+        }
+    }
+
     public List<Map<String, Object>> listarUsuarios() {
         String sql = "SELECT u.*, t.nombre AS tipo " +
                 "FROM usuarios u " +
@@ -23,9 +38,10 @@ public class UsuarioDAO {
         String sql = "INSERT INTO usuarios (nombre, email, password, telefono, id_tipo) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, nombre, email, password, telefono, idTipo);
     }
+
     public List<Map<String, Object>> listarPropietarios() {
 
-        String sql = "SELECT * FROM usuarios WHERE id_tipo = 2";
+        String sql = "SELECT * FROM usuarios WHERE idtipo = 2";
         return jdbcTemplate.queryForList(sql);
     }
 

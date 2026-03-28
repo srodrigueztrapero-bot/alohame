@@ -40,6 +40,21 @@
         </ul>
     </li>
 </ul>
+<!-- SI NO está logueado -->
+<div th:if="${session.usuario == null}">
+    <a href="/login">
+        <button>🔐 Iniciar sesión</button>
+    </a>
+</div>
 
+<!-- SI está logueado -->
+<div th:if="${session.usuario != null}">
+    <p th:text="'Bienvenido ' + ${session.usuario['nombre']}"></p>
+
+    <a href="/logout">
+        <button>🚪 Cerrar sesión</button>
+    </a>
+</div>
+</div>
 </body>
 </html>
