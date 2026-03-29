@@ -50,7 +50,7 @@ CREATE TABLE comentarios (
     FOREIGN KEY (id_propiedad) REFERENCES propiedades(id)
 );
 
--- IMAGENES (CLAVE)
+-- IMAGENES
 CREATE TABLE imagenes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_propiedad INT,
@@ -58,84 +58,42 @@ CREATE TABLE imagenes (
     FOREIGN KEY (id_propiedad) REFERENCES propiedades(id)
 );
 
--- DATOS
+-- 🔥 USUARIOS (PRIMERO)
 INSERT INTO usuarios (nombre, email, password, telefono, tipo_usuario)
 VALUES 
+('Admin Alohame', 'admin@alohame.com', '0001', '600000000', 'admin'),
 ('Julio Romero', 'julio@gmail.com', '11589', '611558445', 'cliente'),
-('Marisol Torrijos', 'marisole@gmail.com', '44544', '655998990', 'cliente');
+('Marisol Torrijos', 'marisole@gmail.com', '44544', '655998990', 'cliente'),
+('Daniel Garcia', 'danituri@gmail.com', '332445', '655455621','propietario'),
+('Carlos Ruiz', 'carlos@gmail.com', '899422', '600222333', 'propietario'),
+('Paula Navarro', 'paula@gmail.com', '990800', '600777888', 'propietario');
 
-INSERT INTO propiedades (titulo, descripcion, precio_noche, ubicacion, capacidad, id_usuario)
+-- 🔥 PROPIEDADES (AHORA SÍ FUNCIONA)
+INSERT INTO propiedades 
+(titulo, descripcion, precio_noche, ubicacion, capacidad, id_usuario) 
 VALUES 
-('Apartamento en la playa', 'Muy bonito y cerca del mar', 80.00, 'Valencia', 4, 1),
-('Casa rural', 'Ideal para desconectar', 120.00, 'Asturias', 6, 2);
+('Apartamento en la playa', 'Muy bonito y cerca del mar', 80.00, 'Valencia', 4, 4),
+('Casa rural', 'Ideal para desconectar', 120.00, 'Asturias', 6, 4),
+('Piso en el centro', 'Cerca de la Almudena', 220.00, 'Madrid', 2, 5),
+('Apartamento centro', 'Muy bonito y céntrico', 280.00, 'Barcelona', 4, 5),
+('Casa estudiantes', 'Perfecto para estudiantes', 120.00, 'Salamanca', 2, 6),
+('Estudio barato', 'Pequeño pero acogedor', 250.00, 'Malaga', 2, 6),
+('Estudio en el centro', 'Con todas las comodidades', 150.00, 'Badajoz', 2, 6);
 
--- IMÁGENES (8 para propiedad 1)
-INSERT INTO imagenes (id_propiedad, url) VALUES (1, '/images/valencia1.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (1, '/images/valencia2.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (1, '/images/valencia3.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (1, '/images/valencia4.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (1, '/images/valencia5.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (1, '/images/valencia6.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (1, '/images/valencia7.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (1, '/images/valencia8.jpg');
+-- 🔥 IMÁGENES (UNA MÍNIMA POR PROPIEDAD)
+INSERT INTO imagenes (id_propiedad, url) VALUES 
+(1, 'images/valencia1.jpg'),
+(2, 'images/oviedo1.jpg'),
+(3, 'images/madrid1.jpg'),
+(4, 'images/barcelona1.jpg'),
+(5, 'images/salamanca1.jpg'),
+(6, 'images/malaga1.jpg'),
+(7, 'images/badajoz1.jpg');
 
--- RESERVA (SIN DUPLICADOS)
+-- 🔥 RESERVA
 INSERT INTO reservas (id_usuario, id_propiedad, fecha_inicio, fecha_fin, estado)
 VALUES (2, 1, '2026-04-01', '2026-04-05', 'confirmada');
 
--- COMENTARIO
+-- 🔥 COMENTARIO
 INSERT INTO comentarios (id_usuario, id_propiedad, comentario, puntuacion)
 VALUES (2, 1, 'Muy buena experiencia', 5);
-
-INSERT INTO propiedades (titulo, descripcion, precio_noche, ubicacion, capacidad, id_usuario)
-VALUES 
-('Casa rural', 'Ideal para desconectar', 120.00, 'Asturias', 6, 2);
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo1.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo2.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo3.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo4.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo5.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo6.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo7.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo8.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo9.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (2, '/images/oviedo10.jpg');
-
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid1.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid2.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid3.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid4.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid5.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid6.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid7.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid8.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid9.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/madrid10.jpg');
-
-INSERT INTO usuarios (nombre, email, password, telefono, tipo_usuario)
-VALUES 
-('Daniel Garcia', 'danituri@gmail.com', '332445', '655455621','propietario'),
-('Laura Sanchez', 'laura@gmail.com', '553220', '600111222', 'cliente'),
-('Carlos Ruiz', 'carlos@gmail.com', '899422', '600222333', 'propietario'),
-('Marta López', 'marta@gmail.com', '448443', '600333444', 'cliente'),
-('Javier Gómez', 'javier@gmail.com', '800222', '600444555', 'propietario'),
-('Elena Torres', 'elena@gmail.com', '112233', '600555666', 'cliente'),
-('David Moreno', 'david@gmail.com', '005005', '600666777', 'cliente'),
-('Paula Navarro', 'paula@gmail.com', '990800', '600777888', 'propietario');
-
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz1.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz2.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz3.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz4.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz5.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz6.jpg');
-INSERT INTO imagenes (id_propiedad, url) VALUES (3, '/images/badajoz7.jpg');
-
-CREATE TABLE tipos_usuario (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(50)
-);
-
-INSERT INTO tipos_usuario (nombre) VALUES ('admin'), ('usuario'), ('propietario');
-ALTER TABLE usuarios ADD id_tipo INT;
-UPDATE usuarios SET id_tipo = 1 WHERE tipo_usuario = 'admin';

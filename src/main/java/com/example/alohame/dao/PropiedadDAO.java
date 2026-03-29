@@ -13,25 +13,30 @@ public class PropiedadDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    // 🔹 LISTAR TODAS LAS PROPIEDADES (para index)
     public List<Map<String, Object>> listarPropiedades() {
         String sql = "SELECT * FROM propiedades";
         return jdbcTemplate.queryForList(sql);
     }
+
+    // 🔹 LISTAR CON IMAGEN (MEJOR PARA LA HOME)
+    public List<Map<String, Object>> listarPropiedadesConImagen() {
+
+        String sql = "SELECT p.id, p.titulo, p.ubicacion, p.precio_noche, p.capacidad, " +
+                "(SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url " +
+                "FROM propiedades p";
+
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    // 🔹 GUARDAR PROPIEDAD
     public void guardarPropiedad(String titulo, String descripcion, double precio, String ubicacion, int capacidad, int idUsuario) {
         String sql = "INSERT INTO propiedades (titulo, descripcion, precio_noche, ubicacion, capacidad, id_usuario, fecha_publicacion) VALUES (?, ?, ?, ?, ?, ?, NOW())";
         jdbcTemplate.update(sql, titulo, descripcion, precio, ubicacion, capacidad, idUsuario);
     }
-    public List<Map<String, Object>> listarPropiedadesConImagen() {
 
-        String sql = "SELECT p.id, p.titulo, p.ubicacion, p.precio_noche, p.capacidad, i.url " +
-                "FROM propiedades p " +
-                "LEFT JOIN imagenes i ON p.id = i.id_propiedad " +
-                "GROUP BY p.id";
-
-        return jdbcTemplate.queryForList(sql);
-    }
+    // 🔹 OBTENER POR ID
     public Map<String, Object> obtenerPorId(int id) {
-
         String sql = "SELECT * FROM propiedades WHERE id = ?";
         return jdbcTemplate.queryForMap(sql, id);
     }

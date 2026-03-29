@@ -27,7 +27,12 @@ public class AlohameController {
 
     // 👉 HOME
     @GetMapping("/")
-    public String inicio() {
+    public String index(Model model) {
+
+        List<Map<String, Object>> propiedades = propiedadDAO.listarPropiedadesConImagen();
+
+        model.addAttribute("propiedades", propiedades);
+
         return "index";
     }
 

@@ -5,49 +5,19 @@
 </head>
 <body>
 
-<h1>Bienvenido a Alohame</h1>
+<!-- HEADER -->
+<h1>🏠 Alohame</h1>
 
-<ul>
-    <li>
-        Usuarios
-        <ul>
-            <li><a href="/usuarios">Ver usuarios</a></li>
-            <li><a href="/crearUsuario">Crear usuario</a></li>
-        </ul>
-    </li>
-
-    <li>
-        Propiedades
-        <ul>
-            <li><a href="/propiedades">Ver propiedades</a></li>
-            <li><a href="/crearPropiedad">Crear propiedad</a></li>
-        </ul>
-    </li>
-
-    <li>
-        Reservas
-        <ul>
-            <li><a href="/reservas">Ver reservas</a></li>
-            <li><a href="/crearReserva">Crear reserva</a></li>
-        </ul>
-    </li>
-
-    <li>
-        Comentarios
-        <ul>
-            <li><a href="/comentarios">Ver comentarios</a></li>
-            <li><a href="/crearComentario">Crear comentario</a></li>
-        </ul>
-    </li>
-</ul>
-<!-- SI NO está logueado -->
+<!-- LOGIN / LOGOUT -->
 <div th:if="${session.usuario == null}">
     <a href="/login">
         <button>🔐 Iniciar sesión</button>
     </a>
+    <a href="/crearUsuario">
+        <button>📝 Registrarse</button>
+    </a>
 </div>
 
-<!-- SI está logueado -->
 <div th:if="${session.usuario != null}">
     <p th:text="'Bienvenido ' + ${session.usuario['nombre']}"></p>
 
@@ -55,6 +25,36 @@
         <button>🚪 Cerrar sesión</button>
     </a>
 </div>
+
+<hr>
+
+<!-- BUSCADOR -->
+<h2>🔍 Buscar alojamiento</h2>
+<form action="/propiedades" method="get">
+    <input type="text" name="ciudad" placeholder="Ciudad">
+    <button type="submit">Buscar</button>
+</form>
+
+<hr>
+
+<!-- LISTADO DE PROPIEDADES -->
+<h2>🏡 Propiedades disponibles</h2>
+
+<div th:each="propiedad : ${propiedades}">
+
+    <h3 th:text="${propiedad['titulo']}"></h3>
+
+    <p th:text="${propiedad['ubicacion']}"></p>
+
+    <p th:text="'Precio: ' + ${propiedad['precio_noche']} + '€'"></p>
+
+    <img th:src="@{ ${propiedad['url']}}" width="200">
+
+    <a th:href="@{'/detallePropiedad/' + ${propiedad['id']}}">
+        <button>Ver detalle</button>
+    </a>
+
 </div>
+
 </body>
 </html>
