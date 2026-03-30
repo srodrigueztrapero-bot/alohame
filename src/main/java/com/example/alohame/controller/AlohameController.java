@@ -44,7 +44,7 @@ public class AlohameController {
     @PostMapping("/login")
     public String login(@RequestParam String email,
                         @RequestParam String password,
-                        HttpSession session,   // 👈 AÑADE ESTO
+                        HttpSession session,
                         Model model) {
 
         Map<String, Object> usuario = usuarioDAO.login(email, password);
@@ -56,7 +56,7 @@ public class AlohameController {
 
         session.setAttribute("usuario", usuario);
 
-        String tipo = usuario.get("tipo").toString();
+        String tipo = usuario.get("tipo_usuario").toString();
 
         if(tipo.equals("admin")){
             return "admin";

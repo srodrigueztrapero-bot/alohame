@@ -1,32 +1,48 @@
-<h1 th:text="${propiedad.titulo}"></h1>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Detalle propiedad</title>
 
-<p th:text="${propiedad.descripcion}"></p>
-<p>Precio: <span th:text="${propiedad.precio_noche}"></span> €</p>
-<p>Ubicación: <span th:text="${propiedad.ubicacion}"></span></p>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 
-<h3>Imágenes</h3>
+<body>
 
-<div>
-  <img th:each="img : ${imagenes}"
-       th:src="@{${img.url}}"
-       width="200"
-       style="margin:10px; border-radius:10px;">
+<div class="container mt-4">
+
+  <!-- BOTÓN VOLVER -->
+  <a href="/" class="btn btn-outline-dark mb-3">⬅ Volver</a>
+
+  <!-- TÍTULO -->
+  <h2 class="fw-bold mb-3" th:text="${propiedad['titulo']}"></h2>
+
+  <!-- GALERÍA DE IMÁGENES -->
+  <div class="row mb-4">
+    <div class="col-md-4 mb-3" th:each="img : ${imagenes}">
+      <img th:src="@{'/' + ${img['url']}}"
+           class="img-fluid rounded shadow-sm"
+           style="height:200px; object-fit:cover;">
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="card p-4 shadow-sm">
+
+    <p class="text-muted" th:text="${propiedad['ubicacion']}"></p>
+
+    <p th:text="${propiedad['descripcion']}"></p>
+
+    <p><strong>Capacidad:</strong>
+      <span th:text="${propiedad['capacidad']}"></span> personas
+    </p>
+
+    <h4 class="text-primary fw-bold"
+        th:text="${propiedad['precio_noche']} + ' € / noche'"></h4>
+
+  </div>
+
 </div>
-<h3>Reservar</h3>
 
-<form action="/guardarReserva" method="post">
-
-  <input type="hidden" name="id_propiedad" th:value="${propiedad.id}">
-
-  <label>Fecha inicio:</label>
-  <input type="date" name="fecha_inicio" required>
-
-  <label>Fecha fin:</label>
-  <input type="date" name="fecha_fin" required>
-
-  <!-- usuario fijo de prueba -->
-  <input type="hidden" name="id_usuario" value="1">
-
-  <button type="submit">Reservar</button>
-
-</form>
+</body>
+</html>

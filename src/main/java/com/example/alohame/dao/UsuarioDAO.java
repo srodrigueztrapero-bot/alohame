@@ -14,10 +14,7 @@ public class UsuarioDAO {
     private JdbcTemplate jdbcTemplate;
 
     public Map<String, Object> login(String email, String password) {
-        String sql = "SELECT u.*, t.nombre AS tipo " +
-                "FROM usuarios u " +
-                "JOIN tipos_usuario t ON u.id_tipo = t.id " +
-                "WHERE u.email = ? AND u.password = ?";
+        String sql = "SELECT * FROM usuarios WHERE email = ? AND password = ?";
 
         List<Map<String, Object>> lista = jdbcTemplate.queryForList(sql, email, password);
 
