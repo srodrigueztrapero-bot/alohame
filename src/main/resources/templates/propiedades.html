@@ -26,9 +26,9 @@
             </a>
         </td>
 
-        <td th:text="${p.ubicacion}"></td>
-        <td th:text="${p.precio_noche}"></td>
-        <td th:text="${p.capacidad}"></td>
+        <p th:text="${p['titulo']}"></p>
+        <p th:text="${p['capacidad']}"></p>
+        <p th:text="${p['precio_noche']}"></p>
 
         <td>
             <a th:href="@{'/propiedad/' + ${p.id}}">

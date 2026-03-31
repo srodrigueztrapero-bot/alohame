@@ -10,11 +10,6 @@
 <!-- HEADER -->
 <nav class="navbar navbar-light bg-light px-4">
     <span class="navbar-brand mb-0 h1">🏠 Alohame</span>
-
-    <div>
-        <a href="/login" class="btn btn-outline-dark me-2">Login</a>
-        <a href="/crearUsuario" class="btn btn-dark">Registro</a>
-    </div>
 </nav>
 
 <!-- LOGIN / LOGOUT -->
@@ -40,7 +35,7 @@
 <!-- BUSCADOR -->
 <h2>🔍 Buscar alojamiento</h2>
 <form action="/propiedades" method="get">
-    <input type="text" name="ciudad" placeholder="Ciudad">
+    <input type="text" name="ciudad" placeholder="¿Donde quieres alojarte?">
     <button type="submit">Buscar</button>
 </form>
 
@@ -53,7 +48,7 @@
 
     <div class="row">
 
-        <div class="col-md-4 mb-4" th:each="propiedad : ${propiedades}">
+        <div class="col-12 col-md-6 col-lg-4" th:each="propiedad : ${propiedades}">
 
             <div class="card h-100 shadow-sm">
 

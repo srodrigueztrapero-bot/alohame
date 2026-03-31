@@ -26,9 +26,7 @@ public class UsuarioDAO {
     }
 
     public List<Map<String, Object>> listarUsuarios() {
-        String sql = "SELECT u.*, t.nombre AS tipo " +
-                "FROM usuarios u " +
-                "JOIN tipos_usuario t ON u.id_tipo = t.id";;
+        String sql = "SELECT * FROM usuarios";
         return jdbcTemplate.queryForList(sql);
     }
     public void guardarUsuario(String nombre, String email, String password, String telefono, int idTipo) {

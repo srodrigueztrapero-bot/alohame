@@ -35,3 +35,8 @@ h1 {
 .card:hover img {
   transform: scale(1.05);
 }
+
+.carousel-item {
+  overflow: hidden;
+  border-radius: 15px;
+}

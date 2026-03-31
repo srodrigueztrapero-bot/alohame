@@ -127,13 +127,6 @@ public class AlohameController {
         return "usuarios";
     }
 
-    // 👉 PROPIEDADES
-    @GetMapping("/propiedades")
-    public String listarPropiedades(Model model) {
-        model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConImagen());
-        return "propiedades";
-    }
-
     // 👉 RESERVAS
     @Autowired
     private ReservaDAO reservaDAO;
@@ -234,6 +227,18 @@ public class AlohameController {
         model.addAttribute("imagenes", imagenDAO.obtenerPorPropiedad(id));
 
         return "detallePropiedad";
+    }
+    // BUSQUEDA CIUDAD
+    @GetMapping("/propiedades")
+    public String listarPropiedades(@RequestParam(required = false) String ciudad, Model model) {
+
+        if (ciudad != null && !ciudad.isEmpty()) {
+            model.addAttribute("propiedades", propiedadDAO.buscarPorCiudad(ciudad));
+        } else {
+            model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConImagen());
+        }
+
+        return "propiedades";
     }
 
     }

@@ -40,4 +40,14 @@ public class PropiedadDAO {
         String sql = "SELECT * FROM propiedades WHERE id = ?";
         return jdbcTemplate.queryForMap(sql, id);
     }
+    // 🔹 BUSCAR POR CIUDAD
+    public List<Map<String, Object>> buscarPorCiudad(String ciudad) {
+
+        String sql = "SELECT p.id, p.titulo, p.ubicacion, p.precio_noche, " +
+                "(SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url " +
+                "FROM propiedades p " +
+                "WHERE p.ubicacion LIKE ?";
+
+        return jdbcTemplate.queryForList(sql, "%" + ciudad + "%");
+    }
 }
