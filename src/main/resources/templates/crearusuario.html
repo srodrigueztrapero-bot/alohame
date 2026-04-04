@@ -1,39 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Crear Usuario</title>
+    <title>Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
-<h1>Nuevo Usuario</h1>
+<body class="bg-light">
 
-<form action="/guardarUsuario" method="post">
+<div class="container mt-5">
 
-    <label>Nombre:</label>
-    <input type="text" name="nombre"><br>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
 
-    <label>Email:</label>
-    <input type="text" name="email"><br>
+            <div class="card shadow-lg p-4">
 
-    <label>Password:</label>
-    <input type="text" name="password"><br>
+                <h2 class="text-center mb-4">👤 Nuevo Usuario</h2>
 
-    <label>Teléfono:</label>
-    <input type="text" name="telefono"><br>
+                <form action="/guardarUsuario" method="post">
 
-    <label>Tipo de usuario:</label>
-    <select name="idtipo">
-        <option value="1">Cliente</option>
-        <option value="2">Propietario</option>
-    </select>
-    <br>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" name="nombre" class="form-control" required>
+                    </div>
 
-    <button type="submit">Guardar</button>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
 
-</form>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
 
-<br>
-<a href="/">⬅ Volver al inicio</a>
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" name="telefono" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de usuario</label>
+                        <select name="tipo" class="form-select">
+                            <option value="CLIENTE">Cliente</option>
+                            <option value="PROPIETARIO">Propietario</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-dark">
+                            💾 Guardar
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="text-center mt-3">
+                <a href="/" class="btn btn-outline-secondary">
+                    ⬅ Volver al inicio
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>

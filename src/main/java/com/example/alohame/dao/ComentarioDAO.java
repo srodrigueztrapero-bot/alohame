@@ -24,4 +24,8 @@ public class ComentarioDAO {
         String sql = "INSERT INTO comentarios (id_usuario, id_propiedad, comentario, puntuacion, fecha) VALUES (?, ?, ?, ?, NOW())";
         jdbcTemplate.update(sql, idUsuario, idPropiedad, comentario, puntuacion);
     }
+    public List<Map<String, Object>> obtenerPorPropiedad(int idPropiedad) {
+        String sql = "SELECT * FROM comentarios WHERE id_propiedad = ?";
+        return jdbcTemplate.queryForList(sql, idPropiedad);
+    }
 }

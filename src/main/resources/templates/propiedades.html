@@ -2,41 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Propiedades</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
 <h1>Lista de Propiedades</h1>
 
-<a href="/crearPropiedad">
-<button>➕ Crear propiedad</button></a>
+<div th:if="${session.usuario != null and session.usuario.tipo == 'PROPIETARIO'}">
+    <a href="/crear" class="btn btn-success mb-3">+ Crear propiedad</a>
+</div>
 
-<table border="1">
-    <tr>
-        <th>Título</th>
-        <th>Ubicación</th>
-        <th>Precio</th>
-        <th>Capacidad</th>
-    </tr>
+<div class="container mt-5">
 
-    <tr th:each="p : ${propiedades}">
 
-        <td>
-            <a th:href="@{'/propiedad/' + ${p.id}}">
-                <span th:text="${p.titulo}"></span>
-            </a>
-        </td>
+    <div class="row">
+        <div class="col-md-4 mb-4" th:each="propiedad : ${propiedades}">
+            <div class="card h-100 shadow-sm">
 
-        <p th:text="${p['titulo']}"></p>
-        <p th:text="${p['capacidad']}"></p>
-        <p th:text="${p['precio_noche']}"></p>
+                <img th:src="${'/' + propiedad['url']}"
+                     class="card-img-top"
+                     style="height:200px; object-fit:cover;">
 
-        <td>
-            <a th:href="@{'/propiedad/' + ${p.id}}">
-                <img th:src="@{${p.url}}" width="150"/>
-            </a>
-    </tr>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${propiedad['titulo']}"></h5>
+                    <p class="card-text">
+                        💰 <span th:text="${propiedad['precio_noche']}"></span> €
+                    </p>
+                </div>
 
-</table>
+                <div class="card-footer text-center">
+
+                    <!-- VER SIEMPRE -->
+                    <a
+                        th:if="${propiedad['id'] != null}"
+                        th:href="@{/propiedad/{id}(id=${propiedad['id']})}" class="btn btn-primary">
+                        Ver
+                    </a>
+
+                    <!-- SOLO PROPIETARIO -->
+                    <a th:if="${session.usuario != null and session.usuario.tipo != null and session.usuario.tipo == 'PROPIETARIO'}"
+                       th:href="@{/editar/{id}(id=${propiedad.id})}"
+                       class="btn btn-warning">
+                        Editar
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <a href="/">
     <button>➕ ⬅ Volver al inicio</button></a>

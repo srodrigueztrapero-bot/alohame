@@ -36,7 +36,7 @@ public class UsuarioDAO {
 
     public List<Map<String, Object>> listarPropietarios() {
 
-        String sql = "SELECT * FROM usuarios WHERE idtipo = 2";
+        String sql = "SELECT * FROM usuarios WHERE tipo_usuario = 'propietario'";
         return jdbcTemplate.queryForList(sql);
     }
 
