@@ -12,28 +12,47 @@
 <a href="/Añadir usuario">
     <button>➕ Añadir usuario</button></a>
 
-<table border="1">
-    <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>password</th>
-        <th>telefono</th>
-        <th>fecha_registro</th>
-        <th>tipo</th>
-    </tr>
+<div class="table-responsive">
 
-    <tr th:each="u : ${usuarios}">
-        <td th:text="${u['nombre']}"></td>
-        <td th:text="${u['email']}"></td>
-        <td th:text="${u['password']}"></td>
-        <td th:text="${u['telefono']}"></td>
-        <td th:text="${u['fecha_registro']}"></td>
-        <td th:text="${u['tipo']}"></td>
-    </tr>
-</table>
+    <table class="table table-hover table-striped align-middle">
 
-<a href="/">
-    <button>➕ ⬅ Volver al inicio</button></a>
+        <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Fecha</th>
+            <th>Tipo</th>
+        </tr>
+        </thead>
 
+        <tbody>
+
+        <tr th:each="usuario : ${usuarios}">
+
+            <td th:text="${usuario['nombre']}"></td>
+
+            <td th:text="${usuario['email']}"></td>
+
+            <td th:text="${usuario['telefono']}"></td>
+
+            <td th:text="${usuario['fecha_registro']}"></td>
+
+            <td>
+                        <span class="badge bg-primary"
+                              th:text="${usuario['tipo_usuario']}"></span>
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<button onclick="history.back()" class="btn btn-outline-secondary mt-3">
+    ⬅ Volver
+</button>
 </body>
 </html>

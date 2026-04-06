@@ -7,24 +7,72 @@
 </head>
 <body>
 
-<h1>Lista de Reservas</h1>
+<div class="container mt-4">
 
-<table border="1">
-    <tr>
-        <th>Usuario</th>
-        <th>Propiedad</th>
-        <th>Fecha inicio</th>
-        <th>Fecha fin</th>
-    </tr>
+    <h2 class="mb-4">📅 Lista de Reservas</h2>
 
-    <tr th:each="r : ${reservas}">
-        <td th:text="${r.id_usuario}"></td>
-        <td th:text="${r.id_propiedad}"></td>
-        <td th:text="${r.fecha_inicio}"></td>
-        <td th:text="${r.fecha_fin}"></td>
-    </tr>
+    <div class="table-responsive">
 
-</table>
+        <table class="table table-hover table-striped align-middle">
+
+            <thead class="table-dark">
+            <tr>
+                <th>Usuario</th>
+                <th>Propiedad</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="reserva : ${reservas}">
+
+                <!-- USUARIO -->
+                <td th:text="${reserva['id_usuario']}"></td>
+
+                <!-- PROPIEDAD -->
+                <td th:text="${reserva['id_propiedad']}"></td>
+
+                <!-- FECHAS -->
+                <td th:text="${reserva['fecha_inicio']}"></td>
+                <td th:text="${reserva['fecha_fin']}"></td>
+
+                <!-- ESTADO -->
+                <td>
+                        <span class="badge bg-success"
+                              th:if="${reserva['estado'] == 'confirmada'}">Confirmada</span>
+
+                    <span class="badge bg-warning text-dark"
+                          th:if="${reserva['estado'] == 'pendiente'}">Pendiente</span>
+
+                    <span class="badge bg-danger"
+                          th:if="${reserva['estado'] == 'cancelada'}">Cancelada</span>
+                </td>
+
+                <!-- ACCIONES -->
+                <td>
+                    <a th:href="@{/reserva/cancelar/{id}(id=${reserva['id']})}"
+                       class="btn btn-sm btn-outline-danger">
+                        Cancelar
+                    </a>
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <button onclick="history.back()" class="btn btn-outline-secondary mt-3">
+        ⬅ Volver
+    </button>
+
+</div>
 
 </body>
 </html>

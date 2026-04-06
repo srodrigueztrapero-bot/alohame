@@ -7,26 +7,68 @@
 </head>
 <body>
 
-<h1>Comentarios</h1>
+<div class="container mt-4">
 
-<table border="1">
-    <tr>
-        <th>Usuario</th>
-        <th>Propiedad</th>
-        <th>Comentario</th>
-        <th>Puntuación</th>
-    </tr>
+    <h2 class="mb-4">💬 Comentarios</h2>
 
-    <tr th:each="c : ${comentarios}">
-        <td th:text="${c.id_usuario}"></td>
-        <td th:text="${c.id_propiedad}"></td>
-        <td th:text="${c.comentario}"></td>
-        <td th:text="${c.puntuacion}"></td>
-    </tr>
+    <div class="table-responsive">
 
-</table>
-<a href="/">
-    <button>➕ ⬅ Volver al inicio</button></a>
+        <table class="table table-hover table-striped align-middle">
+
+            <thead class="table-dark">
+            <tr>
+                <th>Usuario</th>
+                <th>Propiedad</th>
+                <th>Comentario</th>
+                <th>Puntuación</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="comentario : ${comentarios}">
+
+                <!-- USUARIO -->
+                <td th:text="${comentario['id_usuario']}"></td>
+
+                <!-- PROPIEDAD -->
+                <td th:text="${comentario['id_propiedad']}"></td>
+
+                <!-- TEXTO -->
+                <td th:text="${comentario['comentario']}"></td>
+
+                <!-- ⭐ PUNTUACIÓN -->
+                <td>
+                        <span class="text-warning"
+                              th:text="${comentario['puntuacion']} + ' ⭐'"></span>
+                </td>
+
+                <!-- FECHA -->
+                <td th:text="${comentario['fecha']}"></td>
+
+                <!-- ACCIONES -->
+                <td>
+                    <a th:href="@{/comentario/eliminar/{id}(id=${comentario['id']})}"
+                       class="btn btn-sm btn-outline-danger">
+                        🗑️ Eliminar
+                    </a>
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <a href="/admin" class="btn btn-outline-dark rounded-pill mt-3">
+        ⬅ Volver al panel
+    </a>
+
+</div>
 
 </body>
 </html>

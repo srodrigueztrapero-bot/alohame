@@ -34,4 +34,22 @@ public class ReservaDAO {
 
         return jdbcTemplate.queryForList(sql, idUsuario);
     }
+    // NO SOLAPAR RESERVAS
+    public boolean estaDisponible(int idPropiedad, String inicio, String fin) {
+
+        String sql = "SELECT COUNT(*) FROM reservas " +
+                "WHERE id_propiedad = ? " +
+                "AND estado != 'cancelada' " +
+                "AND (? <= fecha_fin AND ? >= fecha_inicio)";
+
+        Integer count = jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
+                idPropiedad,
+                inicio,
+                fin
+        );
+
+        return count == null || count == 0;
+    }
 }

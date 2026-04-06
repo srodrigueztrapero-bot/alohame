@@ -1,17 +1,6 @@
-/* CSS for index.html */
-/* CSS general */
-header {
-  background: white;
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-}
-.navbar {
-  border-bottom: 1px solid #eee;
-}
-
-.navbar-brand {
-  letter-spacing: 1px;
-}
+/* =========================
+   GENERAL
+========================= */
 
 html, body {
   margin: 0;
@@ -28,15 +17,28 @@ h1 {
   font-size: 2.5rem;
 }
 
-/* tarjetas */
+/* =========================
+   HEADER / NAVBAR
+========================= */
 
-.card-title {
-  font-size: 1.1rem;
+header {
+  background: white;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
 }
 
-.card-text {
-  font-size: 0.9rem;
+.navbar {
+  border-bottom: 1px solid #eee;
 }
+
+.navbar-brand {
+  letter-spacing: 1px;
+}
+
+/* =========================
+   TARJETAS (CARDS)
+========================= */
+
 .card {
   border: none;
   border-radius: 15px;
@@ -50,24 +52,39 @@ h1 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-.card img {
-  transition: transform 0.3s ease;
+.card-title {
+  font-size: 1.1rem;
 }
+
+.card-text {
+  font-size: 0.9rem;
+}
+
+/* imágenes dentro de cards */
+
+.card img,
 .card-img-top {
   transition: transform 0.4s ease;
 }
 
-.card:hover img {
-  transform: scale(1.05);
-}
+.card:hover img,
 .card:hover .card-img-top {
   transform: scale(1.05);
 }
+
+/* =========================
+   CAROUSEL
+========================= */
 
 .carousel-item {
   overflow: hidden;
   border-radius: 15px;
 }
+
+/* =========================
+   FORMULARIOS
+========================= */
+
 form.card {
   border-radius: 15px;
 }
@@ -75,14 +92,7 @@ form.card {
 form.card:hover {
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
-.btn-dark {
-  background: linear-gradient(135deg, #222, #444);
-  border: none;
-}
 
-.btn-dark:hover {
-  background: linear-gradient(135deg, #000, #333);
-}
 form input {
   border-radius: 30px;
   padding: 10px 15px;
@@ -92,6 +102,24 @@ form button {
   border-radius: 30px;
   padding: 10px 20px;
 }
+
+/* =========================
+   BOTONES
+========================= */
+
+.btn-dark {
+  background: linear-gradient(135deg, #222, #444);
+  border: none;
+}
+
+.btn-dark:hover {
+  background: linear-gradient(135deg, #000, #333);
+}
+
+/* =========================
+   FAVORITOS ❤️
+========================= */
+
 .favorite {
   transition: all 0.2s ease;
 }
@@ -99,7 +127,11 @@ form button {
 .favorite:hover {
   transform: scale(1.2);
 }
-/* TABS */
+
+/* =========================
+   TABS (filtros arriba)
+========================= */
+
 .tabs .tab {
   display: flex;
   align-items: center;
@@ -115,7 +147,10 @@ form button {
   border-bottom: 2px solid black;
 }
 
-/* SEARCH BAR */
+/* =========================
+   SEARCH BAR
+========================= */
+
 .search-bar {
   background: white;
   border-radius: 40px;
@@ -123,7 +158,6 @@ form button {
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-/* ITEMS */
 .search-item {
   display: flex;
   flex-direction: column;
@@ -135,7 +169,8 @@ form button {
   font-size: 13px;
 }
 
-/* DIVIDER */
+/* separador */
+
 .divider {
   width: 1px;
   height: 40px;
@@ -143,7 +178,8 @@ form button {
   margin: 0 15px;
 }
 
-/* BOTÓN */
+/* botón buscar */
+
 .search-btn {
   background: #ff385c;
   border: none;
@@ -160,4 +196,18 @@ form button {
 
 .search-btn:hover {
   background: #e03150;
+}
+
+/* =========================
+   ADMIN PANEL
+========================= */
+
+.admin-card {
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }

@@ -26,6 +26,8 @@
   <button type="submit">Guardar</button>
 
 </form>
-
+<div th:if="${error}" class="alert alert-danger mt-3">
+  <span th:text="${error}"></span>
+</div>
 </body>
 </html>

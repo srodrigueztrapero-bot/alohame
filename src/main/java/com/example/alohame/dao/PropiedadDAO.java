@@ -89,4 +89,13 @@ public class PropiedadDAO {
         String sqlProp = "DELETE FROM propiedades WHERE id = ?";
         jdbcTemplate.update(sqlProp, id);
     }
+    // PUNTUACION
+    public List<Map<String, Object>> listarPropiedadesConMedia() {
+        String sql = "SELECT p.*, AVG(c.puntuacion) AS media_puntuacion " +
+                "FROM propiedades p " +
+                "LEFT JOIN comentarios c ON p.id = c.id_propiedad " +
+                "GROUP BY p.id";
+
+        return jdbcTemplate.queryForList(sql);
+    }
 }

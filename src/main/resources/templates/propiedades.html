@@ -9,18 +9,17 @@
 
 <h1>Lista de Propiedades</h1>
 
-<div th:if="${session.usuario != null and session.usuario.tipo == 'PROPIETARIO'}">
+<div th:if="${session.usuario != null and session.usuario['tipo'] == 'PROPIETARIO'}">
     <a href="/crear" class="btn btn-success mb-3">+ Crear propiedad</a>
 </div>
 
 <div class="container mt-5">
 
-
     <div class="row">
         <div class="col-md-4 mb-4" th:each="propiedad : ${propiedades}">
             <div class="card h-100 shadow-sm">
 
-                <img th:src="${'/' + propiedad['url']}"
+                <img th:src="@{'/' + ${propiedad['url']}}"
                      class="card-img-top"
                      style="height:200px; object-fit:cover;">
 
@@ -33,16 +32,16 @@
 
                 <div class="card-footer text-center">
 
-                    <!-- VER SIEMPRE -->
-                    <a
-                        th:if="${propiedad['id'] != null}"
-                        th:href="@{/propiedad/{id}(id=${propiedad['id']})}" class="btn btn-primary">
+                    <!-- VER -->
+                    <a th:if="${propiedad['id'] != null}"
+                       th:href="@{/propiedad/{id}(id=${propiedad['id']})}"
+                       class="btn btn-primary">
                         Ver
                     </a>
 
-                    <!-- SOLO PROPIETARIO -->
-                    <a th:if="${session.usuario != null and session.usuario.tipo != null and session.usuario.tipo == 'PROPIETARIO'}"
-                       th:href="@{/editar/{id}(id=${propiedad.id})}"
+                    <!-- EDITAR -->
+                    <a th:if="${session.usuario != null and session.usuario['tipo'] == 'PROPIETARIO'}"
+                       th:href="@{/editar/{id}(id=${propiedad['id']})}"
                        class="btn btn-warning">
                         Editar
                     </a>
@@ -54,8 +53,9 @@
     </div>
 </div>
 
-<a href="/">
-    <button>➕ ⬅ Volver al inicio</button></a>
+<button onclick="history.back()" class="btn btn-outline-secondary mt-3">
+    ⬅ Volver
+</button>
 
 </body>
 </html>

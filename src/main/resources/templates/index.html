@@ -116,11 +116,6 @@
 
             <div class="card h-100 shadow-sm position-relative">
 
-                <!-- ❤️ FAVORITO -->
-                <span class="position-absolute top-0 end-0 m-2 p-2 bg-white rounded-circle shadow-sm favorite">
-                 ❤️
-                </span>
-
                 <!-- IMAGEN -->
                 <img th:if="${propiedad['url'] != null}"
                      th:src="@{'/' + ${propiedad['url']}}"
@@ -134,7 +129,7 @@
 
                     <!-- ⭐ VALORACIÓN -->
                     <p class="mb-1 text-warning small">
-                        ⭐⭐⭐⭐☆ <span class="text-muted">(4.5)</span>
+                        ⭐ <span th:text="${#numbers.formatDecimal(propiedad['media_puntuacion'], 1, 1)}"></span>
                     </p>
 
                     <!-- 📍 UBICACIÓN -->

@@ -9,20 +9,65 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>👑 Zona Admin</h1>
-<p th:text="'Bienvenido ' + ${session.usuario['nombre']}"></p>
+<div class="container mt-5">
 
-        <a href="/logout">
-        <button>🚪 Cerrar sesión</button>
+    <!-- TÍTULO -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">👑 Panel de Administración</h1>
+        <p class="text-muted">Bienvenido, Admin Alohame</p>
+    </div>
+
+    <!-- BOTÓN LOGOUT -->
+    <div class="text-center mb-4">
+        <a href="/logout" class="btn btn-outline-danger rounded-pill px-4">
+            🚪 Cerrar sesión
         </a>
+    </div>
 
-        <hr>
+    <!-- OPCIONES -->
+    <div class="row text-center g-4">
 
-        <ul>
-        <li><a href="/usuarios">Usuarios</a></li>
-        <li><a href="/propiedades">Propiedades</a></li>
-        <li><a href="/reservas">Reservas</a></li>
-        <li><a href="/comentarios">Comentarios</a></li>
-        </ul>
+        <div class="col-md-3">
+            <a href="/usuarios" class="text-decoration-none">
+                <div class="card p-4 shadow-sm h-100 admin-card">
+                    <h3>👤</h3>
+                    <h5>Usuarios</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="/propiedades" class="text-decoration-none">
+                <div class="card p-4 shadow-sm h-100 admin-card">
+                    <h3>🏠</h3>
+                    <h5>Propiedades</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="/reservas" class="text-decoration-none">
+                <div class="card p-4 shadow-sm h-100 admin-card">
+                    <h3>📅</h3>
+                    <h5>Reservas</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="/comentarios" class="text-decoration-none">
+                <div class="card p-4 shadow-sm h-100 admin-card">
+                    <h3>💬</h3>
+                    <h5>Comentarios</h5>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+</div>
+<button onclick="history.back()" class="btn btn-outline-secondary mt-3">
+    ⬅ Volver
+</button>
 </body>
 </html>
