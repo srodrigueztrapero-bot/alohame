@@ -29,10 +29,15 @@ public class UsuarioDAO {
         String sql = "SELECT * FROM usuarios";
         return jdbcTemplate.queryForList(sql);
     }
-    public void guardarUsuario(String nombre, String email, String password, String telefono, int idTipo) {
-        String sql = "INSERT INTO usuarios (nombre, email, password, telefono, id_tipo) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, nombre, email, password, telefono, idTipo);
+
+
+    public void guardarUsuario(String nombre, String email, String password, String telefono, String tipoUsuario) {
+        String sql = "INSERT INTO usuarios (nombre, email, password, telefono, tipo_usuario) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, nombre, email, password, telefono, tipoUsuario);
     }
+
+
+
 
     public List<Map<String, Object>> listarPropietarios() {
 

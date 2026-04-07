@@ -68,6 +68,25 @@
         th:text="${propiedad['precio_noche']} + ' € / noche'"></h4>
 
   </div>
+
+
+  <div class="mt-4">
+
+    <div th:if="${session.usuario == null}">
+      <a href="/login" class="btn btn-dark rounded-pill px-4">
+        Inicia sesión para reservar
+      </a>
+    </div>
+
+    <div th:if="${session.usuario != null}">
+      <a th:href="@{/crearReserva(id_propiedad=${propiedad['id']})}"
+         class="btn btn-success rounded-pill px-4">
+        Reservar ahora
+      </a>
+    </div>
+
+  </div>
+
   <h4>💬 Comentarios</h4>
 
   <div th:each="comentario : ${comentarios}" class="card mb-2 p-2">

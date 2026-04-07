@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -24,6 +23,42 @@ public class AlohameController {
     @Autowired private ImagenDAO imagenDAO;
     @Autowired private ReservaDAO reservaDAO;
     @Autowired private ComentarioDAO comentarioDAO;
+
+    /* =========================
+       HELPERS
+    ========================= */
+
+    private Map<String, Object> getUsuarioSesion(HttpSession session) {
+        return (Map<String, Object>) session.getAttribute("usuario");
+    }
+
+    private boolean esTipoUsuario(HttpSession session, String tipoEsperado) {
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        return usuario != null
+                && usuario.get("tipo_usuario") != null
+                && tipoEsperado.equals(usuario.get("tipo_usuario").toString());
+    }
+
+    private Integer obtenerIdUsuario(Map<String, Object> usuario) {
+        if (usuario == null || usuario.get("id") == null) {
+            return null;
+        }
+        return Integer.parseInt(usuario.get("id").toString());
+    }
+
+    private void guardarImagenEnDisco(MultipartFile imagen, int idPropiedad) throws Exception {
+        if (imagen == null || imagen.isEmpty()) {
+            return;
+        }
+
+        String nombre = System.currentTimeMillis() + "_" + imagen.getOriginalFilename();
+        String ruta = "src/main/resources/static/images/";
+
+        File archivo = new File(ruta + nombre);
+        imagen.transferTo(archivo);
+
+        imagenDAO.guardarImagen(idPropiedad, "images/" + nombre);
+    }
 
     /* =========================
        HOME
@@ -79,9 +114,7 @@ public class AlohameController {
 
     @GetMapping("/admin")
     public String admin(HttpSession session) {
-        Map<String, Object> usuario = (Map<String, Object>) session.getAttribute("usuario");
-
-        if (usuario == null || !usuario.get("tipo_usuario").toString().equals("admin")) {
+        if (!esTipoUsuario(session, "admin")) {
             return "redirect:/login";
         }
 
@@ -90,27 +123,35 @@ public class AlohameController {
 
     @GetMapping("/propietario")
     public String propietario(HttpSession session, Model model) {
-        Map<String, Object> usuario = (Map<String, Object>) session.getAttribute("usuario");
-
-        if (usuario == null || !usuario.get("tipo_usuario").toString().equals("propietario")) {
+        if (!esTipoUsuario(session, "propietario")) {
             return "redirect:/login";
         }
 
-        int idUsuario = (int) usuario.get("id");
-        model.addAttribute("propiedades", propiedadDAO.obtenerPorUsuario(idUsuario));
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        Integer idUsuario = obtenerIdUsuario(usuario);
 
+        if (idUsuario == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("propiedades", propiedadDAO.obtenerPorUsuario(idUsuario));
         return "propietario";
     }
 
     @GetMapping("/cliente")
     public String cliente(HttpSession session, Model model) {
-        Map<String, Object> usuario = (Map<String, Object>) session.getAttribute("usuario");
+        Map<String, Object> usuario = getUsuarioSesion(session);
 
-        if (usuario == null) return "redirect:/login";
+        if (usuario == null) {
+            return "redirect:/login";
+        }
 
-        int idUsuario = Integer.parseInt(usuario.get("id").toString());
+        Integer idUsuario = obtenerIdUsuario(usuario);
+        if (idUsuario == null) {
+            return "redirect:/login";
+        }
+
         model.addAttribute("reservas", reservaDAO.obtenerPorUsuario(idUsuario));
-
         return "cliente";
     }
 
@@ -128,15 +169,19 @@ public class AlohameController {
     public String mostrarFormularioUsuario() {
         return "crearUsuario";
     }
+    @GetMapping("/registro")
+    public String mostrarRegistro() {
+        return "crearUsuario";
+    }
 
     @PostMapping("/guardarUsuario")
     public String guardarUsuario(@RequestParam String nombre,
                                  @RequestParam String email,
                                  @RequestParam String password,
                                  @RequestParam String telefono,
-                                 @RequestParam int id_tipo) {
+                                 @RequestParam String tipo_usuario) {
 
-        usuarioDAO.guardarUsuario(nombre, email, password, telefono, id_tipo);
+        usuarioDAO.guardarUsuario(nombre, email, password, telefono, tipo_usuario);
         return "redirect:/usuarios";
     }
 
@@ -158,7 +203,6 @@ public class AlohameController {
 
     @GetMapping("/propiedad/{id}")
     public String verPropiedad(@PathVariable int id, Model model) {
-
         model.addAttribute("propiedad", propiedadDAO.obtenerPorId(id));
         model.addAttribute("imagenes", imagenDAO.obtenerPorPropiedad(id));
         model.addAttribute("comentarios", comentarioDAO.obtenerPorPropiedad(id));
@@ -183,24 +227,17 @@ public class AlohameController {
                                    HttpSession session) {
 
         try {
-            Map<String, Object> usuario = (Map<String, Object>) session.getAttribute("usuario");
+            Map<String, Object> usuario = getUsuarioSesion(session);
             if (usuario == null) return "redirect:/login";
 
-            int idUsuario = Integer.parseInt(usuario.get("id").toString());
+            Integer idUsuario = obtenerIdUsuario(usuario);
+            if (idUsuario == null) return "redirect:/login";
 
             int idPropiedad = propiedadDAO.guardarPropiedadYDevolverId(
                     titulo, descripcion, precio, ubicacion, capacidad, idUsuario
             );
 
-            if (!imagen.isEmpty()) {
-                String nombre = System.currentTimeMillis() + "_" + imagen.getOriginalFilename();
-                String ruta = "src/main/resources/static/images/";
-
-                File archivo = new File(ruta + nombre);
-                imagen.transferTo(archivo);
-
-                imagenDAO.guardarImagen(idPropiedad, "images/" + nombre);
-            }
+            guardarImagenEnDisco(imagen, idPropiedad);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -228,13 +265,7 @@ public class AlohameController {
 
         try {
             for (MultipartFile img : imagenes) {
-                if (!img.isEmpty()) {
-                    String nombre = System.currentTimeMillis() + "_" + img.getOriginalFilename();
-                    File archivo = new File("src/main/resources/static/images/" + nombre);
-
-                    img.transferTo(archivo);
-                    imagenDAO.guardarImagen(id, "images/" + nombre);
-                }
+                guardarImagenEnDisco(img, id);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -260,26 +291,63 @@ public class AlohameController {
     }
 
     @GetMapping("/crearReserva")
-    public String mostrarFormularioReserva() {
+    public String mostrarFormularioReserva(@RequestParam(required = false) Integer id_propiedad,
+                                           HttpSession session,
+                                           Model model) {
+
+        Map<String, Object> usuario = getUsuarioSesion(session);
+
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        Integer idUsuario = obtenerIdUsuario(usuario);
+        if (idUsuario == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("id_usuario", idUsuario);
+        model.addAttribute("id_propiedad", id_propiedad);
+
         return "crearReserva";
     }
+
+    // ... existing code ...
 
     @PostMapping("/guardarReserva")
     public String guardarReserva(@RequestParam int id_usuario,
                                  @RequestParam int id_propiedad,
                                  @RequestParam String fecha_inicio,
                                  @RequestParam String fecha_fin,
+                                 HttpSession session,
                                  Model model) {
 
-        // validar solapamiento
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        Integer idUsuarioSesion = obtenerIdUsuario(usuario);
+        if (idUsuarioSesion == null) {
+            return "redirect:/login";
+        }
+
+        if (idUsuarioSesion != id_usuario) {
+            return "redirect:/login";
+        }
+
         if (!reservaDAO.estaDisponible(id_propiedad, fecha_inicio, fecha_fin)) {
             model.addAttribute("error", "❌ Ya está reservada en esas fechas");
+            model.addAttribute("id_usuario", id_usuario);
+            model.addAttribute("id_propiedad", id_propiedad);
             return "crearReserva";
         }
 
         reservaDAO.guardarReserva(id_usuario, id_propiedad, fecha_inicio, fecha_fin);
         return "redirect:/propiedad/" + id_propiedad;
     }
+
+// ... existing code ...
 
     /* =========================
        COMENTARIOS

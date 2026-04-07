@@ -9,7 +9,7 @@
 
 <h1>Lista de Propiedades</h1>
 
-<div th:if="${session.usuario != null and session.usuario['tipo'] == 'PROPIETARIO'}">
+<div th:if="${session.usuario != null and session.usuario['tipo_usuario'] == 'PROPIETARIO'}">
     <a href="/crear" class="btn btn-success mb-3">+ Crear propiedad</a>
 </div>
 
@@ -40,7 +40,7 @@
                     </a>
 
                     <!-- EDITAR -->
-                    <a th:if="${session.usuario != null and session.usuario['tipo'] == 'PROPIETARIO'}"
+                    <a th:if="${session.usuario != null and session.usuario['tipo_usuario'] == 'PROPIETARIO'}"
                        th:href="@{/editar/{id}(id=${propiedad['id']})}"
                        class="btn btn-warning">
                         Editar
