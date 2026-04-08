@@ -2,29 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>
-        <h1>👑 Zona Admin</h1>
-    </title>
+    <title>Zona Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div class="container mt-5">
 
-    <!-- TÍTULO -->
     <div class="text-center mb-4">
         <h1 class="fw-bold">👑 Panel de Administración</h1>
         <p class="text-muted">Bienvenido, Admin Alohame</p>
     </div>
 
-    <!-- BOTÓN LOGOUT -->
     <div class="text-center mb-4">
+        <a href="/" class="btn btn-outline-secondary rounded-pill px-4 me-2">
+            ⬅ Inicio
+        </a>
         <a href="/logout" class="btn btn-outline-danger rounded-pill px-4">
             🚪 Cerrar sesión
         </a>
     </div>
 
-    <!-- OPCIONES -->
     <div class="row text-center g-4">
 
         <div class="col-md-3">
@@ -66,8 +64,5 @@
     </div>
 
 </div>
-<button onclick="history.back()" class="btn btn-outline-secondary mt-3">
-    ⬅ Volver
-</button>
 </body>
 </html>

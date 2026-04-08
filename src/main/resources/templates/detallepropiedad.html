@@ -11,10 +11,11 @@
 
 <div class="container mt-4">
 
-  <!-- BOTÓN VOLVER -->
-  <a href="/" class="btn btn-outline-dark mb-3">⬅ Volver</a>
+  <div class="d-flex gap-2 mb-3">
+    <a href="/" class="btn btn-outline-dark">⬅ Inicio</a>
+    <a href="/propiedades" class="btn btn-outline-secondary">⬅ Ver propiedades</a>
+  </div>
 
-  <!-- TÍTULO -->
   <h2 class="fw-bold mb-3" th:text="${propiedad['titulo']}"></h2>
 
   <!-- GALERÍA DE IMÁGENES -->
@@ -80,30 +81,26 @@
 
     <div th:if="${session.usuario != null}">
       <a th:href="@{/crearReserva(id_propiedad=${propiedad['id']})}"
-         class="btn btn-success rounded-pill px-4">
+         class="btn btn-primary">
         Reservar ahora
       </a>
     </div>
 
   </div>
 
-  <h4>💬 Comentarios</h4>
+  <h4 class="mt-4">💬 Comentarios</h4>
 
   <div th:each="comentario : ${comentarios}" class="card mb-2 p-2">
-
     <p th:text="${comentario['comentario']}"></p>
-
     <small>
       ⭐ <span th:text="${comentario['puntuacion']}"></span>
     </small>
-
   </div>
-  <div th:if="${session.usuario != null and session.usuario['tipo_usuario'] == 'cliente'}">>
 
+  <div th:if="${session.usuario != null and session.usuario['tipo_usuario'] == 'cliente'}">
     <h5>Añadir comentario</h5>
 
-    <form action="/comentario/guardar" method="post">
-
+    <form action="/guardarComentario" method="post">
       <input type="hidden" name="id_propiedad" th:value="${propiedad['id']}">
 
       <textarea name="comentario" class="form-control mb-2" required></textarea>
@@ -117,9 +114,7 @@
       </select>
 
       <button class="btn btn-primary">Enviar</button>
-
     </form>
-
   </div>
 </div>
 

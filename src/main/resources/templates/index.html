@@ -7,28 +7,20 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-2">
 
-    <!-- LOGO -->
     <a class="navbar-brand d-flex align-items-center" href="/">
         <img src="/images/logo.png" alt="logo" style="height:120px;">
-
     </a>
 
-    <!-- BOTÓN MÓVIL -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- DERECHA -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-
         <div class="d-flex align-items-center gap-3">
 
-            <!-- SI NO LOGUEADO -->
             <div th:if="${session.usuario == null}" class="d-flex gap-2">
-
                 <a href="/login" class="btn btn-outline-dark rounded-pill px-3">
                     Iniciar sesión
                 </a>
@@ -36,31 +28,23 @@
                 <a href="/registro" class="btn btn-dark rounded-pill px-3">
                     Registrarse
                 </a>
-
             </div>
 
-            <!-- SI LOGUEADO -->
             <div th:if="${session.usuario != null}" class="d-flex align-items-center gap-3">
-
-                <!-- NOMBRE -->
                 <span class="fw-semibold text-dark"
                       th:text="${session.usuario['nombre']}"></span>
 
-                <!-- ICONO USUARIO -->
                 <div class="rounded-circle bg-dark text-white d-flex justify-content-center align-items-center"
                      style="width:35px; height:35px;">
                     👤
                 </div>
 
-                <!-- LOGOUT -->
                 <a href="/logout" class="btn btn-outline-danger rounded-pill btn-sm">
                     Salir
                 </a>
-
             </div>
 
         </div>
-
     </div>
 
 </nav>
@@ -112,11 +96,10 @@
 
     <div class="row">
 
-        <div class="col-12 col-md-6 col-lg-4" th:each="propiedad : ${propiedades}">
+        <div class="col-12 col-md-6 col-lg-4 mb-4" th:each="propiedad : ${propiedades}">
 
             <div class="card h-100 shadow-sm position-relative">
 
-                <!-- IMAGEN -->
                 <img th:if="${propiedad['url'] != null}"
                      th:src="@{'/' + ${propiedad['url']}}"
                      class="card-img-top"
@@ -124,24 +107,19 @@
 
                 <div class="card-body">
 
-                    <!-- TÍTULO -->
                     <h5 class="card-title" th:text="${propiedad['titulo']}"></h5>
 
-                    <!-- ⭐ VALORACIÓN -->
                     <p class="mb-1 text-warning small">
                         ⭐ <span th:text="${#numbers.formatDecimal(propiedad['media_puntuacion'], 1, 1)}"></span>
                     </p>
 
-                    <!-- 📍 UBICACIÓN -->
                     <p class="card-text text-muted mb-1">
                         📍 <span th:text="${propiedad['ubicacion']}"></span>
                     </p>
 
-                    <!-- 💰 PRECIO -->
                     <p class="fw-bold text-danger fs-5"
                        th:text="${propiedad['precio_noche']} + ' € / noche'"></p>
 
-                    <!-- BOTÓN -->
                     <a th:href="@{'/propiedad/' + ${propiedad['id']}}"
                        class="btn btn-dark w-100 rounded-pill py-2">
                         Ver detalle

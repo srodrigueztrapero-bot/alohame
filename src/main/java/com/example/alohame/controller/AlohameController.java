@@ -117,7 +117,6 @@ public class AlohameController {
         if (!esTipoUsuario(session, "admin")) {
             return "redirect:/login";
         }
-
         return "admin";
     }
 
@@ -126,10 +125,10 @@ public class AlohameController {
         if (!esTipoUsuario(session, "propietario")) {
             return "redirect:/login";
         }
-
         Map<String, Object> usuario = getUsuarioSesion(session);
-        Integer idUsuario = obtenerIdUsuario(usuario);
+        if (usuario == null) return "redirect:/login";
 
+        Integer idUsuario = obtenerIdUsuario(usuario);
         if (idUsuario == null) {
             return "redirect:/login";
         }
@@ -160,34 +159,16 @@ public class AlohameController {
     ========================= */
 
     @GetMapping("/usuarios")
-    public String listarUsuarios(Model model) {
+    public String listarUsuarios(HttpSession session, Model model) {
+        if (!esTipoUsuario(session, "admin")) {
+            return "redirect:/login";
+        }
+
         model.addAttribute("usuarios", usuarioDAO.listarUsuarios());
         return "usuarios";
     }
 
-    @GetMapping("/crearUsuario")
-    public String mostrarFormularioUsuario() {
-        return "crearUsuario";
-    }
-    @GetMapping("/registro")
-    public String mostrarRegistro() {
-        return "crearUsuario";
-    }
-
-    @PostMapping("/guardarUsuario")
-    public String guardarUsuario(@RequestParam String nombre,
-                                 @RequestParam String email,
-                                 @RequestParam String password,
-                                 @RequestParam String telefono,
-                                 @RequestParam String tipo_usuario) {
-
-        usuarioDAO.guardarUsuario(nombre, email, password, telefono, tipo_usuario);
-        return "redirect:/usuarios";
-    }
-
-    /* =========================
-       PROPIEDADES
-    ========================= */
+    
 
     @GetMapping("/propiedades")
     public String listarPropiedades(@RequestParam(required = false) String ciudad, Model model) {
@@ -280,6 +261,16 @@ public class AlohameController {
         return "redirect:/propietario";
     }
 
+    @GetMapping("/reserva/cancelar/{id}")
+    public String cancelarReserva(@PathVariable int id, HttpSession session) {
+        if (!esTipoUsuario(session, "admin")) {
+            return "redirect:/login";
+        }
+
+        reservaDAO.cancelarReserva(id);
+        return "redirect:/reservas";
+    }
+
     /* =========================
        RESERVAS
     ========================= */
@@ -306,17 +297,17 @@ public class AlohameController {
             return "redirect:/login";
         }
 
-        model.addAttribute("id_usuario", idUsuario);
-        model.addAttribute("id_propiedad", id_propiedad);
+        if (id_propiedad == null) {
+            return "redirect:/propiedades";
+        }
 
+        model.addAttribute("id_propiedad", id_propiedad);
         return "crearReserva";
     }
 
-    // ... existing code ...
 
     @PostMapping("/guardarReserva")
-    public String guardarReserva(@RequestParam int id_usuario,
-                                 @RequestParam int id_propiedad,
+    public String guardarReserva(@RequestParam int id_propiedad,
                                  @RequestParam String fecha_inicio,
                                  @RequestParam String fecha_fin,
                                  HttpSession session,
@@ -332,22 +323,16 @@ public class AlohameController {
             return "redirect:/login";
         }
 
-        if (idUsuarioSesion != id_usuario) {
-            return "redirect:/login";
-        }
-
         if (!reservaDAO.estaDisponible(id_propiedad, fecha_inicio, fecha_fin)) {
             model.addAttribute("error", "❌ Ya está reservada en esas fechas");
-            model.addAttribute("id_usuario", id_usuario);
             model.addAttribute("id_propiedad", id_propiedad);
             return "crearReserva";
         }
 
-        reservaDAO.guardarReserva(id_usuario, id_propiedad, fecha_inicio, fecha_fin);
-        return "redirect:/propiedad/" + id_propiedad;
+        reservaDAO.guardarReserva(idUsuarioSesion, id_propiedad, fecha_inicio, fecha_fin);
+        return "redirect:/cliente";
     }
 
-// ... existing code ...
 
     /* =========================
        COMENTARIOS

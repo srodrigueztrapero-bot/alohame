@@ -7,9 +7,12 @@
 </head>
 <body>
 
-<div class="container mt-5">
+<div class="container mt-5" style="max-width: 800px;">
 
-  <h2 class="mb-4 text-center">🏡 Añadir nueva propiedad</h2>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">🏡 Añadir nueva propiedad</h2>
+    <a href="/propietario" class="btn btn-outline-secondary">⬅ Volver</a>
+  </div>
 
   <form action="/guardarPropiedad" method="post" enctype="multipart/form-data" class="card p-4 shadow">
 
@@ -20,7 +23,7 @@
 
     <div class="mb-3">
       <label class="form-label">Descripción</label>
-      <textarea name="descripcion" class="form-control"></textarea>
+      <textarea name="descripcion" class="form-control" rows="4"></textarea>
     </div>
 
     <div class="row">
@@ -42,7 +45,7 @@
 
     <div class="mb-3">
       <label class="form-label">Imágenes</label>
-      <input type="file" name="imagenes" multiple class="form-control">
+      <input type="file" name="imagen" class="form-control">
     </div>
 
     <button type="submit" class="btn btn-dark w-100">
@@ -54,6 +57,4 @@
 </div>
 
 </body>
-<a href="/">
-  <button>➕ ⬅ Volver al inicio</button></a>
 </html>

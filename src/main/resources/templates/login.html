@@ -7,26 +7,35 @@
 </head>
 <body>
 
-<h1>Iniciar sesión</h1>
+<div class="container mt-5" style="max-width: 500px;">
 
-<form action="/login" method="post">
-    <label>Email:</label><br>
-    <input type="text" name="email" placeholder="Email"><br><br>
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Iniciar sesión</h1>
+        <p class="text-muted">Accede a tu cuenta en Alohame</p>
+    </div>
 
-    <label>Password:</label><br>
-    <input type="password" name="password" placeholder="Password"><br><br>
+    <form action="/login" method="post" class="card p-4 shadow-sm">
 
-    <button type="submit">Entrar</button>
-</form>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="Email" required>
+        </div>
 
-<!-- Mostrar error si login falla -->
-<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
+        </div>
 
-<br>
+        <button type="submit" class="btn btn-dark w-100">Entrar</button>
+    </form>
 
-<a href="/">
-    <button>⬅ Volver</button>
-</a>
+    <p th:if="${error}" th:text="${error}" class="text-danger text-center mt-3"></p>
+
+    <div class="text-center mt-3">
+        <a href="/" class="btn btn-outline-secondary">⬅ Volver al inicio</a>
+    </div>
+
+</div>
 
 </body>
 </html>

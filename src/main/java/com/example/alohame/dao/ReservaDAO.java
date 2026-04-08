@@ -26,9 +26,9 @@ public class ReservaDAO {
     public void guardarReserva(int idUsuario, int idPropiedad, String fechaInicio, String fechaFin) {
         String sql = """
                 INSERT INTO reservas
-                    (id_usuario, id_propiedad, fecha_inicio, fecha_fin, precio_total, estado)
+                    (id_usuario, id_propiedad, fecha_inicio, fecha_fin, estado)
                 VALUES
-                    (?, ?, ?, ?, 0, 'confirmada')
+                    (?, ?, ?, ?, 'confirmada')
                 """;
 
         jdbcTemplate.update(sql, idUsuario, idPropiedad, fechaInicio, fechaFin);
@@ -70,5 +70,16 @@ public class ReservaDAO {
         );
 
         return count == null || count == 0;
+    }
+
+    // CANCELAR RESERVA
+    public void cancelarReserva(int idReserva) {
+        String sql = """
+                UPDATE reservas
+                SET estado = 'cancelada'
+                WHERE id = ?
+                """;
+
+        jdbcTemplate.update(sql, idReserva);
     }
 }

@@ -7,53 +7,60 @@
 </head>
 <body>
 
-<h1>Lista de Usuarios</h1>
+<div class="container mt-4">
 
-<a href="/crearUsuario" class="btn btn-success mb-3">
-    ➕ Añadir usuario
-</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Lista de Usuarios</h1>
+        <div class="d-flex gap-2">
+            <a href="/admin" class="btn btn-outline-secondary">⬅ Panel admin</a>
+            <a href="/logout" class="btn btn-outline-danger">Salir</a>
+        </div>
+    </div>
 
-<div class="table-responsive">
+    <a href="/crearUsuario" class="btn btn-success mb-3">
+        ➕ Añadir usuario
+    </a>
 
-    <table class="table table-hover table-striped align-middle">
+    <div class="table-responsive">
 
-        <thead class="table-dark">
-        <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Fecha</th>
-            <th>Tipo</th>
-        </tr>
-        </thead>
+        <table class="table table-hover table-striped align-middle">
 
-        <tbody>
+            <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+            </tr>
+            </thead>
 
-        <tr th:each="usuario : ${usuarios}">
+            <tbody>
 
-            <td th:text="${usuario['nombre']}"></td>
+            <tr th:each="usuario : ${usuarios}">
 
-            <td th:text="${usuario['email']}"></td>
+                <td th:text="${usuario['nombre']}"></td>
 
-            <td th:text="${usuario['telefono']}"></td>
+                <td th:text="${usuario['email']}"></td>
 
-            <td th:text="${usuario['fecha_registro']}"></td>
+                <td th:text="${usuario['telefono']}"></td>
 
-            <td>
-                        <span class="badge bg-primary"
-                              th:text="${usuario['tipo_usuario']}"></span>
-            </td>
+                <td th:text="${usuario['fecha_registro']}"></td>
 
-        </tr>
+                <td>
+                    <span class="badge bg-primary"
+                          th:text="${usuario['tipo_usuario']}"></span>
+                </td>
 
-        </tbody>
+            </tr>
 
-    </table>
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
-<button onclick="history.back()" class="btn btn-outline-secondary mt-3">
-    ⬅ Volver
-</button>
 </body>
 </html>

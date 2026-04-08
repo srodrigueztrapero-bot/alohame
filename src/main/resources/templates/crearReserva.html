@@ -6,28 +6,33 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-<h1>Nueva Reserva</h1>
+<div class="container mt-4">
+  <h1>Nueva Reserva</h1>
 
 <form action="/guardarReserva" method="post">
 
-  <label>ID Usuario:</label>
-  <input type="number" name="id_usuario"><br>
+  <input type="hidden" name="id_propiedad" th:value="${id_propiedad}">
 
-  <label>ID Propiedad:</label>
-  <input type="number" name="id_propiedad"><br>
+  <div class="mb-3">
+    <label class="form-label">Fecha inicio:</label>
+    <input type="date" name="fecha_inicio" class="form-control" required>
+  </div>
 
-  <label>Fecha inicio:</label>
-  <input type="date" name="fecha_inicio"><br>
+  <div class="mb-3">
+    <label class="form-label">Fecha fin:</label>
+    <input type="date" name="fecha_fin" class="form-control" required>
+  </div>
 
-  <label>Fecha fin:</label>
-  <input type="date" name="fecha_fin"><br>
+  <button type="submit" class="btn btn-primary">Guardar</button>
+    <a th:href="@{/propiedad/{id}(id=${id_propiedad})}" class="btn btn-outline-secondary ms-2">
+      ⬅ Volver al detalle
+    </a>
+  </form>
 
-  <button type="submit">Guardar</button>
-
-</form>
-<div th:if="${error}" class="alert alert-danger mt-3">
-  <span th:text="${error}"></span>
+  <div th:if="${error}" class="alert alert-danger mt-3">
+    <span th:text="${error}"></span>
+  </div>
 </div>
+
 </body>
 </html>
