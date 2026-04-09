@@ -18,8 +18,14 @@ public class ImagenDAO {
         String sql = "SELECT * FROM imagenes WHERE id_propiedad = ?";
         return jdbcTemplate.queryForList(sql, idPropiedad);
     }
+    
     public void guardarImagen(int idPropiedad, String url) {
         String sql = "INSERT INTO imagenes (id_propiedad, url) VALUES (?, ?)";
         jdbcTemplate.update(sql, idPropiedad, url);
+    }
+    
+    public void eliminarPorPropiedad(int idPropiedad) {
+        String sql = "DELETE FROM imagenes WHERE id_propiedad = ?";
+        jdbcTemplate.update(sql, idPropiedad);
     }
 }

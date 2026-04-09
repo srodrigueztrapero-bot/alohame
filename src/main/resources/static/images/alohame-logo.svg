@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 65 175 130" role="img" aria-labelledby="title desc">
+  <title id="title">Alohame logo</title>
+  <desc id="desc">Casa con dos palmeras tropicales.</desc>
+
+  <!-- Palmera izquierda -->
+  <g transform="translate(52 80)">
+    <path d="M28 86c8-16 10-30 8-44" stroke="#8b5a2b" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M38 41c12-10 26-10 39-2-14 2-24 8-30 17" fill="#16a34a"/>
+    <path d="M36 42c-2-15 5-27 19-37 1 14-2 24-10 34" fill="#22c55e"/>
+    <path d="M35 42c-12-9-15-22-11-39 11 9 17 20 18 35" fill="#15803d"/>
+  </g>
+
+  <!-- Palmera derecha -->
+  <g transform="translate(165 78) scale(0.9)">
+    <path d="M24 90c7-14 9-28 7-42" stroke="#8b5a2b" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M34 45c10-8 23-8 35-1-12 2-22 7-27 15" fill="#16a34a"/>
+    <path d="M32 46c-2-13 4-25 17-34 1 12-2 22-9 30" fill="#22c55e"/>
+    <path d="M31 46c-11-8-14-20-10-35 10 8 16 18 17 31" fill="#15803d"/>
+  </g>
+
+  <!-- Casa -->
+  <g transform="translate(79 84)">
+    <path d="M8 44 49 14l41 30v56H8z" fill="#ffffff"/>
+    <path d="M0 45 49 8l49 37" fill="none" stroke="#e2e8f0" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="39" y="62" width="20" height="38" rx="3" fill="#334155"/>
+    <rect x="18" y="55" width="14" height="14" rx="2" fill="#7dd3fc"/>
+    <rect x="66" y="55" width="14" height="14" rx="2" fill="#7dd3fc"/>
+    <rect x="42" y="30" width="14" height="9" rx="1.5" fill="#fb7185"/>
+  </g>
+</svg>
+

@@ -38,14 +38,21 @@ public class ReservaDAO {
     public List<Map<String, Object>> obtenerPorUsuario(int idUsuario) {
         String sql = """
                 SELECT r.id,
+                       r.id_propiedad,
                        r.fecha_inicio,
                        r.fecha_fin,
                        r.estado,
+                       p.id,
                        p.titulo,
-                       p.ubicacion
+                       p.descripcion,
+                       p.ubicacion,
+                       p.precio_noche,
+                       p.capacidad,
+                       (SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url
                 FROM reservas r
                 JOIN propiedades p ON r.id_propiedad = p.id
                 WHERE r.id_usuario = ?
+                ORDER BY r.fecha_inicio DESC
                 """;
 
         return jdbcTemplate.queryForList(sql, idUsuario);

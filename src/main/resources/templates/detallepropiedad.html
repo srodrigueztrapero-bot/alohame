@@ -2,9 +2,48 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Detalle propiedad</title>
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/css/style.css}">
+  <style>
+    .header-detalle {
+      position: relative;
+    }
+    .btn-favorito-grande {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      background-color: rgba(255,255,255,0.9);
+      border: 2px solid #ddd;
+      z-index: 10;
+      font-size: 1.5rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-favorito-grande:hover {
+      background-color: rgba(255,255,255,1);
+      transform: scale(1.1);
+    }
+    .btn-favorito-grande.is-favorito {
+      color: #ff6b6b;
+      border-color: #ff6b6b;
+    }
+    .precio-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+    }
+    .acciones-reserva {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+  </style>
 </head>
 
 <body>
@@ -12,13 +51,22 @@
 <div class="container mt-4">
 
   <div class="d-flex gap-2 mb-3">
-    <a href="/" class="btn btn-outline-dark">⬅ Inicio</a>
-    <a href="/propiedades" class="btn btn-outline-secondary">⬅ Ver propiedades</a>
+    <a href="/" class="btn btn-outline-dark">Inicio</a>
+    <a href="/propiedades" class="btn btn-outline-secondary">Ver propiedades</a>
+    <a href="/favoritos" class="btn btn-outline-danger">Mis favoritos <span class="badge text-bg-light ms-1" id="favoritos-count" th:text="${favoritosCount}">0</span></a>
   </div>
 
-  <h2 class="fw-bold mb-3" th:text="${propiedad['titulo']}"></h2>
+  <div class="header-detalle">
+    <h2 class="fw-bold mb-3" th:text="${propiedad['titulo']}"></h2>
+    <button class="btn-favorito-grande"
+            th:id="'favorito-detalle-' + ${propiedad['id']}"
+            th:onclick="'toggleFavoritoDetalle(' + ${propiedad['id']} + ')'"
+            title="Agregar a favoritos">
+      ♡
+    </button>
+  </div>
 
-  <!-- GALERÍA DE IMÁGENES -->
+  <!-- GALERIA DE IMAGENES -->
   <div id="carouselPropiedad" class="carousel slide mb-4">
 
     <div class="carousel-inner">
@@ -33,13 +81,13 @@
 
     </div>
 
-    <!-- BOTÓN ANTERIOR -->
+    <!-- BOTON ANTERIOR -->
     <button class="carousel-control-prev" type="button"
             data-bs-target="#carouselPropiedad" data-bs-slide="prev">
       <span class="carousel-control-prev-icon"></span>
     </button>
 
-    <!-- BOTÓN SIGUIENTE -->
+    <!-- BOTON SIGUIENTE -->
     <button class="carousel-control-next" type="button"
             data-bs-target="#carouselPropiedad" data-bs-slide="next">
       <span class="carousel-control-next-icon"></span>
@@ -54,70 +102,216 @@
     </div>
   </div>
 
-  <!-- INFO -->
-  <div class="card p-4 shadow-sm">
+  <!-- INFO PRINCIPAL -->
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card p-4 shadow-sm mb-4">
 
-    <p class="text-muted" th:text="${propiedad['ubicacion']}"></p>
+        <p class="text-muted text-lg" th:text="${propiedad['ubicacion']}"></p>
 
-    <p th:text="${propiedad['descripcion']}"></p>
+        <p class="lead" th:text="${propiedad['descripcion']}"></p>
 
-    <p><strong>Capacidad:</strong>
-      <span th:text="${propiedad['capacidad']}"></span> personas
-    </p>
+        <hr />
 
-    <h4 class="text-primary fw-bold"
-        th:text="${propiedad['precio_noche']} + ' € / noche'"></h4>
+        <p>
+          <strong>Capacidad:</strong>
+          <span th:text="${propiedad['capacidad']}"></span> personas
+        </p>
 
-  </div>
+      </div>
 
+      <!-- COMENTARIOS -->
+      <div class="card p-4 shadow-sm">
+        <h4>Comentarios y valoraciones</h4>
 
-  <div class="mt-4">
+        <div th:if="${comentarios.isEmpty()}" class="alert alert-info">
+          Aun no hay comentarios para esta propiedad
+        </div>
 
-    <div th:if="${session.usuario == null}">
-      <a href="/login" class="btn btn-dark rounded-pill px-4">
-        Inicia sesión para reservar
-      </a>
+        <div th:each="comentario : ${comentarios}" class="mb-3 pb-3 border-bottom">
+          <div class="d-flex justify-content-between">
+            <strong>Usuario</strong>
+            <span class="text-warning">
+              ⭐ <span th:text="${comentario['puntuacion']}"></span>/5
+            </span>
+          </div>
+          <p class="text-muted small" th:text="${comentario['fecha']}"></p>
+          <p th:text="${comentario['comentario']}"></p>
+        </div>
+
+        <div th:if="${session.usuario != null and session.usuario['tipo_usuario'] == 'cliente'}">
+          <h5 class="mt-4">Anadir comentario</h5>
+
+          <form action="/guardarComentario" method="post">
+            <input type="hidden" name="id_propiedad" th:value="${propiedad['id']}">
+            <input type="hidden" name="id_usuario" th:value="${session.usuario['id']}">
+
+            <textarea name="comentario" class="form-control mb-2" placeholder="Tu comentario..." required></textarea>
+
+            <select name="puntuacion" class="form-select mb-2">
+              <option value="1">1 estrella</option>
+              <option value="2">2 estrellas</option>
+              <option value="3">3 estrellas</option>
+              <option value="4">4 estrellas</option>
+              <option value="5" selected>5 estrellas</option>
+            </select>
+
+            <button class="btn btn-primary">Enviar comentario</button>
+          </form>
+        </div>
+      </div>
     </div>
 
-    <div th:if="${session.usuario != null}">
-      <a th:href="@{/crearReserva(id_propiedad=${propiedad['id']})}"
-         class="btn btn-primary">
-        Reservar ahora
-      </a>
+    <div class="col-md-4">
+      <!-- CARD DE RESERVA -->
+      <div class="precio-card">
+        <h5>Precio</h5>
+        <h2 class="mb-0" th:text="'€' + ${#numbers.formatDecimal(propiedad['precio_noche'], 1, 2)} + ' / noche'"></h2>
+      </div>
+
+      <div class="acciones-reserva">
+        <div th:if="${session.usuario == null}" class="w-100">
+          <a href="/login" class="btn btn-primary btn-lg w-100">
+            Inicia sesion para reservar
+          </a>
+        </div>
+
+        <div th:if="${session.usuario != null}" class="w-100">
+          <a th:href="@{/crearReserva(id_propiedad=${propiedad['id']})}"
+             class="btn btn-primary btn-lg w-100">
+            Reservar ahora
+          </a>
+        </div>
+      </div>
+
+      <!-- PROPIEDADES RECOMENDADAS -->
+      <div class="mt-4">
+        <h5>Propiedades similares</h5>
+        <div class="list-group">
+          <a th:each="prop : ${propiedades}"
+             th:if="${prop['id'] != propiedad['id']}"
+             th:href="@{/propiedad/{id}(id=${prop['id']})}"
+             class="list-group-item list-group-item-action">
+            <h6 th:text="${prop['titulo']}"></h6>
+            <small class="text-muted" th:text="'€' + ${prop['precio_noche']} + ' / noche'"></small>
+          </a>
+        </div>
+      </div>
     </div>
-
   </div>
 
-  <h4 class="mt-4">💬 Comentarios</h4>
-
-  <div th:each="comentario : ${comentarios}" class="card mb-2 p-2">
-    <p th:text="${comentario['comentario']}"></p>
-    <small>
-      ⭐ <span th:text="${comentario['puntuacion']}"></span>
-    </small>
-  </div>
-
-  <div th:if="${session.usuario != null and session.usuario['tipo_usuario'] == 'cliente'}">
-    <h5>Añadir comentario</h5>
-
-    <form action="/guardarComentario" method="post">
-      <input type="hidden" name="id_propiedad" th:value="${propiedad['id']}">
-
-      <textarea name="comentario" class="form-control mb-2" required></textarea>
-
-      <select name="puntuacion" class="form-select mb-2">
-        <option value="1">1 ⭐</option>
-        <option value="2">2 ⭐</option>
-        <option value="3">3 ⭐</option>
-        <option value="4">4 ⭐</option>
-        <option value="5">5 ⭐</option>
-      </select>
-
-      <button class="btn btn-primary">Enviar</button>
-    </form>
-  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function updateFavoritosCount(count) {
+    const badge = document.getElementById('favoritos-count');
+    if (!badge) return;
+    const parsed = Number(count);
+    badge.textContent = Number.isNaN(parsed) ? '0' : String(parsed);
+}
+
+function setFavoritoDetalleVisual(btn, esFavorito) {
+    if (!btn) return;
+    btn.classList.toggle('is-favorito', esFavorito);
+    btn.title = esFavorito ? 'Eliminar de favoritos' : 'Agregar a favoritos';
+    btn.textContent = esFavorito ? '♥' : '♡';
+}
+
+function showToast(message, type) {
+    const toastContainer = document.getElementById('toast-container') || createToastContainer();
+    const toast = document.createElement('div');
+    toast.className = `alert ${type === 'error' ? 'alert-danger' : 'alert-success'} shadow-sm mb-2`;
+    toast.style.minWidth = '260px';
+    toast.textContent = message;
+    toastContainer.appendChild(toast);
+    setTimeout(() => toast.remove(), 2200);
+}
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.position = 'fixed';
+    container.style.top = '16px';
+    container.style.right = '16px';
+    container.style.zIndex = '2000';
+    document.body.appendChild(container);
+    return container;
+}
+
+function toggleFavoritoDetalle(idPropiedad) {
+    const btn = document.getElementById('favorito-detalle-' + idPropiedad);
+
+    if (btn.classList.contains('is-favorito')) {
+        eliminarDeFavoritosDetalle(idPropiedad);
+    } else {
+        agregarAFavoritosDetalle(idPropiedad);
+    }
+}
+
+function agregarAFavoritosDetalle(idPropiedad) {
+    fetch('/favorito/agregar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'idPropiedad=' + idPropiedad
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const btn = document.getElementById('favorito-detalle-' + idPropiedad);
+            setFavoritoDetalleVisual(btn, true);
+            updateFavoritosCount(data.favoritosCount);
+            showToast('Agregado a favoritos', 'success');
+        } else {
+            if (data.message.includes('iniciar sesion')) {
+                if (confirm('Debes iniciar sesion para usar favoritos. Ir al login?')) {
+                    window.location.href = '/login';
+                }
+            } else {
+                showToast(data.message || 'No se pudo agregar favorito', 'error');
+            }
+        }
+    })
+    .catch(() => showToast('Error de red al agregar favorito', 'error'));
+}
+
+function eliminarDeFavoritosDetalle(idPropiedad) {
+    fetch('/favorito/eliminar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'idPropiedad=' + idPropiedad
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const btn = document.getElementById('favorito-detalle-' + idPropiedad);
+            setFavoritoDetalleVisual(btn, false);
+            updateFavoritosCount(data.favoritosCount);
+            showToast('Eliminado de favoritos', 'success');
+        } else {
+            showToast(data.message || 'No se pudo eliminar favorito', 'error');
+        }
+    })
+    .catch(() => showToast('Error de red al eliminar favorito', 'error'));
+}
+
+// Cargar estado de favorito al cargar la pagina
+document.addEventListener('DOMContentLoaded', function() {
+    const realId = window.location.pathname.split('/').pop();
+    const btn = document.getElementById('favorito-detalle-' + realId);
+    if (!btn) return;
+
+    fetch('/favorito/verificar/' + realId)
+        .then(response => response.json())
+        .then(data => setFavoritoDetalleVisual(btn, !!data.esFavorito))
+        .catch(() => setFavoritoDetalleVisual(btn, false));
+});
+</script>
+
 </body>
 </html>

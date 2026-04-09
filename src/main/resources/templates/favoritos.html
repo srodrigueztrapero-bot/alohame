@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mis Favoritos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .propiedad-card {
+            border: 1px solid #dee2e6;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            height: 100%;
+        }
+        .propiedad-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .propiedad-imagen {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+        .precio-noche {
+            font-size: 1.25rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+        .ubicacion-badge {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        .btn-favorito {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background-color: rgba(255,255,255,0.9);
+            border: none;
+            z-index: 10;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+        .btn-favorito:hover {
+            background-color: rgba(255,255,255,1);
+            transform: scale(1.1);
+        }
+        .btn-favorito.is-favorito {
+            color: #ff6b6b;
+        }
+        .sin-favoritos {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        .sin-favoritos-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Mis favoritos <span class="badge text-bg-danger ms-1" id="favoritos-count" th:text="${favoritosCount}">0</span></h2>
+        <div class="d-flex gap-2">
+            <a href="/propiedades" class="btn btn-outline-secondary">Ver todas</a>
+            <a href="/cliente" class="btn btn-outline-secondary">Mis reservas</a>
+            <a href="/logout" class="btn btn-outline-danger">Salir</a>
+        </div>
+    </div>
+
+    <!-- Sin favoritos -->
+    <div th:if="${propiedades.isEmpty()}" class="sin-favoritos">
+        <div class="sin-favoritos-icon">♡</div>
+        <h4>No tienes favoritos aun</h4>
+        <p class="text-muted mb-3">Comienza a guardar tus propiedades favoritas</p>
+        <a href="/propiedades" class="btn btn-primary">Explorar propiedades</a>
+    </div>
+
+    <!-- Grid de favoritos -->
+    <div class="row" id="favoritos-grid" th:unless="${propiedades.isEmpty()}">
+        <div class="col-12 col-md-6 col-lg-4 mb-4" th:each="p : ${propiedades}" th:attr="data-propiedad-id=${p['id']}">
+            <div class="card propiedad-card">
+
+                <!-- Imagen -->
+                <img th:if="${p['url']}"
+                     th:src="@{'/' + ${p['url']}}"
+                     class="propiedad-imagen"
+                     alt="Imagen de propiedad" />
+                <div th:if="${p['url'] == null}" class="propiedad-imagen bg-light d-flex align-items-center justify-content-center">
+                    <span class="text-muted">Sin imagen</span>
+                </div>
+
+                <!-- Boton de favorito -->
+                <button class="btn-favorito is-favorito"
+                        th:onclick="'eliminarDeFavoritos(' + ${p['id']} + ')'"
+                        title="Eliminar de favoritos">
+                    ♥
+                </button>
+
+                <div class="card-body d-flex flex-column">
+
+                    <!-- Titulo -->
+                    <h5 class="card-title" th:text="${p['titulo']}"></h5>
+
+                    <!-- Ubicacion -->
+                    <p class="text-muted mb-2 small">
+                        <span th:text="${p['ubicacion']}"></span>
+                    </p>
+
+                    <!-- Capacidad y precio -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted small">
+                            <span th:text="${p['capacidad']}"></span> personas
+                        </span>
+                        <span class="precio-noche" th:text="'€' + ${#numbers.formatDecimal(p['precio_noche'], 1, 2)}"></span>
+                    </div>
+
+                    <!-- Enlace a detalles -->
+                    <a th:href="@{/propiedad/{id}(id=${p['id']})}"
+                       class="btn btn-outline-primary btn-sm mt-auto">Ver detalles</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function updateFavoritosCount(count) {
+    const badge = document.getElementById('favoritos-count');
+    if (!badge) return;
+    const parsed = Number(count);
+    badge.textContent = Number.isNaN(parsed) ? '0' : String(parsed);
+}
+
+function showToast(message, type) {
+    const toastContainer = document.getElementById('toast-container') || createToastContainer();
+    const toast = document.createElement('div');
+    toast.className = `alert ${type === 'error' ? 'alert-danger' : 'alert-success'} shadow-sm mb-2`;
+    toast.style.minWidth = '260px';
+    toast.textContent = message;
+    toastContainer.appendChild(toast);
+    setTimeout(() => toast.remove(), 2200);
+}
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.position = 'fixed';
+    container.style.top = '16px';
+    container.style.right = '16px';
+    container.style.zIndex = '2000';
+    document.body.appendChild(container);
+    return container;
+}
+
+function renderEmptyStateIfNeeded() {
+    const grid = document.getElementById('favoritos-grid');
+    if (!grid) return;
+
+    const cards = grid.querySelectorAll('[data-propiedad-id]');
+    if (cards.length > 0) return;
+
+    const empty = document.createElement('div');
+    empty.className = 'sin-favoritos';
+    empty.innerHTML = `
+        <div class="sin-favoritos-icon">♡</div>
+        <h4>No tienes favoritos aun</h4>
+        <p class="text-muted mb-3">Comienza a guardar tus propiedades favoritas</p>
+        <a href="/propiedades" class="btn btn-primary">Explorar propiedades</a>
+    `;
+
+    grid.replaceWith(empty);
+}
+
+function eliminarDeFavoritos(idPropiedad) {
+    fetch('/favorito/eliminar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'idPropiedad=' + idPropiedad
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const cardCol = document.querySelector(`[data-propiedad-id="${idPropiedad}"]`);
+            if (cardCol) {
+                cardCol.remove();
+            }
+            updateFavoritosCount(data.favoritosCount);
+            renderEmptyStateIfNeeded();
+            showToast('Eliminado de favoritos', 'success');
+        } else {
+            showToast(data.message || 'No se pudo eliminar favorito', 'error');
+        }
+    })
+    .catch(() => showToast('Error de red al eliminar favorito', 'error'));
+}
+</script>
+
+</body>
+</html>
+

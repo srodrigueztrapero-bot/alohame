@@ -2,54 +2,120 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Zona Cliente</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .propiedad-card {
+            border: 1px solid #dee2e6;
+            transition: transform 0.2s;
+        }
+        .propiedad-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .propiedad-imagen {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+        .reserva-fecha {
+            background-color: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .estado-confirmada {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .estado-cancelada {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .precio-noche {
+            font-size: 1.25rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
 </head>
-
 <body>
-
 <div class="container mt-4">
-
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">📅 Mis reservas</h2>
+        <h2 class="mb-0">Mis reservas</h2>
         <div class="d-flex gap-2">
-            <a href="/" class="btn btn-outline-secondary">⬅ Inicio</a>
+            <a href="/favoritos" class="btn btn-outline-danger">Mis favoritos <span class="badge text-bg-light ms-1" th:text="${favoritosCount}">0</span></a>
+            <a href="/propiedades" class="btn btn-outline-secondary">Ver propiedades</a>
+            <a href="/" class="btn btn-outline-secondary">Inicio</a>
             <a href="/logout" class="btn btn-outline-danger">Salir</a>
         </div>
     </div>
 
     <div class="row">
-
         <div class="col-12 col-md-6 col-lg-4 mb-4" th:each="r : ${reservas}">
+            <div class="card h-100 shadow-sm propiedad-card">
+                <!-- Imagen de la propiedad -->
+                <img th:if="${r['url'] != null}"
+                     th:src="@{'/' + ${r['url']}}"
+                     class="propiedad-imagen"
+                     alt="Imagen de propiedad" />
+                <div th:if="${r['url'] == null}" class="propiedad-imagen bg-light d-flex align-items-center justify-content-center">
+                    <span class="text-muted">Sin imagen</span>
+                </div>
 
-            <div class="card h-100 shadow-sm p-3">
+                <div class="card-body d-flex flex-column">
+                    <!-- Titulo de la propiedad -->
+                    <h5 class="card-title" th:text="${r['titulo']}"></h5>
 
-                <h5 th:text="${r['titulo']}"></h5>
+                    <!-- Ubicacion -->
+                    <p class="text-muted mb-2">
+                        <span th:text="${r['ubicacion']}"></span>
+                    </p>
 
-                <p class="text-muted" th:text="${r['ubicacion']}"></p>
+                    <!-- Descripcion -->
+                    <p class="text-secondary mb-2" th:text="${#strings.abbreviate(r['descripcion'], 100)}"></p>
 
-                <p>
-                    <strong>Desde:</strong>
-                    <span th:text="${r['fecha_inicio']}"></span>
-                </p>
+                    <!-- Capacidad -->
+                    <p class="mb-2">
+                        <strong>Capacidad:</strong>
+                        <span th:text="${r['capacidad']}"></span> personas
+                    </p>
 
-                <p>
-                    <strong>Hasta:</strong>
-                    <span th:text="${r['fecha_fin']}"></span>
-                </p>
+                    <!-- Precio por noche -->
+                    <p class="mb-3">
+                        <strong>Precio por noche:</strong>
+                        <span class="precio-noche" th:text="'€' + ${#numbers.formatDecimal(r['precio_noche'], 1, 2)}"></span>
+                    </p>
 
-                <p>
-                    <strong>Estado:</strong>
-                    <span th:text="${r['estado']}"></span>
-                </p>
+                    <!-- Fechas de la reserva -->
+                    <div class="reserva-fecha">
+                        <p class="mb-1">
+                            <strong>Desde:</strong>
+                            <span th:text="${r['fecha_inicio']}"></span>
+                        </p>
+                        <p class="mb-0">
+                            <strong>Hasta:</strong>
+                            <span th:text="${r['fecha_fin']}"></span>
+                        </p>
+                    </div>
 
+                    <!-- Estado de la reserva -->
+                    <p class="mt-3 mb-0">
+                        <strong>Estado:</strong>
+                        <span class="badge"
+                              th:class="'badge ' + (${r['estado']} == 'confirmada' ? 'estado-confirmada' : 'estado-cancelada')"
+                              th:text="${r['estado']}"></span>
+                    </p>
+
+                    <!-- Enlace a detalles de propiedad -->
+                    <a th:href="@{/propiedad/{id}(id=${r['id_propiedad']})}"
+                       class="btn btn-primary btn-sm mt-3 w-100">Ver propiedad</a>
+                </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 </body>

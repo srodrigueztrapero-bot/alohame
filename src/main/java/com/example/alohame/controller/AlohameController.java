@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -23,6 +24,8 @@ public class AlohameController {
     @Autowired private ImagenDAO imagenDAO;
     @Autowired private ReservaDAO reservaDAO;
     @Autowired private ComentarioDAO comentarioDAO;
+    @Autowired private FavoritoDAO favoritoDAO;
+
 
     /* =========================
        HELPERS
@@ -46,16 +49,41 @@ public class AlohameController {
         return Integer.parseInt(usuario.get("id").toString());
     }
 
+    private int obtenerContadorFavoritosSesion(HttpSession session) {
+        if (session == null) {
+            return 0;
+        }
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        Integer idUsuario = obtenerIdUsuario(usuario);
+        if (idUsuario == null) {
+            return 0;
+        }
+        return favoritoDAO.contarFavoritos(idUsuario);
+    }
+
+    private void agregarContadorFavoritos(Model model, HttpSession session) {
+        model.addAttribute("favoritosCount", obtenerContadorFavoritosSesion(session));
+    }
+
     private void guardarImagenEnDisco(MultipartFile imagen, int idPropiedad) throws Exception {
         if (imagen == null || imagen.isEmpty()) {
             return;
         }
 
         String nombre = System.currentTimeMillis() + "_" + imagen.getOriginalFilename();
-        String ruta = "src/main/resources/static/images/";
+        
+        // Spring sirve los recursos estáticos desde target/classes/static durante ejecución
+        String rutaBase = System.getProperty("user.dir") + "/target/classes/static/images/";
+        File rutaDir = new File(rutaBase);
+        
+        if (!rutaDir.exists()) {
+            rutaDir.mkdirs();
+        }
 
-        File archivo = new File(ruta + nombre);
+        File archivo = new File(rutaDir, nombre);
         imagen.transferTo(archivo);
+        
+        System.out.println("✅ Imagen guardada en: " + archivo.getAbsolutePath());
 
         imagenDAO.guardarImagen(idPropiedad, "images/" + nombre);
     }
@@ -108,6 +136,26 @@ public class AlohameController {
         return "redirect:/login";
     }
 
+    @GetMapping("/registro")
+    public String mostrarRegistro() {
+        return "crearusuario";
+    }
+
+    @PostMapping("/guardarUsuario")
+    public String guardarUsuario(@RequestParam String nombre,
+                                 @RequestParam String email,
+                                 @RequestParam String password,
+                                 @RequestParam String telefono,
+                                 @RequestParam(required = false, defaultValue = "cliente") String tipo_usuario) {
+        try {
+            usuarioDAO.guardarUsuario(nombre, email, password, telefono, tipo_usuario);
+            return "redirect:/login?registered=true";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/registro?error=true";
+        }
+    }
+
     /* =========================
        ZONAS PROTEGIDAS
     ========================= */
@@ -151,6 +199,7 @@ public class AlohameController {
         }
 
         model.addAttribute("reservas", reservaDAO.obtenerPorUsuario(idUsuario));
+        agregarContadorFavoritos(model, session);
         return "cliente";
     }
 
@@ -171,7 +220,7 @@ public class AlohameController {
     
 
     @GetMapping("/propiedades")
-    public String listarPropiedades(@RequestParam(required = false) String ciudad, Model model) {
+    public String listarPropiedades(@RequestParam(required = false) String ciudad, Model model, HttpSession session) {
 
         if (ciudad != null && !ciudad.isEmpty()) {
             model.addAttribute("propiedades", propiedadDAO.buscarPorCiudad(ciudad));
@@ -179,15 +228,18 @@ public class AlohameController {
             model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConImagen());
         }
 
+        agregarContadorFavoritos(model, session);
+
         return "propiedades";
     }
 
     @GetMapping("/propiedad/{id}")
-    public String verPropiedad(@PathVariable int id, Model model) {
+    public String verPropiedad(@PathVariable int id, Model model, HttpSession session) {
         model.addAttribute("propiedad", propiedadDAO.obtenerPorId(id));
         model.addAttribute("imagenes", imagenDAO.obtenerPorPropiedad(id));
         model.addAttribute("comentarios", comentarioDAO.obtenerPorPropiedad(id));
         model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConMedia());
+        agregarContadorFavoritos(model, session);
 
         return "detallePropiedad";
     }
@@ -204,7 +256,7 @@ public class AlohameController {
                                    @RequestParam double precio,
                                    @RequestParam String ubicacion,
                                    @RequestParam int capacidad,
-                                   @RequestParam("imagen") MultipartFile imagen,
+                                   @RequestParam("imagenes") MultipartFile[] imagenes,
                                    HttpSession session) {
 
         try {
@@ -218,7 +270,11 @@ public class AlohameController {
                     titulo, descripcion, precio, ubicacion, capacidad, idUsuario
             );
 
-            guardarImagenEnDisco(imagen, idPropiedad);
+            for (MultipartFile img : imagenes) {
+                if (img != null && !img.isEmpty()) {
+                    guardarImagenEnDisco(img, idPropiedad);
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -245,8 +301,24 @@ public class AlohameController {
         propiedadDAO.actualizarPropiedad(id, titulo, descripcion, precio, ubicacion, capacidad);
 
         try {
+            // Eliminar imágenes viejas de BD y disco
+            List<Map<String, Object>> imagenesViejas = imagenDAO.obtenerPorPropiedad(id);
+            for (Map<String, Object> img : imagenesViejas) {
+                String url = img.get("url").toString();
+                File archivoViejo = new File("src/main/resources/static/" + url).getAbsoluteFile();
+                if (archivoViejo.exists()) {
+                    archivoViejo.delete();
+                }
+            }
+            
+            // Eliminar registros de imagenes viejas de la BD
+            imagenDAO.eliminarPorPropiedad(id);
+            
+            // Guardar solo las nuevas imágenes
             for (MultipartFile img : imagenes) {
-                guardarImagenEnDisco(img, id);
+                if (img != null && !img.isEmpty()) {
+                    guardarImagenEnDisco(img, id);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -331,6 +403,82 @@ public class AlohameController {
 
         reservaDAO.guardarReserva(idUsuarioSesion, id_propiedad, fecha_inicio, fecha_fin);
         return "redirect:/cliente";
+    }
+
+
+    /* =========================
+       FAVORITOS
+    ========================= */
+
+    @GetMapping("/favoritos")
+    public String listarFavoritos(HttpSession session, Model model) {
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        Integer idUsuario = obtenerIdUsuario(usuario);
+        if (idUsuario == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("propiedades",
+                favoritoDAO.obtenerFavoritosPorUsuario(idUsuario));
+        agregarContadorFavoritos(model, session);
+        return "favoritos";
+    }
+
+    @PostMapping("/favorito/agregar")
+    @ResponseBody
+    public Map<String, Object> agregarFavorito(@RequestParam int idPropiedad, HttpSession session) {
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        if (usuario == null) {
+            return Map.of("success", false, "message", "Debes iniciar sesion");
+        }
+
+        Integer idUsuario = obtenerIdUsuario(usuario);
+        if (idUsuario == null) {
+            return Map.of("success", false, "message", "Error en la sesion");
+        }
+
+        favoritoDAO.agregarFavorito(idUsuario, idPropiedad);
+        int favoritosCount = favoritoDAO.contarFavoritos(idUsuario);
+        return Map.of("success", true, "message", "Agregado a favoritos", "favoritosCount", favoritosCount);
+    }
+
+    @PostMapping("/favorito/eliminar")
+    @ResponseBody
+    public Map<String, Object> eliminarFavorito(@RequestParam int idPropiedad, HttpSession session) {
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        if (usuario == null) {
+            return Map.of("success", false, "message", "Debes iniciar sesion");
+        }
+
+        Integer idUsuario = obtenerIdUsuario(usuario);
+        if (idUsuario == null) {
+            return Map.of("success", false, "message", "Error en la sesion");
+        }
+
+        favoritoDAO.eliminarFavorito(idUsuario, idPropiedad);
+        int favoritosCount = favoritoDAO.contarFavoritos(idUsuario);
+        return Map.of("success", true, "message", "Eliminado de favoritos", "favoritosCount", favoritosCount);
+    }
+
+    @GetMapping("/favorito/verificar/{idPropiedad}")
+    @ResponseBody
+    public Map<String, Object> verificarFavorito(@PathVariable int idPropiedad, HttpSession session) {
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        if (usuario == null) {
+            return Map.of("esFavorito", false);
+        }
+
+        Integer idUsuario = obtenerIdUsuario(usuario);
+        if (idUsuario == null) {
+            return Map.of("esFavorito", false);
+        }
+
+        boolean esFavorito = favoritoDAO.esFavorito(idUsuario, idPropiedad);
+        return Map.of("esFavorito", esFavorito);
     }
 
 
