@@ -16,6 +16,8 @@
         <a href="/propietario" class="btn btn-outline-secondary">⬅ Volver</a>
     </div>
 
+    <div th:if="${param.error}" class="alert alert-danger" role="alert" th:text="${param.error}"></div>
+
     <form action="/actualizarPropiedad" method="post" enctype="multipart/form-data" class="card p-4 shadow">
 
         <input type="hidden" name="id" th:value="${propiedad.id}">

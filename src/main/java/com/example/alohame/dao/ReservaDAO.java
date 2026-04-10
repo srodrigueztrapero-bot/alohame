@@ -27,7 +27,7 @@ public class ReservaDAO {
                        p.titulo as propiedad_titulo,
                        p.ubicacion,
                        p.precio_noche,
-                       (SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url
+                       (SELECT CASE WHEN i.url LIKE 'images/%' THEN i.url ELSE CONCAT('images/', i.url) END FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url
                 FROM reservas r
                 JOIN usuarios u ON r.id_usuario = u.id
                 JOIN propiedades p ON r.id_propiedad = p.id
@@ -62,7 +62,7 @@ public class ReservaDAO {
                        p.ubicacion,
                        p.precio_noche,
                        p.capacidad,
-                       (SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url
+                       (SELECT CASE WHEN i.url LIKE 'images/%' THEN i.url ELSE CONCAT('images/', i.url) END FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url
                 FROM reservas r
                 JOIN propiedades p ON r.id_propiedad = p.id
                 WHERE r.id_usuario = ?

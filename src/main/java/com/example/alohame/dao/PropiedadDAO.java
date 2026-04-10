@@ -23,7 +23,7 @@ public class PropiedadDAO {
     public List<Map<String, Object>> listarPropiedadesConImagen() {
 
         String sql = "SELECT p.id, p.titulo, p.ubicacion, p.precio_noche, p.capacidad, " +
-                "(SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url " +
+                "(SELECT CASE WHEN i.url LIKE 'images/%' THEN i.url ELSE CONCAT('images/', i.url) END FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url " +
                 "FROM propiedades p";
 
         return jdbcTemplate.queryForList(sql);
@@ -44,7 +44,7 @@ public class PropiedadDAO {
     public List<Map<String, Object>> buscarPorCiudad(String ciudad) {
 
         String sql = "SELECT p.id, p.titulo, p.ubicacion, p.precio_noche, " +
-                "(SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url " +
+                "(SELECT CASE WHEN i.url LIKE 'images/%' THEN i.url ELSE CONCAT('images/', i.url) END FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url " +
                 "FROM propiedades p " +
                 "WHERE p.ubicacion LIKE ?";
 
@@ -54,7 +54,7 @@ public class PropiedadDAO {
     public List<Map<String, Object>> obtenerPorUsuario(int idUsuario) {
 
         String sql = "SELECT p.id, p.titulo, p.ubicacion, p.precio_noche, " +
-                "(SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url " +
+                "(SELECT CASE WHEN i.url LIKE 'images/%' THEN i.url ELSE CONCAT('images/', i.url) END FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url " +
                 "FROM propiedades p " +
                 "WHERE p.id_usuario = ?";
 

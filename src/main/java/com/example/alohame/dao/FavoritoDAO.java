@@ -54,7 +54,7 @@ public class FavoritoDAO {
                        p.ubicacion,
                        p.precio_noche,
                        p.capacidad,
-                       (SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url
+                       (SELECT CASE WHEN i.url LIKE 'images/%' THEN i.url ELSE CONCAT('images/', i.url) END FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url
                 FROM favoritos f
                 JOIN propiedades p ON f.id_propiedad = p.id
                 WHERE f.id_usuario = ?
