@@ -7,9 +7,10 @@
 </head>
 <body>
 
-<h1>Nuevo Comentario</h1>
+<div class="crearcomentario-wrapper">
+<h1 class="crearcomentario-title">Nuevo Comentario</h1>
 
-<form action="/guardarComentario" method="post">
+<form action="/guardarComentario" method="post" class="crearcomentario-form">
 
     <label>ID Usuario:</label>
     <input type="number" name="id_usuario"><br>
@@ -28,7 +29,9 @@
 </form>
 
 <br>
-<a href="/">⬅ Volver al inicio</a>
+<a href="/" class="crearcomentario-back">⬅ Volver al inicio</a>
+
+</div>
 
 </body>
 </html>

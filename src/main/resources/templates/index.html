@@ -71,7 +71,7 @@
 <!-- BUSCADOR FUNCIONAL -->
 <div class="bg-light py-5 border-bottom search-hero-section">
     <div class="container">
-        <h1 class="text-center mb-4" style="font-size: 2.8rem; color: #10b981;">Encuentra tu alojamiento perfecto</h1>
+        <h1 class="text-center mb-4 index-hero-title">Encuentra tu alojamiento perfecto</h1>
 
         <form action="/propiedades" method="get" class="row g-3 justify-content-center hero-search-form">
             <div class="col-md-6">
@@ -99,8 +99,7 @@
 
                 <img th:if="${propiedad['url'] != null}"
                      th:src="@{'/' + ${propiedad['url']}}"
-                     class="card-img-top"
-                     style="height:200px; object-fit:cover;">
+                     class="card-img-top index-card-image">
 
                 <div class="card-body">
 

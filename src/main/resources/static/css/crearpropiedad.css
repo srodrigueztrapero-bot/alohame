@@ -1,2 +1,14 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.crearpropiedad-wrapper {
+  max-width: 800px;
+}
+
+.crearpropiedad-card {
+  border-radius: 16px;
+}
+
+.crearpropiedad-header h2 {
+  letter-spacing: 0.2px;
+}
 

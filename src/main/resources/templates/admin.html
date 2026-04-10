@@ -7,14 +7,14 @@
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<div class="container mt-5">
+<div class="container mt-5 admin-wrapper">
 
-    <div class="text-center mb-4">
-        <h1 class="fw-bold">👑 Panel de Administración</h1>
-        <p class="text-muted">Bienvenido, Admin Alohame</p>
+    <div class="text-center mb-4 admin-header">
+        <h1 class="fw-bold admin-title">👑 Panel de Administración</h1>
+        <p class="text-muted admin-subtitle">Bienvenido, Admin Alohame</p>
     </div>
 
-    <div class="text-center mb-4">
+    <div class="text-center mb-4 admin-actions">
         <a href="/" class="btn btn-outline-secondary rounded-pill px-4 me-2">
             ⬅ Inicio
         </a>
@@ -26,7 +26,7 @@
     <div class="row text-center g-4">
 
         <div class="col-md-3">
-            <a href="/usuarios" class="text-decoration-none">
+            <a href="/usuarios" class="text-decoration-none admin-link-card">
                 <div class="card p-4 shadow-sm h-100 admin-card">
                     <h3>👤</h3>
                     <h5>Usuarios</h5>
@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="/propiedades" class="text-decoration-none">
+            <a href="/propiedades" class="text-decoration-none admin-link-card">
                 <div class="card p-4 shadow-sm h-100 admin-card">
                     <h3>🏠</h3>
                     <h5>Propiedades</h5>
@@ -44,7 +44,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="/reservas" class="text-decoration-none">
+            <a href="/reservas" class="text-decoration-none admin-link-card">
                 <div class="card p-4 shadow-sm h-100 admin-card">
                     <h3>📅</h3>
                     <h5>Reservas</h5>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="/comentarios" class="text-decoration-none">
+            <a href="/comentarios" class="text-decoration-none admin-link-card">
                 <div class="card p-4 shadow-sm h-100 admin-card">
                     <h3>💬</h3>
                     <h5>Comentarios</h5>

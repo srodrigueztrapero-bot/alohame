@@ -1,2 +1,43 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.propiedad-card {
+  border: 1px solid #dee2e6;
+  transition: transform 0.2s;
+}
+
+.propiedad-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.propiedad-imagen {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+.reserva-fecha {
+  background-color: #e7f3ff;
+  border-left: 4px solid #0066cc;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+.estado-confirmada {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.estado-cancelada {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.precio-noche {
+  font-size: 1.25rem;
+  color: #28a745;
+  font-weight: bold;
+}
 

@@ -1,2 +1,19 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.crearreserva-wrapper {
+  max-width: 700px;
+}
+
+.crearreserva-form {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.crearreserva-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 

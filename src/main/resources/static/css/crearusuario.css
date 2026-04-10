@@ -1,2 +1,9 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.registro-container {
+  max-width: 600px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 

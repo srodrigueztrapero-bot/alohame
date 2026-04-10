@@ -1,2 +1,11 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.propietario-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+.propietario-price {
+  font-size: 1.15rem;
+}
 

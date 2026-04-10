@@ -1,2 +1,38 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.login-container {
+  max-width: 500px;
+  margin-top: 5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #ccc;
+}
+
+.divider-text {
+  padding: 0 1rem;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.registro-link {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.success-alert {
+  display: block;
+}
+
 

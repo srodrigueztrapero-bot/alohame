@@ -1,2 +1,55 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.reserva-card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.reserva-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.reserva-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reserva-body {
+  padding: 1.5rem;
+}
+
+.duracion {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.precio-total {
+  font-size: 1.5rem;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #666;
+}
+
+.info-value {
+  color: #333;
+}
+
 

@@ -1,2 +1,46 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.header-detalle {
+  position: relative;
+}
+
+.btn-favorito-grande {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid #ddd;
+  z-index: 10;
+  font-size: 1.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-favorito-grande:hover {
+  background-color: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+.btn-favorito-grande.is-favorito {
+  color: #ff6b6b;
+  border-color: #ff6b6b;
+}
+
+.precio-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+}
+
+.acciones-reserva {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
 

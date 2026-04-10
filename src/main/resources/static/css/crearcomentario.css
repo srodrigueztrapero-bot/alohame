@@ -1,2 +1,23 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.crearcomentario-wrapper {
+  max-width: 640px;
+  margin: 2.5rem auto;
+}
+
+.crearcomentario-title {
+  margin-bottom: 1.25rem;
+}
+
+.crearcomentario-form {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.crearcomentario-back {
+  display: inline-block;
+  margin-top: 1rem;
+}
 

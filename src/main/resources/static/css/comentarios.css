@@ -1,2 +1,26 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.comentarios-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.comentarios-table-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.comentarios-table thead th {
+  white-space: nowrap;
+}
+
+.comentario-texto {
+  max-width: 380px;
+}
+
+.puntuacion-badge {
+  font-weight: 600;
+}
 

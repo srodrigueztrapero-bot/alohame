@@ -1,2 +1,16 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.usuarios-header {
+  gap: 1rem;
+}
+
+.usuarios-table-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.usuarios-table thead th {
+  white-space: nowrap;
+}
 

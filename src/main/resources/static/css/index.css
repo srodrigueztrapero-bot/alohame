@@ -1,2 +1,12 @@
-@import url('/css/style.css');
+@import url('style.css');
+
+.index-hero-title {
+  font-size: 2.8rem;
+  color: #10b981;
+}
+
+.index-card-image {
+  height: 200px;
+  object-fit: cover;
+}
 

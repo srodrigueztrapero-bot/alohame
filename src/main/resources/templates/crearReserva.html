@@ -6,10 +6,10 @@
   <link rel="stylesheet" th:href="@{/css/crearReserva.css}">
 </head>
 <body>
-<div class="container mt-4">
+<div class="container mt-4 crearreserva-wrapper">
   <h1>Nueva Reserva</h1>
 
-<form action="/guardarReserva" method="post">
+<form action="/guardarReserva" method="post" class="crearreserva-form">
 
   <input type="hidden" name="id_propiedad" th:value="${id_propiedad}">
 
@@ -23,10 +23,12 @@
     <input type="date" name="fecha_fin" class="form-control" required>
   </div>
 
-  <button type="submit" class="btn btn-primary">Guardar</button>
-    <a th:href="@{/propiedad/{id}(id=${id_propiedad})}" class="btn btn-outline-secondary ms-2">
+  <div class="crearreserva-actions">
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a th:href="@{/propiedad/{id}(id=${id_propiedad})}" class="btn btn-outline-secondary">
       ⬅ Volver al detalle
     </a>
+  </div>
   </form>
 
   <div th:if="${error}" class="alert alert-danger mt-3">

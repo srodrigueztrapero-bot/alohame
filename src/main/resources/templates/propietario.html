@@ -31,8 +31,7 @@
 
                 <img th:if="${p['url'] != null}"
                      th:src="@{'/' + ${p['url']}}"
-                     class="card-img-top"
-                     style="height:200px; object-fit:cover;">
+                     class="card-img-top propietario-image">
 
                 <div class="card-body">
 
@@ -40,7 +39,7 @@
 
                     <p th:text="${p['ubicacion']}"></p>
 
-                    <p class="fw-bold text-primary"
+                    <p class="fw-bold text-primary propietario-price"
                        th:text="${p['precio_noche']} + ' € / noche'"></p>
 
 
