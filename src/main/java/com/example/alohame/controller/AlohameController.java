@@ -237,6 +237,13 @@ public class AlohameController {
         return "propiedades";
     }
 
+    @GetMapping("/mapa")
+    public String mostrarMapa(Model model, HttpSession session) {
+        model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConCoordenadas());
+        agregarContadorFavoritos(model, session);
+        return "mapa";
+    }
+
     @GetMapping("/propiedad/{id}")
     public String verPropiedad(@PathVariable int id, Model model, HttpSession session) {
         model.addAttribute("propiedad", propiedadDAO.obtenerPorId(id));
@@ -511,3 +518,4 @@ public class AlohameController {
         return "redirect:/comentarios";
     }
 }
+

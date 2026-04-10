@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Propiedades - Alohame</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #mapa {
+            width: 100%;
+            height: 700px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header-mapa {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            padding: 2rem 0;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .info-mapa {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .leaflet-popup-content {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .popup-title {
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+
+        .popup-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .popup-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .popup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark shadow-lg">
+    <div class="container-fluid px-4 navbar-three-col">
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse navbar-left" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">🏠 Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/propiedades">🏨 Propiedades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/mapa">🗺️ Mapa</a>
+                </li>
+                <li class="nav-item" th:if="${session.usuario != null && session.usuario['tipo_usuario'] == 'cliente'}">
+                    <a class="nav-link" href="/cliente">📅 Mis Reservas</a>
+                </li>
+                <li class="nav-item" th:if="${session.usuario != null && session.usuario['tipo_usuario'] == 'propietario'}">
+                    <a class="nav-link" href="/propietario">🔑 Mis Propiedades</a>
+                </li>
+                <li class="nav-item" th:if="${session.usuario != null && session.usuario['tipo_usuario'] == 'admin'}">
+                    <a class="nav-link" href="/admin">⚙️ Admin</a>
+                </li>
+            </ul>
+        </div>
+
+        <a class="navbar-brand navbar-center d-flex align-items-center" href="/">
+            <span class="brand-logo-wrap">
+                <img src="/images/alohame-logo.png" alt="Logo Alohame" class="brand-logo">
+            </span>
+            <span class="fw-bold fs-5">Alohame</span>
+        </a>
+
+        <div class="navbar-right d-flex align-items-center gap-2">
+            <div th:if="${session.usuario == null}" class="d-flex gap-2">
+                <a href="/login" class="btn btn-outline-light btn-sm rounded-pill">
+                    Iniciar sesión
+                </a>
+                <a href="/registro" class="btn btn-light btn-sm rounded-pill">
+                    Registrarse
+                </a>
+            </div>
+            <div th:if="${session.usuario != null}" class="d-flex align-items-center gap-2">
+                <span class="text-white fw-semibold" th:text="${session.usuario['nombre']}"></span>
+                <a href="/logout" class="btn btn-outline-danger btn-sm rounded-pill">
+                    Salir
+                </a>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="header-mapa">
+    <div class="container">
+        <h1 class="mb-0" style="color: #10b981;">🗺️ Explora nuestras propiedades en el mapa</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="info-mapa">
+        <strong>💡 Tip:</strong> Haz clic en cualquier marcador para ver los detalles de la propiedad
+    </div>
+
+    <!-- Mapa -->
+    <div id="mapa"></div>
+
+    <div class="mt-4 text-center mb-4">
+        <a href="/propiedades" class="btn btn-outline-secondary">
+            ⬅ Volver a la lista
+        </a>
+    </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script th:inline="javascript">
+// Inicializar mapa (centrado en España)
+const mapa = L.map('mapa').setView([40.4637, -3.7492], 6);
+
+// Añadir capa de OpenStreetMap
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 18,
+    minZoom: 4
+}).addTo(mapa);
+
+// Propiedades desde Thymeleaf
+const propiedades = /*[[${propiedades}]]*/ [];
+const geocodeCache = new Map();
+
+function crearIconoVerde() {
+    return L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+}
+
+function crearPopup(prop) {
+    return `
+        <div style="font-family: 'Poppins', sans-serif; min-width: 200px;">
+            <div class="popup-title">${prop.titulo}</div>
+            <div class="popup-info"><strong>📍</strong> ${prop.ubicacion}</div>
+            <div class="popup-info"><strong>💰</strong> €${prop.precio_noche}/noche</div>
+            <a href="/propiedad/${prop.id}" class="popup-btn">Ver detalles →</a>
+        </div>
+    `;
+}
+
+async function geocodificarUbicacion(ubicacion) {
+    if (!ubicacion) return null;
+    const key = ubicacion.trim().toLowerCase();
+    if (geocodeCache.has(key)) {
+        return geocodeCache.get(key);
+    }
+
+    const query = encodeURIComponent(`${ubicacion}, España`);
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=es&q=${query}`;
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        if (!response.ok) return null;
+
+        const data = await response.json();
+        if (!Array.isArray(data) || data.length === 0) return null;
+
+        const lat = Number(data[0].lat);
+        const lon = Number(data[0].lon);
+        if (Number.isNaN(lat) || Number.isNaN(lon)) return null;
+
+        const coords = { latitud: lat, longitud: lon };
+        geocodeCache.set(key, coords);
+        return coords;
+    } catch (_) {
+        return null;
+    }
+}
+
+async function pintarMarcadores() {
+    const bounds = [];
+
+    for (const prop of propiedades) {
+        let lat = Number(prop.latitud);
+        let lon = Number(prop.longitud);
+
+        if (Number.isNaN(lat) || Number.isNaN(lon)) {
+            const coords = await geocodificarUbicacion(prop.ubicacion);
+            if (!coords) continue;
+            lat = coords.latitud;
+            lon = coords.longitud;
+        }
+
+        L.marker([lat, lon], { icon: crearIconoVerde() })
+            .bindPopup(crearPopup(prop), {
+                maxWidth: 250,
+                minWidth: 200,
+                className: 'custom-popup'
+            })
+            .addTo(mapa);
+
+        bounds.push([lat, lon]);
+    }
+
+    if (bounds.length > 0) {
+        mapa.fitBounds(bounds, { padding: [30, 30], maxZoom: 11 });
+    } else {
+        console.warn('No hay propiedades geocodificables para mostrar en el mapa');
+    }
+}
+
+pintarMarcadores();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

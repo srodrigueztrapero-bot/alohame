@@ -98,4 +98,61 @@ public class PropiedadDAO {
 
         return jdbcTemplate.queryForList(sql);
     }
+
+    // 🗺️ LISTAR PROPIEDADES CON COORDENADAS (PARA MAPA)
+    public List<Map<String, Object>> listarPropiedadesConCoordenadas() {
+        String sql = """
+                SELECT id,
+                       titulo,
+                       ubicacion,
+                       precio_noche,
+                       CASE LOWER(TRIM(ubicacion))
+                           WHEN 'valencia' THEN 39.4699
+                           WHEN 'asturias' THEN 43.3614
+                           WHEN 'madrid' THEN 40.4168
+                           WHEN 'barcelona' THEN 41.3851
+                           WHEN 'salamanca' THEN 40.9658
+                           WHEN 'malaga' THEN 36.7213
+                           WHEN 'málaga' THEN 36.7213
+                           WHEN 'badajoz' THEN 38.8794
+                           WHEN 'galicia' THEN 42.8782
+                           WHEN 'ávila' THEN 40.6565
+                           WHEN 'avila' THEN 40.6565
+                           WHEN 'segovia' THEN 40.9429
+                           WHEN 'sevilla' THEN 37.3891
+                           WHEN 'mallorca' THEN 39.6953
+                           WHEN 'mallora' THEN 39.6953
+                           WHEN 'tenerife' THEN 28.2916
+                           WHEN 'vitoria' THEN 42.8467
+                           WHEN 'vitoria-gasteiz' THEN 42.8467
+                           WHEN 'gasteiz' THEN 42.8467
+                           ELSE NULL
+                       END AS latitud,
+                       CASE LOWER(TRIM(ubicacion))
+                           WHEN 'valencia' THEN -0.3763
+                           WHEN 'asturias' THEN -5.8494
+                           WHEN 'madrid' THEN -3.7038
+                           WHEN 'barcelona' THEN 2.1734
+                           WHEN 'salamanca' THEN -5.6640
+                           WHEN 'malaga' THEN -4.4214
+                           WHEN 'málaga' THEN -4.4214
+                           WHEN 'badajoz' THEN -6.9707
+                           WHEN 'galicia' THEN -8.5448
+                           WHEN 'ávila' THEN -4.7000
+                           WHEN 'avila' THEN -4.7000
+                           WHEN 'segovia' THEN -4.1088
+                           WHEN 'sevilla' THEN -5.9845
+                           WHEN 'mallorca' THEN 2.9608
+                           WHEN 'mallora' THEN 2.9608
+                           WHEN 'tenerife' THEN -16.6291
+                           WHEN 'vitoria' THEN -2.6727
+                           WHEN 'vitoria-gasteiz' THEN -2.6727
+                           WHEN 'gasteiz' THEN -2.6727
+                           ELSE NULL
+                       END AS longitud
+                FROM propiedades
+                ORDER BY id
+                """;
+        return jdbcTemplate.queryForList(sql);
+    }
 }
