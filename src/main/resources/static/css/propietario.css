@@ -1,11 +1,74 @@
 @import url('style.css');
 
+.zona-propietario {
+  background: linear-gradient(180deg, #fffaf0 0%, #fff 55%);
+  border-radius: 18px;
+  padding: 1.2rem;
+}
+
+.propietario-topbar {
+  border-bottom: 1px solid #f1e3c8;
+  padding-bottom: 0.9rem;
+}
+
+.propietario-title {
+  color: #8a4b08;
+}
+
+.propietario-add-btn {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  border: none;
+  font-weight: 600;
+}
+
+.propietario-add-btn:hover {
+  background: linear-gradient(135deg, #d97706, #ea580c);
+}
+
+.propietario-card {
+  border: 1px solid #f3e8d3;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.propietario-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 26px rgba(217, 119, 6, 0.18);
+}
+
 .propietario-image {
   height: 200px;
   object-fit: cover;
 }
 
+.propietario-location {
+  color: #7c2d12;
+  font-weight: 500;
+}
+
 .propietario-price {
   font-size: 1.15rem;
+  color: #b45309 !important;
+}
+
+.propietario-edit-btn {
+  border: none;
+  background: #facc15;
+  color: #78350f;
+  font-weight: 600;
+}
+
+.propietario-edit-btn:hover {
+  background: #eab308;
+  color: #78350f;
+}
+
+.propietario-delete-btn {
+  background: #dc2626;
+  border: none;
+}
+
+.propietario-delete-btn:hover {
+  background: #b91c1c;
 }
 

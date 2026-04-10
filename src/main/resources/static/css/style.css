@@ -55,8 +55,32 @@ header {
   padding-top: 1.2rem;
   padding-bottom: 1.2rem;
   min-height: 160px;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
   overflow: visible;
+  transition: min-height 0.25s ease, padding 0.25s ease, box-shadow 0.25s ease;
+}
+
+.navbar.bg-dark.navbar-scrolled {
+  min-height: 116px;
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+  box-shadow: 0 8px 20px rgba(0, 74, 84, 0.32);
+}
+
+.navbar.bg-dark.navbar-scrolled .brand-logo-wrap {
+  width: 102px;
+  height: 102px;
+}
+
+.navbar.bg-dark.navbar-scrolled .brand-logo {
+  width: 98px;
+  height: 98px;
+}
+
+.navbar.bg-dark.navbar-scrolled .navbar-brand .fw-bold {
+  font-size: 2.25rem !important;
 }
 
 /* Overlay para legibilidad */
@@ -234,6 +258,12 @@ header {
 
   .navbar-brand .fw-bold {
     font-size: 1.8rem !important;
+  }
+
+  .navbar.bg-dark.navbar-scrolled {
+    min-height: auto;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 }
 
