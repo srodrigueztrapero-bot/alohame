@@ -230,6 +230,10 @@ public class AlohameController {
 
         agregarContadorFavoritos(model, session);
 
+        // Verificar si es admin
+        boolean esAdmin = esTipoUsuario(session, "admin");
+        model.addAttribute("esAdmin", esAdmin);
+
         return "propiedades";
     }
 

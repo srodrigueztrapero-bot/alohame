@@ -4,67 +4,140 @@
     <title>Reservas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .reserva-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .reserva-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .reserva-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .reserva-body {
+            padding: 1.5rem;
+        }
+        .duracion {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .precio-total {
+            font-size: 1.5rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #666;
+        }
+        .info-value {
+            color: #333;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">📅 Lista de Reservas</h2>
+        <h2 class="mb-0">📅 Todas las Reservas</h2>
         <div class="d-flex gap-2">
             <a href="/admin" class="btn btn-outline-secondary">⬅ Panel admin</a>
             <a href="/logout" class="btn btn-outline-danger">Salir</a>
         </div>
     </div>
 
-    <div class="table-responsive">
+    <!-- Mensaje sin reservas -->
+    <div th:if="${reservas.isEmpty()}" class="alert alert-info text-center mt-5">
+        <h5>No hay reservas registradas</h5>
+        <p class="mb-0">Las nuevas reservas aparecerán aquí</p>
+    </div>
 
-        <table class="table table-hover table-striped align-middle">
+    <!-- Listado de reservas -->
+    <div th:unless="${reservas.isEmpty()}">
+        <div class="mb-3 text-muted">
+            Total: <span th:text="${reservas.size()}"></span> reservas
+        </div>
 
-            <thead class="table-dark">
-            <tr>
-                <th>Usuario</th>
-                <th>Propiedad</th>
-                <th>Inicio</th>
-                <th>Fin</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-            </thead>
+        <div th:each="reserva : ${reservas}" class="card reserva-card">
+            <div class="reserva-header">
+                <div>
+                    <h5 class="mb-1" th:text="${reserva['propiedad_titulo']}"></h5>
+                    <small th:text="${reserva['ubicacion']}"></small>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-light text-dark" th:text="${reserva['estado'] == 'confirmada' ? '✓ Confirmada' : (reserva['estado'] == 'pendiente' ? '⏱ Pendiente' : '✗ Cancelada')}"
+                          th:classappend="${reserva['estado'] == 'confirmada' ? 'bg-success' : (reserva['estado'] == 'pendiente' ? 'bg-warning text-dark' : 'bg-danger')}"></span>
+                </div>
+            </div>
 
-            <tbody>
+            <div class="reserva-body">
+                <!-- Información del usuario -->
+                <div class="info-row mb-3">
+                    <div>
+                        <span class="info-label">👤 Cliente:</span>
+                        <span class="info-value ms-2" th:text="${reserva['usuario_nombre']}"></span>
+                    </div>
+                    <div>
+                        <span class="info-label">📧 Email:</span>
+                        <span class="info-value ms-2" th:text="${reserva['usuario_email']}"></span>
+                    </div>
+                </div>
 
-            <tr th:each="reserva : ${reservas}">
+                <!-- Fechas y duración -->
+                <div class="info-row mb-3">
+                    <div>
+                        <span class="info-label">📆 Llegada:</span>
+                        <span class="info-value ms-2" th:text="${#dates.format(reserva['fecha_inicio'], 'dd/MM/yyyy')}"></span>
+                    </div>
+                    <div>
+                        <span class="info-label">📆 Salida:</span>
+                        <span class="info-value ms-2" th:text="${#dates.format(reserva['fecha_fin'], 'dd/MM/yyyy')}"></span>
+                    </div>
+                    <div>
+                        <span class="info-label">🌙 Noches:</span>
+                        <span class="info-value ms-2" th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).parse(reserva['fecha_inicio'].toString()), T(java.time.LocalDate).parse(reserva['fecha_fin'].toString()))} + ' noches'"></span>
+                    </div>
+                </div>
 
-                <td th:text="${reserva['id_usuario']}"></td>
-                <td th:text="${reserva['id_propiedad']}"></td>
-                <td th:text="${reserva['fecha_inicio']}"></td>
-                <td th:text="${reserva['fecha_fin']}"></td>
+                <!-- Precio -->
+                <div class="info-row mb-2">
+                    <div>
+                        <span class="info-label">💰 Precio/noche:</span>
+                        <span class="info-value ms-2" th:text="'€' + ${#numbers.formatDecimal(reserva['precio_noche'], 1, 2)}"></span>
+                    </div>
+                    <div>
+                        <span class="precio-total" th:text="'€' + ${#numbers.formatDecimal(reserva['precio_noche'] * T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).parse(reserva['fecha_inicio'].toString()), T(java.time.LocalDate).parse(reserva['fecha_fin'].toString())), 1, 2)}"></span>
+                    </div>
+                </div>
 
-                <td>
-                    <span class="badge bg-success"
-                          th:if="${reserva['estado'] == 'confirmada'}">Confirmada</span>
-
-                    <span class="badge bg-warning text-dark"
-                          th:if="${reserva['estado'] == 'pendiente'}">Pendiente</span>
-
-                    <span class="badge bg-danger"
-                          th:if="${reserva['estado'] == 'cancelada'}">Cancelada</span>
-                </td>
-
-                <td>
-                    <a th:href="@{/reserva/cancelar/{id}(id=${reserva['id']})}"
-                       class="btn btn-sm btn-outline-danger">
-                        Cancelar
+                <!-- Acción de cancelar -->
+                <div class="mt-3">
+                    <a th:if="${reserva['estado'] != 'cancelada'}"
+                       th:href="@{/reserva/cancelar/{id}(id=${reserva['id']})}"
+                       class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('¿Estás seguro de que quieres cancelar esta reserva?')">
+                        🗑️ Cancelar reserva
                     </a>
-                </td>
-
-            </tr>
-
-            </tbody>
-
-        </table>
-
+                    <span th:if="${reserva['estado'] == 'cancelada'}" class="badge bg-dark">Esta reserva ya está cancelada</span>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

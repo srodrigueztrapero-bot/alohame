@@ -91,9 +91,16 @@
             <h5 class="mb-0" th:text="'Total: ' + ${propiedades.size()} + ' propiedades'"></h5>
         </div>
         <div class="d-flex gap-2">
-            <a href="/favoritos" class="btn btn-outline-danger">
-                Ver favoritos <span class="badge text-bg-light ms-1" id="favoritos-count" th:text="${favoritosCount}">0</span>
-            </a>
+            <th:block th:if="${esAdmin}">
+                <a href="/admin" class="btn btn-outline-warning">
+                    👑 Volver al Panel Admin
+                </a>
+            </th:block>
+            <th:block th:unless="${esAdmin}">
+                <a href="/favoritos" class="btn btn-outline-danger">
+                    Ver favoritos <span class="badge text-bg-light ms-1" id="favoritos-count" th:text="${favoritosCount}">0</span>
+                </a>
+            </th:block>
             <a href="/" class="btn btn-outline-secondary">Inicio</a>
         </div>
     </div>

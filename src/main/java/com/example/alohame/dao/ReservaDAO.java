@@ -16,8 +16,22 @@ public class ReservaDAO {
     // LISTAR RESERVAS
     public List<Map<String, Object>> listarReservas() {
         String sql = """
-                SELECT *
-                FROM reservas
+                SELECT r.id,
+                       r.id_usuario,
+                       r.id_propiedad,
+                       r.fecha_inicio,
+                       r.fecha_fin,
+                       r.estado,
+                       u.nombre as usuario_nombre,
+                       u.email as usuario_email,
+                       p.titulo as propiedad_titulo,
+                       p.ubicacion,
+                       p.precio_noche,
+                       (SELECT url FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) as url
+                FROM reservas r
+                JOIN usuarios u ON r.id_usuario = u.id
+                JOIN propiedades p ON r.id_propiedad = p.id
+                ORDER BY r.fecha_inicio DESC
                 """;
         return jdbcTemplate.queryForList(sql);
     }

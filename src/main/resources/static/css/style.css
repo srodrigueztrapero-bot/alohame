@@ -3,6 +3,7 @@
 ========================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 /* =========================
    GENERAL
@@ -11,16 +12,22 @@
 html, body {
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
-  background-color: #f7f7f7;
+  background-color: #f9fafb;
 }
 
 h1 {
-  color: #333;
+  color: #1f2937;
   font-size: 2.5rem;
+  font-weight: 700;
+}
+
+h2, h3, h4, h5 {
+  font-weight: 600;
+  color: #1f2937;
 }
 
 /* =========================
@@ -39,17 +46,42 @@ header {
 
 /* Navbar principal con look moderno */
 .navbar.bg-dark {
-  background: linear-gradient(135deg, #2e8b57 0%, #52c788 55%, #7fffd4 100%) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 30px rgba(46, 139, 87, 0.4);
-  padding-top: 1.4rem;
-  padding-bottom: 1.4rem;
-  min-height: 110px;
+  background: linear-gradient(135deg, #10b981 0%, #34d399 35%, #6ee7b7 70%, #a7f3d0 100%) !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+  min-height: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Patrón de fondo tropical */
+.navbar.bg-dark::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 40% 0%, rgba(255,255,255,0.05) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.navbar.bg-dark > * {
+  position: relative;
+  z-index: 1;
 }
 
 .navbar-brand {
   letter-spacing: 1px;
-  gap: 2px;
+  gap: 8px;
+  display: flex;
+  align-items: center;
 }
 
 /* Layout de 3 columnas: links | logo centrado | sesión */
@@ -80,60 +112,78 @@ header {
 .navbar-brand .fw-bold {
   font-family: 'Pacifico', cursive;
   font-weight: 400;
-  font-size: 2.2rem !important;
+  font-size: 2.5rem !important;
   color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+  margin: 0;
+  padding: 0;
 }
 
 .brand-logo-wrap {
-  width: 75px;
-  height: 75px;
+  width: 80px;
+  height: 80px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin-right: 12px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 8px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.navbar:hover .brand-logo-wrap {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .brand-logo {
-  width: 75px;
-  height: 75px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
 }
 
 .navbar .nav-link {
-  color: rgba(255, 255, 255, 0.85) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   border-radius: 999px;
-  padding: 0.42rem 0.9rem !important;
-  margin-right: 0.35rem;
+  padding: 0.5rem 1rem !important;
+  margin-right: 0.25rem;
   transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .navbar .nav-link:hover {
   color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
 }
 
 .navbar .nav-link.active {
   color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 
 .navbar .btn {
   border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .navbar .btn-outline-light {
-  border-color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.8);
   color: #ffffff;
 }
 
 .navbar .btn-outline-light:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.2);
   border-color: #ffffff;
   color: #ffffff;
 }
@@ -141,14 +191,14 @@ header {
 .navbar .btn-light {
   background: #ffffff;
   border-color: #ffffff;
-  color: #2e8b57;
+  color: #10b981;
   font-weight: 600;
 }
 
 .navbar .btn-light:hover {
-  background: #eaffee;
-  border-color: #eaffee;
-  color: #1f6b40;
+  background: #f0fdf4;
+  border-color: #f0fdf4;
+  color: #059669;
 }
 
 .navbar .btn-outline-danger {
@@ -242,13 +292,44 @@ form button {
    BOTONES
 ========================= */
 
-.btn-dark {
-  background: linear-gradient(135deg, #222, #444);
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
   border: none;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-dark {
+  background: linear-gradient(135deg, #1f2937, #374151);
+  border: none;
+  color: white;
 }
 
 .btn-dark:hover {
-  background: linear-gradient(135deg, #000, #333);
+  background: linear-gradient(135deg, #111827, #1f2937);
+  transform: translateY(-2px);
+}
+
+.btn-outline-danger {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.btn-outline-danger:hover {
+  background: #fef2f2;
+  border-color: #dc2626;
+  color: #dc2626;
 }
 
 /* =========================
@@ -288,9 +369,15 @@ form button {
 
 .search-bar {
   background: white;
-  border-radius: 40px;
-  padding: 10px 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 12px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.2s;
+}
+
+.search-bar:hover,
+.search-bar:focus-within {
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.12);
 }
 
 .search-item {
@@ -316,21 +403,25 @@ form button {
 /* botón buscar */
 
 .search-btn {
-  background: #ff385c;
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
   border: none;
   color: white;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  font-size: 18px;
+  border-radius: 8px;
+  width: auto;
+  min-width: 120px;
+  height: 44px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.3s;
+  transition: all 0.2s;
+  font-weight: 600;
 }
 
 .search-btn:hover {
-  background: #e03150;
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 /* =========================
@@ -345,4 +436,121 @@ form button {
 .admin-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   SECTIONS / BACKGROUNDS
+========================= */
+
+.bg-light {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%) !important;
+}
+
+/* =========================
+   TEXT Y CONTENIDO
+========================= */
+
+.text-muted {
+  color: #6b7280 !important;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+/* =========================
+   INPUTS Y FORMULARIOS
+========================= */
+
+.form-control,
+.form-select {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 14px;
+  transition: all 0.2s;
+  font-family: 'Poppins', sans-serif;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-control::placeholder {
+  color: #9ca3af;
+}
+
+/* =========================
+   ALERTS Y MESSAGES
+========================= */
+
+.alert {
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.alert-success {
+  background: #f0fdf4;
+  color: #047857;
+}
+
+.alert-danger {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.alert-warning {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.alert-info {
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+/* =========================
+   BADGES Y LABELS
+========================= */
+
+.badge {
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.bg-success {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%) !important;
+}
+
+.bg-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
+}
+
+.bg-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important;
+}
+
+/* =========================
+   SCROLLBAR PERSONALIZADO
+========================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
