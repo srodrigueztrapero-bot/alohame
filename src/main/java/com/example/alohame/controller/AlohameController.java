@@ -1,18 +1,16 @@
 package com.example.alohame.controller;
 
 import com.example.alohame.dao.*;
+import com.example.alohame.service.PropiedadImagenService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Locale;
 import java.util.List;
 import java.util.Map;
 
@@ -29,9 +27,8 @@ public class AlohameController {
     @Autowired private ReservaDAO reservaDAO;
     @Autowired private ComentarioDAO comentarioDAO;
     @Autowired private FavoritoDAO favoritoDAO;
+    @Autowired private PropiedadImagenService propiedadImagenService;
 
-    @Value("${app.images.dir:${user.dir}/src/main/resources/static/images}")
-    private String imagesDir;
 
 
     /* =========================
@@ -70,91 +67,6 @@ public class AlohameController {
 
     private void agregarContadorFavoritos(Model model, HttpSession session) {
         model.addAttribute("favoritosCount", obtenerContadorFavoritosSesion(session));
-    }
-
-    private String normalizarNombreArchivo(String originalFilename) {
-        if (originalFilename == null) {
-            return "";
-        }
-
-        String nombre = originalFilename.trim().replace("\\", "/");
-        int lastSlash = nombre.lastIndexOf('/');
-        if (lastSlash >= 0 && lastSlash < nombre.length() - 1) {
-            nombre = nombre.substring(lastSlash + 1);
-        }
-        return nombre.trim();
-    }
-
-    private boolean esFormatoUrl(String valor) {
-        if (valor == null) {
-            return false;
-        }
-        String texto = valor.trim().toLowerCase(Locale.ROOT);
-        return texto.startsWith("http://") || texto.startsWith("https://") || texto.startsWith("www.");
-    }
-
-    private boolean existeNombreEnDisco(String nombreArchivo) {
-        String nombreLower = nombreArchivo.toLowerCase(Locale.ROOT);
-        File carpeta = new File(imagesDir);
-        File[] archivos = carpeta.listFiles();
-        if (archivos == null) {
-            return false;
-        }
-
-        for (File archivo : archivos) {
-            if (!archivo.isFile()) {
-                continue;
-            }
-            String existente = archivo.getName().toLowerCase(Locale.ROOT);
-            if (existente.equals(nombreLower) || existente.endsWith("_" + nombreLower)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String validarImagenSubida(MultipartFile imagen) throws Exception {
-        if (imagen == null || imagen.isEmpty()) {
-            return "";
-        }
-
-        if (esFormatoUrl(imagen.getOriginalFilename())) {
-            throw new Exception("No se permiten URLs como imagen. Debes subir un archivo desde tu equipo.");
-        }
-
-        String nombreOriginal = normalizarNombreArchivo(imagen.getOriginalFilename());
-        if (nombreOriginal.isEmpty()) {
-            throw new Exception("No se pudo leer el nombre del archivo de imagen.");
-        }
-
-        if (imagenDAO.existeImagenPorNombre(nombreOriginal) || existeNombreEnDisco(nombreOriginal)) {
-            throw new Exception("La imagen '" + nombreOriginal + "' ya existe en el sistema. Por favor, renombrala y vuelve a intentar.");
-        }
-
-        return nombreOriginal;
-    }
-
-    private void guardarImagenEnDisco(MultipartFile imagen, int idPropiedad) throws Exception {
-        if (imagen == null || imagen.isEmpty()) {
-            return;
-        }
-
-        String nombreOriginal = validarImagenSubida(imagen);
-
-        String nombre = nombreOriginal;
-
-        File rutaDir = new File(imagesDir);
-
-        if (!rutaDir.exists()) {
-            rutaDir.mkdirs();
-        }
-
-        File archivo = new File(rutaDir, nombre);
-        imagen.transferTo(archivo);
-        
-        System.out.println("✅ Imagen guardada en: " + archivo.getAbsolutePath());
-
-        imagenDAO.guardarImagen(idPropiedad, nombre);
     }
 
     /* =========================
@@ -347,24 +259,9 @@ public class AlohameController {
             Integer idUsuario = obtenerIdUsuario(usuario);
             if (idUsuario == null) return "redirect:/login";
 
-            // Si alguna imagen es invalida/duplicada, se bloquea toda la creacion.
-            if (imagenes != null) {
-                for (MultipartFile img : imagenes) {
-                    if (img != null && !img.isEmpty()) {
-                        validarImagenSubida(img);
-                    }
-                }
-            }
-
-            int idPropiedad = propiedadDAO.guardarPropiedadYDevolverId(
-                    titulo, descripcion, precio, ubicacion, capacidad, idUsuario
+            propiedadImagenService.guardarPropiedadConImagenes(
+                    titulo, descripcion, precio, ubicacion, capacidad, idUsuario, imagenes
             );
-
-            for (MultipartFile img : imagenes) {
-                if (img != null && !img.isEmpty()) {
-                    guardarImagenEnDisco(img, idPropiedad);
-                }
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -398,14 +295,7 @@ public class AlohameController {
         propiedadDAO.actualizarPropiedad(id, titulo, descripcion, precio, ubicacion, capacidad);
 
         try {
-            // Conservar imágenes actuales y añadir solo las nuevas que se suban en la edición.
-            if (imagenes != null) {
-                for (MultipartFile img : imagenes) {
-                    if (img != null && !img.isEmpty()) {
-                        guardarImagenEnDisco(img, id);
-                    }
-                }
-            }
+            propiedadImagenService.actualizarImagenesPropiedad(id, imagenes);
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", e.getMessage());
