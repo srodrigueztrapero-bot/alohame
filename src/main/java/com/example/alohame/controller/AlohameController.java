@@ -1,7 +1,9 @@
 package com.example.alohame.controller;
 
 import com.example.alohame.dao.*;
+import com.example.alohame.service.FavoritoService;
 import com.example.alohame.service.PropiedadImagenService;
+import com.example.alohame.service.ReservaService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,10 +26,10 @@ public class AlohameController {
     @Autowired private UsuarioDAO usuarioDAO;
     @Autowired private PropiedadDAO propiedadDAO;
     @Autowired private ImagenDAO imagenDAO;
-    @Autowired private ReservaDAO reservaDAO;
     @Autowired private ComentarioDAO comentarioDAO;
-    @Autowired private FavoritoDAO favoritoDAO;
     @Autowired private PropiedadImagenService propiedadImagenService;
+    @Autowired private ReservaService reservaService;
+    @Autowired private FavoritoService favoritoService;
 
 
 
@@ -62,7 +64,7 @@ public class AlohameController {
         if (idUsuario == null) {
             return 0;
         }
-        return favoritoDAO.contarFavoritos(idUsuario);
+        return favoritoService.contarFavoritosUsuario(idUsuario);
     }
 
     private void agregarContadorFavoritos(Model model, HttpSession session) {
@@ -179,7 +181,7 @@ public class AlohameController {
             return "redirect:/login";
         }
 
-        model.addAttribute("reservas", reservaDAO.obtenerPorUsuario(idUsuario));
+        model.addAttribute("reservas", reservaService.obtenerReservasPorUsuario(idUsuario));
         agregarContadorFavoritos(model, session);
         return "cliente";
     }
@@ -321,7 +323,7 @@ public class AlohameController {
             return "redirect:/login";
         }
 
-        reservaDAO.cancelarReserva(id);
+        reservaService.cancelarReserva(id);
         return "redirect:/reservas";
     }
 
@@ -331,7 +333,7 @@ public class AlohameController {
 
     @GetMapping("/reservas")
     public String listarReservas(Model model) {
-        model.addAttribute("reservas", reservaDAO.listarReservas());
+        model.addAttribute("reservas", reservaService.listarReservas());
         return "reservas";
     }
 
@@ -377,13 +379,11 @@ public class AlohameController {
             return "redirect:/login";
         }
 
-        if (!reservaDAO.estaDisponible(id_propiedad, fecha_inicio, fecha_fin)) {
+        if (!reservaService.guardarReservaSiDisponible(idUsuarioSesion, id_propiedad, fecha_inicio, fecha_fin)) {
             model.addAttribute("error", "❌ Ya está reservada en esas fechas");
             model.addAttribute("id_propiedad", id_propiedad);
             return "crearReserva";
         }
-
-        reservaDAO.guardarReserva(idUsuarioSesion, id_propiedad, fecha_inicio, fecha_fin);
         return "redirect:/cliente";
     }
 
@@ -404,8 +404,7 @@ public class AlohameController {
             return "redirect:/login";
         }
 
-        model.addAttribute("propiedades",
-                favoritoDAO.obtenerFavoritosPorUsuario(idUsuario));
+        model.addAttribute("propiedades", favoritoService.listarFavoritosUsuario(idUsuario));
         agregarContadorFavoritos(model, session);
         return "favoritos";
     }
@@ -423,8 +422,8 @@ public class AlohameController {
             return Map.of("success", false, "message", "Error en la sesion");
         }
 
-        favoritoDAO.agregarFavorito(idUsuario, idPropiedad);
-        int favoritosCount = favoritoDAO.contarFavoritos(idUsuario);
+        favoritoService.agregarFavorito(idUsuario, idPropiedad);
+        int favoritosCount = favoritoService.contarFavoritosUsuario(idUsuario);
         return Map.of("success", true, "message", "Agregado a favoritos", "favoritosCount", favoritosCount);
     }
 
@@ -441,8 +440,8 @@ public class AlohameController {
             return Map.of("success", false, "message", "Error en la sesion");
         }
 
-        favoritoDAO.eliminarFavorito(idUsuario, idPropiedad);
-        int favoritosCount = favoritoDAO.contarFavoritos(idUsuario);
+        favoritoService.eliminarFavorito(idUsuario, idPropiedad);
+        int favoritosCount = favoritoService.contarFavoritosUsuario(idUsuario);
         return Map.of("success", true, "message", "Eliminado de favoritos", "favoritosCount", favoritosCount);
     }
 
@@ -459,7 +458,7 @@ public class AlohameController {
             return Map.of("esFavorito", false);
         }
 
-        boolean esFavorito = favoritoDAO.esFavorito(idUsuario, idPropiedad);
+        boolean esFavorito = favoritoService.esFavorito(idUsuario, idPropiedad);
         return Map.of("esFavorito", esFavorito);
     }
 
