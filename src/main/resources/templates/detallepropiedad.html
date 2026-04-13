@@ -153,9 +153,19 @@
           <a th:each="prop : ${propiedades}"
              th:if="${prop['id'] != propiedad['id']}"
              th:href="@{/propiedad/{id}(id=${prop['id']})}"
-             class="list-group-item list-group-item-action">
-            <h6 th:text="${prop['titulo']}"></h6>
-            <small class="text-muted" th:text="'€' + ${prop['precio_noche']} + ' / noche'"></small>
+             class="list-group-item list-group-item-action similar-item">
+            <div class="similar-thumb-wrap" th:if="${prop['url'] != null}">
+              <img class="similar-thumb"
+                   th:src="@{'/' + ${prop['url']}}"
+                   th:alt="${'Imagen de ' + prop['titulo']}" />
+            </div>
+            <div class="similar-thumb-wrap similar-thumb-placeholder" th:if="${prop['url'] == null}">
+              Sin imagen
+            </div>
+            <div class="similar-content">
+              <h6 class="mb-1" th:text="${prop['titulo']}"></h6>
+              <small class="text-muted" th:text="'€' + ${prop['precio_noche']} + ' / noche'"></small>
+            </div>
           </a>
         </div>
       </div>

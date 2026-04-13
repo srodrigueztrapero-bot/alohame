@@ -91,7 +91,8 @@ public class PropiedadDAO {
     }
     // PUNTUACION
     public List<Map<String, Object>> listarPropiedadesConMedia() {
-        String sql = "SELECT p.*, AVG(c.puntuacion) AS media_puntuacion " +
+        String sql = "SELECT p.*, AVG(c.puntuacion) AS media_puntuacion, " +
+                "(SELECT CASE WHEN i.url LIKE 'images/%' THEN i.url ELSE CONCAT('images/', i.url) END FROM imagenes i WHERE i.id_propiedad = p.id LIMIT 1) AS url " +
                 "FROM propiedades p " +
                 "LEFT JOIN comentarios c ON p.id = c.id_propiedad " +
                 "GROUP BY p.id";
