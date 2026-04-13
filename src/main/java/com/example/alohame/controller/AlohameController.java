@@ -1,9 +1,11 @@
 package com.example.alohame.controller;
 
 import com.example.alohame.dao.*;
+import com.example.alohame.service.ComentarioService;
 import com.example.alohame.service.FavoritoService;
 import com.example.alohame.service.PropiedadImagenService;
 import com.example.alohame.service.ReservaService;
+import com.example.alohame.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,13 +25,13 @@ public class AlohameController {
        DAOs
     ========================= */
 
-    @Autowired private UsuarioDAO usuarioDAO;
     @Autowired private PropiedadDAO propiedadDAO;
     @Autowired private ImagenDAO imagenDAO;
-    @Autowired private ComentarioDAO comentarioDAO;
     @Autowired private PropiedadImagenService propiedadImagenService;
     @Autowired private ReservaService reservaService;
     @Autowired private FavoritoService favoritoService;
+    @Autowired private UsuarioService usuarioService;
+    @Autowired private ComentarioService comentarioService;
 
 
 
@@ -96,7 +98,7 @@ public class AlohameController {
                         HttpSession session,
                         Model model) {
 
-        Map<String, Object> usuario = usuarioDAO.login(email, password);
+        Map<String, Object> usuario = usuarioService.autenticar(email, password);
 
         if (usuario == null) {
             model.addAttribute("error", "Usuario o contraseña incorrectos");
@@ -131,7 +133,7 @@ public class AlohameController {
                                  @RequestParam String telefono,
                                  @RequestParam(required = false, defaultValue = "cliente") String tipo_usuario) {
         try {
-            usuarioDAO.guardarUsuario(nombre, email, password, telefono, tipo_usuario);
+            usuarioService.registrarUsuario(nombre, email, password, telefono, tipo_usuario);
             return "redirect:/login?registered=true";
         } catch (Exception e) {
             e.printStackTrace();
@@ -196,7 +198,7 @@ public class AlohameController {
             return "redirect:/login";
         }
 
-        model.addAttribute("usuarios", usuarioDAO.listarUsuarios());
+        model.addAttribute("usuarios", usuarioService.listarUsuarios());
         return "usuarios";
     }
 
@@ -231,7 +233,7 @@ public class AlohameController {
     public String verPropiedad(@PathVariable int id, Model model, HttpSession session) {
         model.addAttribute("propiedad", propiedadDAO.obtenerPorId(id));
         model.addAttribute("imagenes", imagenDAO.obtenerPorPropiedad(id));
-        model.addAttribute("comentarios", comentarioDAO.obtenerPorPropiedad(id));
+        model.addAttribute("comentarios", comentarioService.obtenerComentariosPorPropiedad(id));
         model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConMedia());
         agregarContadorFavoritos(model, session);
 
@@ -240,7 +242,7 @@ public class AlohameController {
 
     @GetMapping("/crearPropiedad")
     public String mostrarFormularioPropiedad(Model model) {
-        model.addAttribute("propietarios", usuarioDAO.listarPropietarios());
+        model.addAttribute("propietarios", usuarioService.listarPropietarios());
         return "crearPropiedad";
     }
 
@@ -469,7 +471,7 @@ public class AlohameController {
 
     @GetMapping("/comentarios")
     public String listarComentarios(Model model) {
-        model.addAttribute("comentarios", comentarioDAO.listarComentarios());
+        model.addAttribute("comentarios", comentarioService.listarComentarios());
         return "comentarios";
     }
 
@@ -484,7 +486,7 @@ public class AlohameController {
                                     @RequestParam String comentario,
                                     @RequestParam int puntuacion) {
 
-        comentarioDAO.guardarComentario(id_usuario, id_propiedad, comentario, puntuacion);
+        comentarioService.guardarComentario(id_usuario, id_propiedad, comentario, puntuacion);
         return "redirect:/comentarios";
     }
 }
