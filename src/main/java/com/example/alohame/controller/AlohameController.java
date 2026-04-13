@@ -18,31 +18,50 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controlador principal de la aplicación Alohame.
+ *
+ * Actúa como capa web (MVC): recibe peticiones HTTP, delega la lógica
+ * de negocio en los Services correspondientes y devuelve vistas Thymeleaf
+ * o redirecciones. No contiene lógica de negocio propia.
+ *
+ * Arquitectura del proyecto:
+ *   Controller  ->  Service  ->  DAO  ->  Base de datos
+ *
+ * Roles de usuario soportados: admin, propietario, cliente.
+ */
 @Controller
 public class AlohameController {
 
     /* =========================
-       DAOs
+       DAOs usados directamente (consultas de solo lectura sin lógica extra)
     ========================= */
 
-    @Autowired private PropiedadDAO propiedadDAO;
-    @Autowired private ImagenDAO imagenDAO;
-    @Autowired private PropiedadImagenService propiedadImagenService;
-    @Autowired private ReservaService reservaService;
-    @Autowired private FavoritoService favoritoService;
-    @Autowired private UsuarioService usuarioService;
-    @Autowired private ComentarioService comentarioService;
+    @Autowired private PropiedadDAO propiedadDAO;   // Consultas sobre propiedades
+    @Autowired private ImagenDAO imagenDAO;          // Consultas sobre imágenes
+
+    /* =========================
+       Services (lógica de negocio delegada)
+    ========================= */
+
+    @Autowired private PropiedadImagenService propiedadImagenService; // Crear/editar propiedades con imágenes
+    @Autowired private ReservaService reservaService;                 // Gestión de reservas
+    @Autowired private FavoritoService favoritoService;               // Gestión de favoritos
+    @Autowired private UsuarioService usuarioService;                 // Autenticación y usuarios
+    @Autowired private ComentarioService comentarioService;           // Comentarios y valoraciones
 
 
 
     /* =========================
-       HELPERS
+       HELPERS: métodos privados de apoyo usados en varios endpoints
     ========================= */
 
+    /** Obtiene el usuario autenticado guardado en la sesión HTTP. Devuelve null si no hay sesión. */
     private Map<String, Object> getUsuarioSesion(HttpSession session) {
         return (Map<String, Object>) session.getAttribute("usuario");
     }
 
+    /** Comprueba si el usuario en sesión tiene el rol indicado (admin/propietario/cliente). */
     private boolean esTipoUsuario(HttpSession session, String tipoEsperado) {
         Map<String, Object> usuario = getUsuarioSesion(session);
         return usuario != null
@@ -50,6 +69,7 @@ public class AlohameController {
                 && tipoEsperado.equals(usuario.get("tipo_usuario").toString());
     }
 
+    /** Extrae el ID del usuario del mapa de sesión como Integer. Devuelve null si no existe. */
     private Integer obtenerIdUsuario(Map<String, Object> usuario) {
         if (usuario == null || usuario.get("id") == null) {
             return null;
@@ -57,18 +77,16 @@ public class AlohameController {
         return Integer.parseInt(usuario.get("id").toString());
     }
 
+    /** Consulta el número de favoritos del usuario en sesión para el contador del navbar. */
     private int obtenerContadorFavoritosSesion(HttpSession session) {
-        if (session == null) {
-            return 0;
-        }
+        if (session == null) return 0;
         Map<String, Object> usuario = getUsuarioSesion(session);
         Integer idUsuario = obtenerIdUsuario(usuario);
-        if (idUsuario == null) {
-            return 0;
-        }
+        if (idUsuario == null) return 0;
         return favoritoService.contarFavoritosUsuario(idUsuario);
     }
 
+    /** Añade el contador de favoritos al modelo para que Thymeleaf lo muestre en el navbar. */
     private void agregarContadorFavoritos(Model model, HttpSession session) {
         model.addAttribute("favoritosCount", obtenerContadorFavoritosSesion(session));
     }
