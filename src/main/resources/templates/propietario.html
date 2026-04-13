@@ -7,13 +7,13 @@
     <link rel="stylesheet" th:href="@{/css/propietario.css}">
 </head>
 
-<body>
+<body class="page-propietario">
 
 <div class="container mt-4 zona-propietario">
 
     <div class="d-flex justify-content-between align-items-center mb-4 propietario-topbar">
         <h2 class="mb-0 propietario-title">🏠 Mis propiedades</h2>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 propietario-actions">
             <a href="/" class="btn btn-outline-secondary">⬅ Inicio</a>
             <a href="/logout" class="btn btn-outline-danger">Salir</a>
         </div>
@@ -23,7 +23,7 @@
         ➕ Añadir propiedad
     </a>
 
-    <div class="row">
+    <div class="row propietario-grid">
 
         <div class="col-12 col-md-6 col-lg-4 mb-4" th:each="p : ${propiedades}">
 
@@ -60,6 +60,12 @@
 
         </div>
 
+    </div>
+
+    <div th:if="${propiedades.isEmpty()}" class="alert alert-warning text-center mt-3 propietario-empty">
+        <h5 class="mb-2">Aún no tienes propiedades publicadas</h5>
+        <p class="mb-3">Empieza creando tu primer alojamiento para verlo aquí.</p>
+        <a href="/crearPropiedad" class="btn propietario-add-btn">➕ Añadir propiedad</a>
     </div>
 </div>
 </body>
