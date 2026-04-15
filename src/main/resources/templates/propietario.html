@@ -16,12 +16,13 @@
     <div class="d-flex justify-content-between align-items-center mb-4 propietario-topbar">
         <h2 class="mb-0 propietario-title">🏠 Mis propiedades</h2>
         <div class="d-flex gap-2 propietario-actions">
-            <a href="/" class="btn btn-outline-secondary">⬅ Inicio</a>
-            <a href="/logout" class="btn btn-outline-danger">Salir</a>
+            <a th:href="@{/propietario/mensajes}" class="btn btn-outline-primary">Mensajes</a>
+            <a th:href="@{/}" class="btn btn-outline-secondary">⬅ Inicio</a>
+            <a th:href="@{/logout}" class="btn btn-outline-danger">Salir</a>
         </div>
     </div>
 
-    <a href="/crearPropiedad" class="btn btn-success mb-3 propietario-add-btn">
+    <a th:href="@{/crearPropiedad}" class="btn btn-success mb-3 propietario-add-btn">
         ➕ Añadir propiedad
     </a>
 
@@ -56,6 +57,11 @@
                         🗑 Eliminar
                     </a>
 
+                    <a th:href="@{/propietario/mensajes(idPropiedad=${p['id']})}"
+                       class="btn btn-outline-primary w-100 mt-2">
+                        💬 Ver mensajes
+                    </a>
+
                 </div>
 
             </div>
@@ -67,7 +73,7 @@
     <div th:if="${propiedades.isEmpty()}" class="alert alert-warning text-center mt-3 propietario-empty">
         <h5 class="mb-2">Aún no tienes propiedades publicadas</h5>
         <p class="mb-3">Empieza creando tu primer alojamiento para verlo aquí.</p>
-        <a href="/crearPropiedad" class="btn propietario-add-btn">➕ Añadir propiedad</a>
+        <a th:href="@{/crearPropiedad}" class="btn propietario-add-btn">➕ Añadir propiedad</a>
     </div>
 </div>
 </body>

@@ -29,7 +29,7 @@
     <div id="mapa"></div>
 
     <div class="mt-4 text-center mb-4">
-        <a href="/propiedades" class="btn btn-outline-secondary">
+        <a th:href="@{/propiedades}" class="btn btn-outline-secondary">
             ⬅ Volver a la lista
         </a>
     </div>
@@ -39,6 +39,8 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script th:inline="javascript">
+const propiedadDetalleBaseUrl = /*[[@{/propiedad/}]]*/ '/propiedad/';
+
 // Inicializar mapa (centrado en España)
 const mapa = L.map('mapa').setView([40.4637, -3.7492], 6);
 
@@ -70,7 +72,7 @@ function crearPopup(prop) {
             <div class="popup-title">${prop.titulo}</div>
             <div class="popup-info"><strong>📍</strong> ${prop.ubicacion}</div>
             <div class="popup-info"><strong>💰</strong> €${prop.precio_noche}/noche</div>
-            <a href="/propiedad/${prop.id}" class="popup-btn">Ver detalles →</a>
+            <a href="${propiedadDetalleBaseUrl}${prop.id}" class="popup-btn">Ver detalles →</a>
         </div>
     `;
 }

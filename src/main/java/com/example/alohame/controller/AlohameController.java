@@ -4,6 +4,7 @@ import com.example.alohame.dao.*;
 import com.example.alohame.model.Mensaje;
 import com.example.alohame.service.ComentarioService;
 import com.example.alohame.service.FavoritoService;
+import com.example.alohame.service.MensajeService;
 import com.example.alohame.service.PropiedadImagenService;
 import com.example.alohame.service.ReservaService;
 import com.example.alohame.service.UsuarioService;
@@ -41,6 +42,7 @@ public class AlohameController {
 
     @Autowired private PropiedadDAO propiedadDAO;   // Consultas sobre propiedades
     @Autowired private ImagenDAO imagenDAO;          // Consultas sobre imágenes
+    @Autowired private MensajeDAO mensajeDAO;        // Consultas sobre mensajes
 
     /* =========================
        Services (lógica de negocio delegada)
@@ -51,6 +53,7 @@ public class AlohameController {
     @Autowired private FavoritoService favoritoService;               // Gestión de favoritos
     @Autowired private UsuarioService usuarioService;                 // Autenticación y usuarios
     @Autowired private ComentarioService comentarioService;           // Comentarios y valoraciones
+    @Autowired private MensajeService mensajeService;                 // Mensajes al propietario
 
 
 
@@ -190,6 +193,46 @@ public class AlohameController {
         return "propietario";
     }
 
+    @GetMapping("/propietario/mensajes")
+    public String mensajesPropietario(@RequestParam(required = false) Integer idPropiedad,
+                                      HttpSession session,
+                                      Model model) {
+        if (!esTipoUsuario(session, "propietario")) {
+            return "redirect:/login";
+        }
+
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        if (usuario == null) return "redirect:/login";
+
+        Integer idUsuario = obtenerIdUsuario(usuario);
+        if (idUsuario == null) return "redirect:/login";
+
+        model.addAttribute("propiedades", propiedadDAO.obtenerPorUsuario(idUsuario));
+
+        if (idPropiedad != null) {
+            try {
+                Map<String, Object> propiedad = propiedadDAO.obtenerPorId(idPropiedad);
+                if (propiedad == null || propiedad.isEmpty()) {
+                    return "redirect:/propietario/mensajes?error=propiedad_no_encontrada";
+                }
+
+                Integer idPropietarioPropiedad = Integer.parseInt(propiedad.get("id_usuario").toString());
+                if (!idUsuario.equals(idPropietarioPropiedad)) {
+                    return "redirect:/propietario/mensajes?error=sin_permisos";
+                }
+
+                model.addAttribute("idPropiedadSeleccionada", idPropiedad);
+                model.addAttribute("mensajes", mensajeService.obtenerPorPropietarioYPropiedad(idUsuario.longValue(), idPropiedad.longValue()));
+            } catch (Exception e) {
+                return "redirect:/propietario/mensajes?error=propiedad_no_encontrada";
+            }
+        } else {
+            model.addAttribute("mensajes", mensajeService.obtenerPorPropietario(idUsuario.longValue()));
+        }
+
+        return "mensajespropietario";
+    }
+
     @GetMapping("/cliente")
     public String cliente(HttpSession session, Model model) {
         Map<String, Object> usuario = getUsuarioSesion(session);
@@ -251,16 +294,26 @@ public class AlohameController {
 
     @GetMapping("/propiedad/{id}")
     public String verPropiedad(@PathVariable int id, Model model, HttpSession session) {
-        model.addAttribute("propiedad", propiedadDAO.obtenerPorId(id));
-        model.addAttribute("imagenes", imagenDAO.obtenerPorPropiedad(id));
-        model.addAttribute("comentarios", comentarioService.obtenerComentariosPorPropiedad(id));
-        model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConMedia());
-        agregarContadorFavoritos(model, session);
+        try {
+            Map<String, Object> propiedad = propiedadDAO.obtenerPorId(id);
+            if (propiedad == null || propiedad.isEmpty()) {
+                return "redirect:/propiedades?error=Propiedad no encontrada";
+            }
 
-        List<Mensaje> mensajes = mensajeDAO.obtenerPorPropiedad((long) id);
-        model.addAttribute("mensajes", mensajes);
+            model.addAttribute("propiedad", propiedad);
+            model.addAttribute("imagenes", imagenDAO.obtenerPorPropiedad(id));
+            model.addAttribute("comentarios", comentarioService.obtenerComentariosPorPropiedad(id));
+            model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConMedia());
+            agregarContadorFavoritos(model, session);
 
-        return "detallePropiedad";
+            List<Mensaje> mensajes = mensajeDAO.obtenerPorPropiedad((long) id);
+            model.addAttribute("mensajes", mensajes);
+
+            return "detallePropiedad";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/propiedades?error=Error al cargar la propiedad";
+        }
     }
 
     @GetMapping("/crearPropiedad")
@@ -515,21 +568,47 @@ public class AlohameController {
     /* =========================
        MENSAJE
     ========================= */
-    @Autowired
-    private MensajeDAO mensajeDAO;
     @PostMapping("/mensajes/enviar")
     public String enviarMensaje(@RequestParam String contenido,
-                                @RequestParam String propiedadId) {
+                                @RequestParam Long propiedadId,
+                                HttpSession session) {
 
-        Long id = Long.parseLong(propiedadId);
+        // Validar que el usuario esté autenticado
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        if (usuario == null) {
+            try {
+                return "redirect:/propiedad/" + propiedadId + "?error=" + URLEncoder.encode("Debes iniciar sesión para enviar mensajes", "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                return "redirect:/propiedad/" + propiedadId;
+            }
+        }
 
-        Mensaje mensaje = new Mensaje();
-        mensaje.setContenido(contenido);
-        mensaje.setFecha(LocalDateTime.now());
+        // Validar que el contenido no esté vacío
+        if (contenido == null || contenido.trim().isEmpty()) {
+            try {
+                return "redirect:/propiedad/" + propiedadId + "?error=" + URLEncoder.encode("El mensaje no puede estar vacío", "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                return "redirect:/propiedad/" + propiedadId;
+            }
+        }
 
-        mensajeDAO.guardar(mensaje);
+        try {
+            Mensaje mensaje = new Mensaje();
+            mensaje.setContenido(contenido.trim());
+            mensaje.setFecha(LocalDateTime.now());
+            mensaje.setPropiedadId(propiedadId);
 
-        return "redirect:/propiedad/" + id;
+            mensajeService.guardar(mensaje);
+
+            return "redirect:/propiedad/" + propiedadId + "?success=1";
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                return "redirect:/propiedad/" + propiedadId + "?error=" + URLEncoder.encode("Error al enviar el mensaje", "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                return "redirect:/propiedad/" + propiedadId;
+            }
+        }
     }
 }
 

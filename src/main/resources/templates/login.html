@@ -20,7 +20,7 @@
         Usuario registrado correctamente. Por favor inicia sesion.
     </div>
 
-    <form action="/login" method="post" class="card p-4 shadow-sm">
+    <form th:action="@{/login}" method="post" class="card p-4 shadow-sm">
 
         <div class="mb-3">
             <label class="form-label">Email</label>
@@ -40,11 +40,11 @@
 
     <div class="registro-link">
         <p class="text-muted mb-3">No tienes cuenta?</p>
-        <a href="/registro" class="btn btn-outline-primary w-100">Registrate aqui</a>
+        <a th:href="@{/registro}" class="btn btn-outline-primary w-100">Registrate aqui</a>
     </div>
 
     <div class="text-center mt-3">
-        <a href="/" class="btn btn-outline-secondary">Volver al inicio</a>
+        <a th:href="@{/}" class="btn btn-outline-secondary">Volver al inicio</a>
     </div>
 
 </div>

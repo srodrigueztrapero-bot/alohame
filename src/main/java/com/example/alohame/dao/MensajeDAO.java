@@ -18,12 +18,13 @@ public class MensajeDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public  void guardar(Mensaje mensaje) {
+    public void guardar(Mensaje mensaje) {
         String sql = "INSERT INTO mensaje (contenido, fecha, propiedad_id) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(sql,
                 mensaje.getContenido(),
-                Timestamp.valueOf(mensaje.getFecha())
+                Timestamp.valueOf(mensaje.getFecha()),
+                mensaje.getPropiedadId()
         );
     }
     public List<Mensaje> obtenerPorPropiedad(Long propiedadId) {
@@ -37,5 +38,47 @@ public class MensajeDAO {
             m.setPropiedadId(rs.getLong("propiedad_id"));
             return m;
         }, propiedadId);
+    }
+
+    public List<Mensaje> obtenerPorPropietario(Long idPropietario) {
+        String sql = """
+                SELECT m.id,
+                       m.contenido,
+                       m.fecha,
+                       m.propiedad_id,
+                       p.titulo AS propiedad_titulo
+                FROM mensaje m
+                INNER JOIN propiedades p ON p.id = m.propiedad_id
+                WHERE p.id_usuario = ?
+                ORDER BY m.fecha DESC
+                """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapMensajeConPropiedad(rs), idPropietario);
+    }
+
+    public List<Mensaje> obtenerPorPropietarioYPropiedad(Long idPropietario, Long idPropiedad) {
+        String sql = """
+                SELECT m.id,
+                       m.contenido,
+                       m.fecha,
+                       m.propiedad_id,
+                       p.titulo AS propiedad_titulo
+                FROM mensaje m
+                INNER JOIN propiedades p ON p.id = m.propiedad_id
+                WHERE p.id_usuario = ? AND p.id = ?
+                ORDER BY m.fecha DESC
+                """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapMensajeConPropiedad(rs), idPropietario, idPropiedad);
+    }
+
+    private Mensaje mapMensajeConPropiedad(java.sql.ResultSet rs) throws java.sql.SQLException {
+        Mensaje m = new Mensaje();
+        m.setId(rs.getLong("id"));
+        m.setContenido(rs.getString("contenido"));
+        m.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
+        m.setPropiedadId(rs.getLong("propiedad_id"));
+        m.setPropiedadTitulo(rs.getString("propiedad_titulo"));
+        return m;
     }
 }

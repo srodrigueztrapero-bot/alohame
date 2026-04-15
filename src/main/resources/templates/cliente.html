@@ -11,10 +11,10 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Mis reservas</h2>
         <div class="d-flex gap-2">
-            <a href="/favoritos" class="btn btn-outline-danger">Mis favoritos <span class="badge text-bg-light ms-1" th:text="${favoritosCount}">0</span></a>
-            <a href="/propiedades" class="btn btn-outline-secondary">Ver propiedades</a>
-            <a href="/" class="btn btn-outline-secondary">Inicio</a>
-            <a href="/logout" class="btn btn-outline-danger">Salir</a>
+            <a th:href="@{/favoritos}" class="btn btn-outline-danger">Mis favoritos <span class="badge text-bg-light ms-1" th:text="${favoritosCount}">0</span></a>
+            <a th:href="@{/propiedades}" class="btn btn-outline-secondary">Ver propiedades</a>
+            <a th:href="@{/}" class="btn btn-outline-secondary">Inicio</a>
+            <a th:href="@{/logout}" class="btn btn-outline-danger">Salir</a>
         </div>
     </div>
 

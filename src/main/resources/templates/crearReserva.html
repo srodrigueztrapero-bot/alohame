@@ -10,7 +10,7 @@
 <div class="container mt-4 crearreserva-wrapper">
   <h1>Nueva Reserva</h1>
 
-<form action="/guardarReserva" method="post" class="crearreserva-form">
+<form th:action="@{/guardarReserva}" method="post" class="crearreserva-form">
 
   <input type="hidden" name="id_propiedad" th:value="${id_propiedad}">
 

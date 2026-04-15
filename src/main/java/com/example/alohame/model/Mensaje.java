@@ -8,6 +8,9 @@ public class Mensaje {
     private String contenido;
     private LocalDateTime fecha;
     private Long propiedadId;
+    private String propiedadTitulo;
+
+    public Mensaje() {}
 
     public Long getId() {
         return id;
@@ -39,5 +42,13 @@ public class Mensaje {
 
     public void setPropiedadId(Long propiedadId) {
         this.propiedadId = propiedadId;
+    }
+
+    public String getPropiedadTitulo() {
+        return propiedadTitulo;
+    }
+
+    public void setPropiedadTitulo(String propiedadTitulo) {
+        this.propiedadTitulo = propiedadTitulo;
     }
 }

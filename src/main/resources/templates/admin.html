@@ -16,10 +16,10 @@
     </div>
 
     <div class="text-center mb-4 admin-actions">
-        <a href="/" class="btn btn-outline-secondary rounded-pill px-4 me-2">
+        <a th:href="@{/}" class="btn btn-outline-secondary rounded-pill px-4 me-2">
             ⬅ Inicio
         </a>
-        <a href="/logout" class="btn btn-outline-danger rounded-pill px-4">
+        <a th:href="@{/logout}" class="btn btn-outline-danger rounded-pill px-4">
             🚪 Cerrar sesión
         </a>
     </div>
@@ -27,7 +27,7 @@
     <div class="row text-center g-4">
 
         <div class="col-md-3">
-            <a href="/usuarios" class="text-decoration-none admin-link-card">
+            <a th:href="@{/usuarios}" class="text-decoration-none admin-link-card">
                 <div class="card p-4 shadow-sm h-100 admin-card">
                     <h3>👤</h3>
                     <h5>Usuarios</h5>
@@ -36,7 +36,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="/propiedades" class="text-decoration-none admin-link-card">
+            <a th:href="@{/propiedades}" class="text-decoration-none admin-link-card">
                 <div class="card p-4 shadow-sm h-100 admin-card">
                     <h3>🏠</h3>
                     <h5>Propiedades</h5>
@@ -45,7 +45,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="/reservas" class="text-decoration-none admin-link-card">
+            <a th:href="@{/reservas}" class="text-decoration-none admin-link-card">
                 <div class="card p-4 shadow-sm h-100 admin-card">
                     <h3>📅</h3>
                     <h5>Reservas</h5>
@@ -54,7 +54,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="/comentarios" class="text-decoration-none admin-link-card">
+            <a th:href="@{/comentarios}" class="text-decoration-none admin-link-card">
                 <div class="card p-4 shadow-sm h-100 admin-card">
                     <h3>💬</h3>
                     <h5>Comentarios</h5>

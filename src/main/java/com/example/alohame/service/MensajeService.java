@@ -5,6 +5,8 @@ import com.example.alohame.model.Mensaje;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MensajeService {
 
@@ -13,5 +15,13 @@ public class MensajeService {
 
     public void guardar(Mensaje mensaje) {
         mensajeDAO.guardar(mensaje);
+    }
+
+    public List<Mensaje> obtenerPorPropietario(Long idPropietario) {
+        return mensajeDAO.obtenerPorPropietario(idPropietario);
+    }
+
+    public List<Mensaje> obtenerPorPropietarioYPropiedad(Long idPropietario, Long idPropiedad) {
+        return mensajeDAO.obtenerPorPropietarioYPropiedad(idPropietario, idPropiedad);
     }
 }

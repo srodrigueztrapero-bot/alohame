@@ -24,28 +24,28 @@
         </div>
         <div class="d-flex gap-2">
             <th:block th:if="${esAdmin}">
-                <a href="/admin" class="btn btn-outline-warning">
+                <a th:href="@{/admin}" class="btn btn-outline-warning">
                     👑 Volver al Panel Admin
                 </a>
             </th:block>
             <th:block th:unless="${esAdmin}">
-                <a href="/favoritos" class="btn btn-outline-danger">
+                <a th:href="@{/favoritos}" class="btn btn-outline-danger">
                     Ver favoritos <span class="badge text-bg-light ms-1" id="favoritos-count" th:text="${favoritosCount}">0</span>
                 </a>
             </th:block>
-            <a href="/" class="btn btn-outline-secondary">Inicio</a>
+            <a th:href="@{/}" class="btn btn-outline-secondary">Inicio</a>
         </div>
     </div>
 
     <!-- Filtro de busqueda por ciudad -->
     <div class="filtro-section">
-        <form method="get" action="/propiedades" class="row g-2">
+        <form method="get" th:action="@{/propiedades}" class="row g-2">
             <div class="col-md-8">
                 <input type="text" name="ciudad" class="form-control" placeholder="Busca por ciudad..." required>
             </div>
             <div class="col-md-4">
                 <button type="submit" class="btn btn-primary w-100">Buscar</button>
-                <a href="/propiedades" class="btn btn-outline-secondary w-100 mt-2">Ver todas</a>
+                <a th:href="@{/propiedades}" class="btn btn-outline-secondary w-100 mt-2">Ver todas</a>
             </div>
         </form>
     </div>
@@ -109,12 +109,17 @@
     <div th:if="${propiedades.isEmpty()}" class="alert alert-info text-center mt-5">
         <h5>No se encontraron propiedades</h5>
         <p>Intenta con otra busqueda</p>
-        <a href="/propiedades" class="btn btn-primary">Ver todas las propiedades</a>
+        <a th:href="@{/propiedades}" class="btn btn-primary">Ver todas las propiedades</a>
     </div>
 
 </div>
 
-<script>
+<script th:inline="javascript">
+const favoritoAgregarUrl = /*[[@{/favorito/agregar}]]*/ '/favorito/agregar';
+const favoritoEliminarUrl = /*[[@{/favorito/eliminar}]]*/ '/favorito/eliminar';
+const favoritoVerificarBaseUrl = /*[[@{/favorito/verificar/}]]*/ '/favorito/verificar/';
+const loginUrl = /*[[@{/login}]]*/ '/login';
+
 function updateFavoritosCount(count) {
     const badge = document.getElementById('favoritos-count');
     if (!badge) return;
@@ -161,7 +166,7 @@ function toggleFavorito(idPropiedad) {
 }
 
 function agregarAFavoritos(idPropiedad) {
-    fetch('/favorito/agregar', {
+    fetch(favoritoAgregarUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -178,7 +183,7 @@ function agregarAFavoritos(idPropiedad) {
         } else {
             if (data.message.includes('iniciar sesion')) {
                 if (confirm('Debes iniciar sesion para usar favoritos. Ir al login?')) {
-                    window.location.href = '/login';
+                    window.location.href = loginUrl;
                 }
             } else {
                 showToast(data.message || 'No se pudo agregar favorito', 'error');
@@ -189,7 +194,7 @@ function agregarAFavoritos(idPropiedad) {
 }
 
 function eliminarDeFavoritos(idPropiedad) {
-    fetch('/favorito/eliminar', {
+    fetch(favoritoEliminarUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -215,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const buttons = document.querySelectorAll('[id^="favorito-"]');
     buttons.forEach(btn => {
         const idPropiedad = btn.id.replace('favorito-', '');
-        fetch('/favorito/verificar/' + idPropiedad)
+        fetch(favoritoVerificarBaseUrl + idPropiedad)
             .then(response => response.json())
             .then(data => setFavoritoVisual(btn, !!data.esFavorito))
             .catch(() => setFavoritoVisual(btn, false));

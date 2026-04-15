@@ -14,9 +14,9 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Mis favoritos <span class="badge text-bg-danger ms-1" id="favoritos-count" th:text="${favoritosCount}">0</span></h2>
         <div class="d-flex gap-2">
-            <a href="/propiedades" class="btn btn-outline-secondary">Ver todas</a>
-            <a href="/cliente" class="btn btn-outline-secondary">Mis reservas</a>
-            <a href="/logout" class="btn btn-outline-danger">Salir</a>
+            <a th:href="@{/propiedades}" class="btn btn-outline-secondary">Ver todas</a>
+            <a th:href="@{/cliente}" class="btn btn-outline-secondary">Mis reservas</a>
+            <a th:href="@{/logout}" class="btn btn-outline-danger">Salir</a>
         </div>
     </div>
 
@@ -25,7 +25,7 @@
         <div class="sin-favoritos-icon">♡</div>
         <h4>No tienes favoritos aun</h4>
         <p class="text-muted mb-3">Comienza a guardar tus propiedades favoritas</p>
-        <a href="/propiedades" class="btn btn-primary">Explorar propiedades</a>
+        <a th:href="@{/propiedades}" class="btn btn-primary">Explorar propiedades</a>
     </div>
 
     <!-- Grid de favoritos -->
@@ -78,7 +78,10 @@
 
 </div>
 
-<script>
+<script th:inline="javascript">
+const propiedadesUrl = /*[[@{/propiedades}]]*/ '/propiedades';
+const favoritoEliminarUrl = /*[[@{/favorito/eliminar}]]*/ '/favorito/eliminar';
+
 function updateFavoritosCount(count) {
     const badge = document.getElementById('favoritos-count');
     if (!badge) return;
@@ -120,14 +123,14 @@ function renderEmptyStateIfNeeded() {
         <div class="sin-favoritos-icon">♡</div>
         <h4>No tienes favoritos aun</h4>
         <p class="text-muted mb-3">Comienza a guardar tus propiedades favoritas</p>
-        <a href="/propiedades" class="btn btn-primary">Explorar propiedades</a>
+        <a href="${propiedadesUrl}" class="btn btn-primary">Explorar propiedades</a>
     `;
 
     grid.replaceWith(empty);
 }
 
 function eliminarDeFavoritos(idPropiedad) {
-    fetch('/favorito/eliminar', {
+    fetch(favoritoEliminarUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'

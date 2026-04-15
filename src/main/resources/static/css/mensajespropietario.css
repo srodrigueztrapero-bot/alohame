@@ -1,0 +1,33 @@
+@import url('style.css');
+
+.page-mensajespropietario {
+  background: linear-gradient(180deg, #f3fffb 0%, #f7fffd 36%, #ffffff 100%);
+}
+
+.page-mensajespropietario .mensajes-wrapper {
+  background: linear-gradient(180deg, #fcfffe 0%, #ffffff 65%);
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  border-radius: 18px;
+  padding: 1.2rem;
+  box-shadow: 0 10px 26px rgba(15, 118, 110, 0.1);
+}
+
+.page-mensajespropietario .mensajes-topbar {
+  background: linear-gradient(135deg, #effdf7, #f3fffb);
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: 14px;
+  padding: 0.95rem 1rem;
+}
+
+.page-mensajespropietario .mensajes-card {
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  border-radius: 14px;
+}
+
+@media (max-width: 768px) {
+  .page-mensajespropietario .mensajes-topbar {
+    align-items: flex-start !important;
+    gap: 0.8rem;
+  }
+}
+

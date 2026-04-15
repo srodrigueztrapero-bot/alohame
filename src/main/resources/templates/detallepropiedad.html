@@ -13,9 +13,9 @@
 <div class="container mt-4">
 
   <div class="d-flex gap-2 mb-3">
-    <a href="/" class="btn btn-outline-dark">Inicio</a>
-    <a href="/propiedades" class="btn btn-outline-secondary">Ver propiedades</a>
-    <a href="/favoritos" class="btn btn-outline-danger">Mis favoritos <span class="badge text-bg-light ms-1" id="favoritos-count" th:text="${favoritosCount}">0</span></a>
+    <a th:href="@{/}" class="btn btn-outline-dark">Inicio</a>
+    <a th:href="@{/propiedades}" class="btn btn-outline-secondary">Ver propiedades</a>
+    <a th:href="@{/favoritos}" class="btn btn-outline-danger">Mis favoritos <span class="badge text-bg-light ms-1" id="favoritos-count" th:text="${favoritosCount}">0</span></a>
   </div>
 
   <div class="header-detalle">
@@ -104,7 +104,7 @@
         <div th:if="${session.usuario != null and session.usuario['tipo_usuario'] == 'cliente'}">
           <h5 class="mt-4">Anadir comentario</h5>
 
-          <form action="/guardarComentario" method="post">
+          <form th:action="@{/guardarComentario}" method="post">
             <input type="hidden" name="id_propiedad" th:value="${propiedad['id']}">
             <input type="hidden" name="id_usuario" th:value="${session.usuario['id']}">
 
@@ -133,7 +133,7 @@
 
       <div class="acciones-reserva">
         <div th:if="${session.usuario == null}" class="w-100">
-          <a href="/login" class="btn btn-primary btn-lg w-100">
+          <a th:href="@{/login}" class="btn btn-primary btn-lg w-100">
             Inicia sesion para reservar
           </a>
         </div>
@@ -148,7 +148,7 @@
 
       <!-- dejar mensaje a propietario -->
 
-      <form action="/mensajes/enviar" method="post">
+      <form th:action="@{/mensajes/enviar}" method="post">
 
 
         <input type="hidden" name="propiedadId" th:value="${propiedad['id']}">
@@ -206,7 +206,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
+<script th:inline="javascript">
+const favoritoAgregarUrl = /*[[@{/favorito/agregar}]]*/ '/favorito/agregar';
+const favoritoEliminarUrl = /*[[@{/favorito/eliminar}]]*/ '/favorito/eliminar';
+const favoritoVerificarBaseUrl = /*[[@{/favorito/verificar/}]]*/ '/favorito/verificar/';
+const loginUrl = /*[[@{/login}]]*/ '/login';
+
 function updateFavoritosCount(count) {
     const badge = document.getElementById('favoritos-count');
     if (!badge) return;
@@ -253,7 +258,7 @@ function toggleFavoritoDetalle(idPropiedad) {
 }
 
 function agregarAFavoritosDetalle(idPropiedad) {
-    fetch('/favorito/agregar', {
+    fetch(favoritoAgregarUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -270,7 +275,7 @@ function agregarAFavoritosDetalle(idPropiedad) {
         } else {
             if (data.message.includes('iniciar sesion')) {
                 if (confirm('Debes iniciar sesion para usar favoritos. Ir al login?')) {
-                    window.location.href = '/login';
+                    window.location.href = loginUrl;
                 }
             } else {
                 showToast(data.message || 'No se pudo agregar favorito', 'error');
@@ -281,7 +286,7 @@ function agregarAFavoritosDetalle(idPropiedad) {
 }
 
 function eliminarDeFavoritosDetalle(idPropiedad) {
-    fetch('/favorito/eliminar', {
+    fetch(favoritoEliminarUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -308,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById('favorito-detalle-' + realId);
     if (!btn) return;
 
-    fetch('/favorito/verificar/' + realId)
+    fetch(favoritoVerificarBaseUrl + realId)
         .then(response => response.json())
         .then(data => setFavoritoDetalleVisual(btn, !!data.esFavorito))
         .catch(() => setFavoritoDetalleVisual(btn, false));

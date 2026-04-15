@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mensajes recibidos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/mensajespropietario.css}">
+</head>
+<body class="page-mensajespropietario">
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-4 mb-5 mensajes-wrapper">
+    <div class="d-flex justify-content-between align-items-center mb-3 mensajes-topbar">
+        <h2 class="mb-0">Mensajes de tus propiedades</h2>
+        <a th:href="@{/propietario}" class="btn btn-outline-secondary">Volver a mis propiedades</a>
+    </div>
+
+    <div class="card p-3 mb-4">
+        <form method="get" th:action="@{/propietario/mensajes}" class="row g-2 align-items-end">
+            <div class="col-md-8">
+                <label for="idPropiedad" class="form-label">Filtrar por propiedad</label>
+                <select id="idPropiedad" name="idPropiedad" class="form-select">
+                    <option value="">Todas mis propiedades</option>
+                    <option th:each="p : ${propiedades}"
+                            th:value="${p['id']}"
+                            th:text="${p['titulo']}"
+                            th:selected="${idPropiedadSeleccionada != null and idPropiedadSeleccionada == p['id']}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">Aplicar filtro</button>
+                <a th:href="@{/propietario/mensajes}" class="btn btn-outline-dark w-100">Limpiar</a>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${param.error != null}" class="alert alert-warning">
+        No se pudo aplicar el filtro seleccionado.
+    </div>
+
+    <div th:if="${mensajes.isEmpty()}" class="alert alert-info">
+        No tienes mensajes para mostrar.
+    </div>
+
+    <div th:unless="${mensajes.isEmpty()}" class="vstack gap-3">
+        <div class="card mensajes-card" th:each="mensaje : ${mensajes}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title mb-0" th:text="${mensaje.propiedadTitulo}">Propiedad</h5>
+                    <small class="text-muted" th:text="${#temporals.format(mensaje.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2026 00:00</small>
+                </div>
+                <p class="card-text mb-3" th:text="${mensaje.contenido}">Contenido del mensaje</p>
+                <a th:href="@{/propiedad/{id}(id=${mensaje.propiedadId})}" class="btn btn-sm btn-outline-primary">Ver propiedad</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

@@ -14,7 +14,7 @@
     <div class="container">
         <h1 class="text-center mb-4 index-hero-title">Encuentra tu alojamiento perfecto</h1>
 
-        <form action="/propiedades" method="get" class="row g-3 justify-content-center hero-search-form">
+        <form th:action="@{/propiedades}" method="get" class="row g-3 justify-content-center hero-search-form">
             <div class="col-md-6">
                 <input type="text" name="ciudad" class="form-control form-control-lg hero-search-input"
                        placeholder="¿A dónde viajas?" required>

@@ -13,12 +13,12 @@
 
   <div class="d-flex justify-content-between align-items-center mb-4 crearpropiedad-header">
     <h2 class="mb-0">🏡 Añadir nueva propiedad</h2>
-    <a href="/propietario" class="btn btn-outline-secondary">⬅ Volver</a>
+    <a th:href="@{/propietario}" class="btn btn-outline-secondary">⬅ Volver</a>
   </div>
 
   <div th:if="${param.error}" class="alert alert-danger" role="alert" th:text="${param.error}"></div>
 
-  <form action="/guardarPropiedad" method="post" enctype="multipart/form-data" class="card p-4 shadow crearpropiedad-card">
+  <form th:action="@{/guardarPropiedad}" method="post" enctype="multipart/form-data" class="card p-4 shadow crearpropiedad-card">
 
     <div class="mb-3">
       <label class="form-label">Título</label>
