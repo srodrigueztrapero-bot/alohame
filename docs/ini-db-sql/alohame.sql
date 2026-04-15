@@ -154,6 +154,19 @@ INSERT INTO `imagenes` (`id`, `id_propiedad`, `url`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `mensaje`
+--
+
+CREATE TABLE `mensaje` (
+  `id` bigint(20) NOT NULL,
+  `contenido` text NOT NULL,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
+  `propiedad_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `propiedades`
 --
 
@@ -254,6 +267,13 @@ ALTER TABLE `imagenes`
   ADD KEY `id_propiedad` (`id_propiedad`);
 
 --
+-- Indices de la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_mensaje_propiedad` (`propiedad_id`);
+
+--
 -- Indices de la tabla `propiedades`
 --
 ALTER TABLE `propiedades`
@@ -298,6 +318,12 @@ ALTER TABLE `propiedades`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT de la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `reservas`
 --
 ALTER TABLE `reservas`
@@ -331,6 +357,12 @@ ALTER TABLE `imagenes`
 --
 ALTER TABLE `propiedades`
   ADD CONSTRAINT `propiedades_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
+
+--
+-- Filtros para la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  ADD CONSTRAINT `fk_mensaje_propiedad` FOREIGN KEY (`propiedad_id`) REFERENCES `propiedades` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `reservas`

@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${app.images.dir:${user.dir}/src/main/resources/static/images}")
+    @Value("${app.images.dir:${user.home}/alohame/images}")
     private String imagesDir;
 
     @Override

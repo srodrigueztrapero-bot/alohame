@@ -309,7 +309,7 @@ public class AlohameController {
             List<Mensaje> mensajes = mensajeDAO.obtenerPorPropiedad((long) id);
             model.addAttribute("mensajes", mensajes);
 
-            return "detallePropiedad";
+            return "detallepropiedad";
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/propiedades?error=Error al cargar la propiedad";
@@ -319,7 +319,7 @@ public class AlohameController {
     @GetMapping("/crearPropiedad")
     public String mostrarFormularioPropiedad(Model model) {
         model.addAttribute("propietarios", usuarioService.listarPropietarios());
-        return "crearPropiedad";
+        return "crearpropiedad";
     }
 
     @PostMapping("/guardarPropiedad")
@@ -359,7 +359,7 @@ public class AlohameController {
     @GetMapping("/editarPropiedad/{id}")
     public String editarPropiedad(@PathVariable int id, Model model) {
         model.addAttribute("propiedad", propiedadDAO.obtenerPorId(id));
-        return "editarPropiedad";
+        return "editarpropiedad";
     }
 
     @PostMapping("/actualizarPropiedad")
@@ -553,7 +553,7 @@ public class AlohameController {
 
     @GetMapping("/crearComentario")
     public String mostrarFormularioComentario() {
-        return "crearComentario";
+        return "crearcomentario";
     }
 
     @PostMapping("/guardarComentario")

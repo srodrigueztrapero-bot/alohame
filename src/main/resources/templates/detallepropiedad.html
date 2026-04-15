@@ -148,6 +148,14 @@
 
       <!-- dejar mensaje a propietario -->
 
+      <div th:if="${param.success}" class="alert alert-success mt-3">
+        Mensaje enviado correctamente al propietario.
+      </div>
+
+      <div th:if="${param.error}" class="alert alert-danger mt-3" th:text="${param.error}">
+        No se pudo enviar el mensaje.
+      </div>
+
       <form th:action="@{/mensajes/enviar}" method="post">
 
 

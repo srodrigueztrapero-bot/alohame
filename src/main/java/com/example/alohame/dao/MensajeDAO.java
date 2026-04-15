@@ -1,6 +1,7 @@
 package com.example.alohame.dao;
 
 import com.example.alohame.model.Mensaje;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,25 @@ public class MensajeDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @PostConstruct
+    public void inicializarTablaMensaje() {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS mensaje (
+                    id BIGINT NOT NULL AUTO_INCREMENT,
+                    contenido TEXT NOT NULL,
+                    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    propiedad_id INT NOT NULL,
+                    PRIMARY KEY (id),
+                    KEY idx_mensaje_propiedad (propiedad_id),
+                    CONSTRAINT fk_mensaje_propiedad
+                        FOREIGN KEY (propiedad_id) REFERENCES propiedades(id)
+                        ON DELETE CASCADE
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+                """;
+
+        jdbcTemplate.execute(sql);
+    }
+
     public void guardar(Mensaje mensaje) {
         String sql = "INSERT INTO mensaje (contenido, fecha, propiedad_id) VALUES (?, ?, ?)";
 
@@ -27,17 +47,11 @@ public class MensajeDAO {
                 mensaje.getPropiedadId()
         );
     }
-    public List<Mensaje> obtenerPorPropiedad(Long propiedadId) {
-        String sql = "SELECT * FROM mensaje WHERE propiedad_id = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Mensaje m = new Mensaje();
-            m.setId(rs.getLong("id"));
-            m.setContenido(rs.getString("contenido"));
-            m.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
-            m.setPropiedadId(rs.getLong("propiedad_id"));
-            return m;
-        }, propiedadId);
+    public List<Mensaje> obtenerPorPropiedad(Long propiedadId) {
+        String sql = "SELECT id, contenido, fecha, propiedad_id FROM mensaje WHERE propiedad_id = ? ORDER BY fecha DESC";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapMensajeBase(rs), propiedadId);
     }
 
     public List<Mensaje> obtenerPorPropietario(Long idPropietario) {
@@ -73,12 +87,17 @@ public class MensajeDAO {
     }
 
     private Mensaje mapMensajeConPropiedad(java.sql.ResultSet rs) throws java.sql.SQLException {
+        Mensaje m = mapMensajeBase(rs);
+        m.setPropiedadTitulo(rs.getString("propiedad_titulo"));
+        return m;
+    }
+
+    private Mensaje mapMensajeBase(java.sql.ResultSet rs) throws java.sql.SQLException {
         Mensaje m = new Mensaje();
         m.setId(rs.getLong("id"));
         m.setContenido(rs.getString("contenido"));
         m.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
         m.setPropiedadId(rs.getLong("propiedad_id"));
-        m.setPropiedadTitulo(rs.getString("propiedad_titulo"));
         return m;
     }
 }

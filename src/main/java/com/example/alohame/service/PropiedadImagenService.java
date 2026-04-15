@@ -34,7 +34,7 @@ public class PropiedadImagenService {
     private ImagenDAO imagenDAO;
 
     // Ruta de la carpeta donde se guardan físicamente las imágenes
-    @Value("${app.images.dir:${user.dir}/src/main/resources/static/images}")
+    @Value("${app.images.dir:${user.home}/alohame/images}")
     private String imagesDir;
 
     /**
