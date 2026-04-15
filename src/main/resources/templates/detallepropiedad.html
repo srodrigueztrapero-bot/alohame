@@ -146,6 +146,36 @@
         </div>
       </div>
 
+      <!-- dejar mensaje a propietario -->
+
+      <form action="/mensajes/enviar" method="post">
+
+
+        <input type="hidden" name="propiedadId" th:value="${propiedad['id']}">
+
+        <div class="mb-3">
+          <textarea name="contenido" class="form-control" placeholder="Escribe tu mensaje..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          Enviar mensaje
+        </button>
+
+      </form>
+
+      <div class="mt-4">
+        <h5>Mensajes al propietario</h5>
+
+        <div th:if="${mensajes.isEmpty()}">
+          <p>No hay mensajes aún</p>
+        </div>
+
+        <div th:each="mensaje : ${mensajes}" class="border p-2 mb-2 rounded">
+          <p th:text="${mensaje.contenido}"></p>
+          <small th:text="${mensaje.fecha}"></small>
+        </div>
+      </div>
+
       <!-- PROPIEDADES RECOMENDADAS -->
       <div class="mt-4">
         <h5>Propiedades similares</h5>

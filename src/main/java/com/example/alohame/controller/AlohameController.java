@@ -1,6 +1,7 @@
 package com.example.alohame.controller;
 
 import com.example.alohame.dao.*;
+import com.example.alohame.model.Mensaje;
 import com.example.alohame.service.ComentarioService;
 import com.example.alohame.service.FavoritoService;
 import com.example.alohame.service.PropiedadImagenService;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -254,6 +256,9 @@ public class AlohameController {
         model.addAttribute("comentarios", comentarioService.obtenerComentariosPorPropiedad(id));
         model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConMedia());
         agregarContadorFavoritos(model, session);
+
+        List<Mensaje> mensajes = mensajeDAO.obtenerPorPropiedad((long) id);
+        model.addAttribute("mensajes", mensajes);
 
         return "detallePropiedad";
     }
@@ -506,6 +511,25 @@ public class AlohameController {
 
         comentarioService.guardarComentario(id_usuario, id_propiedad, comentario, puntuacion);
         return "redirect:/comentarios";
+    }
+    /* =========================
+       MENSAJE
+    ========================= */
+    @Autowired
+    private MensajeDAO mensajeDAO;
+    @PostMapping("/mensajes/enviar")
+    public String enviarMensaje(@RequestParam String contenido,
+                                @RequestParam String propiedadId) {
+
+        Long id = Long.parseLong(propiedadId);
+
+        Mensaje mensaje = new Mensaje();
+        mensaje.setContenido(contenido);
+        mensaje.setFecha(LocalDateTime.now());
+
+        mensajeDAO.guardar(mensaje);
+
+        return "redirect:/propiedad/" + id;
     }
 }
 
