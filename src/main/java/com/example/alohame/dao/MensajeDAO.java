@@ -27,6 +27,8 @@ public class MensajeDAO {
                     contenido TEXT NOT NULL,
                     fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     propiedad_id INT NOT NULL,
+                    respuesta TEXT DEFAULT NULL,
+                    fecha_respuesta DATETIME DEFAULT NULL,
                     PRIMARY KEY (id),
                     KEY idx_mensaje_propiedad (propiedad_id),
                     CONSTRAINT fk_mensaje_propiedad
@@ -34,8 +36,15 @@ public class MensajeDAO {
                         ON DELETE CASCADE
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
                 """;
-
         jdbcTemplate.execute(sql);
+
+        // Añadir columnas si la tabla ya existía sin ellas
+        try {
+            jdbcTemplate.execute("ALTER TABLE mensaje ADD COLUMN respuesta TEXT DEFAULT NULL");
+        } catch (Exception ignored) {}
+        try {
+            jdbcTemplate.execute("ALTER TABLE mensaje ADD COLUMN fecha_respuesta DATETIME DEFAULT NULL");
+        } catch (Exception ignored) {}
     }
 
     public void guardar(Mensaje mensaje) {
@@ -48,8 +57,13 @@ public class MensajeDAO {
         );
     }
 
+    public void responder(Long id, String respuesta) {
+        String sql = "UPDATE mensaje SET respuesta = ?, fecha_respuesta = ? WHERE id = ?";
+        jdbcTemplate.update(sql, respuesta, Timestamp.valueOf(java.time.LocalDateTime.now()), id);
+    }
+
     public List<Mensaje> obtenerPorPropiedad(Long propiedadId) {
-        String sql = "SELECT id, contenido, fecha, propiedad_id FROM mensaje WHERE propiedad_id = ? ORDER BY fecha DESC";
+        String sql = "SELECT id, contenido, fecha, propiedad_id, respuesta, fecha_respuesta FROM mensaje WHERE propiedad_id = ? ORDER BY fecha DESC";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> mapMensajeBase(rs), propiedadId);
     }
@@ -60,6 +74,8 @@ public class MensajeDAO {
                        m.contenido,
                        m.fecha,
                        m.propiedad_id,
+                       m.respuesta,
+                       m.fecha_respuesta,
                        p.titulo AS propiedad_titulo
                 FROM mensaje m
                 INNER JOIN propiedades p ON p.id = m.propiedad_id
@@ -76,6 +92,8 @@ public class MensajeDAO {
                        m.contenido,
                        m.fecha,
                        m.propiedad_id,
+                       m.respuesta,
+                       m.fecha_respuesta,
                        p.titulo AS propiedad_titulo
                 FROM mensaje m
                 INNER JOIN propiedades p ON p.id = m.propiedad_id
@@ -98,6 +116,9 @@ public class MensajeDAO {
         m.setContenido(rs.getString("contenido"));
         m.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
         m.setPropiedadId(rs.getLong("propiedad_id"));
+        m.setRespuesta(rs.getString("respuesta"));
+        Timestamp tr = rs.getTimestamp("fecha_respuesta");
+        if (tr != null) m.setFechaRespuesta(tr.toLocalDateTime());
         return m;
     }
 }

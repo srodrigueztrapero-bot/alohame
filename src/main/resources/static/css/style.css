@@ -16,7 +16,8 @@ html, body {
 }
 
 body {
-  background-color: #f9fafb;
+  background: linear-gradient(160deg, #f0fdf8 0%, #f8fffc 55%, #eef9f7 100%);
+  min-height: 100vh;
 }
 
 h1 {
@@ -46,10 +47,7 @@ header {
 
 /* Navbar principal con fondo fotográfico + overlays */
 .navbar.bg-dark {
-  background-color: #0a3a3a !important;
-  background-image: url('/images/fondo.jpg');
-  background-size: cover;
-  background-position: center 38%;
+  background: linear-gradient(135deg, #1e293b 0%, #0f4c5c 50%, #0a3a3a 100%) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 10px 26px rgba(0, 97, 110, 0.24);
   padding-top: 1.2rem;
@@ -70,13 +68,13 @@ header {
 }
 
 .navbar.bg-dark.navbar-scrolled .brand-logo-wrap {
-  width: 102px;
-  height: 102px;
+  width: 44px;
+  height: 44px;
 }
 
 .navbar.bg-dark.navbar-scrolled .brand-logo {
-  width: 98px;
-  height: 98px;
+  width: 40px;
+  height: 40px;
 }
 
 .navbar.bg-dark.navbar-scrolled .navbar-brand .fw-bold {
@@ -173,12 +171,12 @@ header {
 }
 
 .brand-logo-wrap {
-  width: 128px;
-  height: 128px;
+  width: 56px;
+  height: 56px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 12px;
+  margin-right: 10px;
   flex-shrink: 0;
   background: transparent;
   border-radius: 0;
@@ -196,17 +194,15 @@ header {
 }
 
 .brand-logo {
-  width: 124px;
-  height: 124px;
-  object-fit: contain;
+  width: 52px;
+  height: 52px;
   display: block;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.25));
   transition: transform 0.3s ease;
-  transform: scale(1.35);
 }
 
 .navbar-brand:hover .brand-logo {
-  transform: scale(1.42);
+  transform: scale(1.1);
 }
 
 @media (max-width: 992px) {
@@ -245,15 +241,14 @@ header {
   }
 
   .brand-logo-wrap {
-    width: 80px;
-    height: 80px;
+    width: 44px;
+    height: 44px;
     margin-right: 8px;
   }
 
   .brand-logo {
-    width: 76px;
-    height: 76px;
-    transform: scale(1);
+    width: 40px;
+    height: 40px;
   }
 
   .navbar-brand .fw-bold {

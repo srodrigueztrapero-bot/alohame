@@ -36,6 +36,10 @@
         </form>
     </div>
 
+    <div th:if="${param.success != null}" class="alert alert-success">
+        Respuesta enviada correctamente.
+    </div>
+
     <div th:if="${param.error != null}" class="alert alert-warning">
         No se pudo aplicar el filtro seleccionado.
     </div>
@@ -52,7 +56,30 @@
                     <small class="text-muted" th:text="${#temporals.format(mensaje.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2026 00:00</small>
                 </div>
                 <p class="card-text mb-3" th:text="${mensaje.contenido}">Contenido del mensaje</p>
-                <a th:href="@{/propiedad/{id}(id=${mensaje.propiedadId})}" class="btn btn-sm btn-outline-primary">Ver propiedad</a>
+
+                <!-- Respuesta existente -->
+                <div th:if="${mensaje.respuesta != null}" class="alert alert-success py-2 mb-3">
+                    <small class="fw-semibold d-block mb-1">Tu respuesta
+                        <span th:if="${mensaje.fechaRespuesta != null}" class="text-muted fw-normal"
+                              th:text="'· ' + ${#temporals.format(mensaje.fechaRespuesta, 'dd/MM/yyyy HH:mm')}"></span>
+                    </small>
+                    <span th:text="${mensaje.respuesta}"></span>
+                </div>
+
+                <!-- Formulario de respuesta -->
+                <div th:id="'form-' + ${mensaje.id}">
+                    <form th:action="@{/propietario/mensajes/responder}" method="post" class="d-flex gap-2 align-items-start mt-2">
+                        <input type="hidden" name="mensajeId" th:value="${mensaje.id}">
+                        <textarea name="respuesta" class="form-control form-control-sm"
+                                  rows="2"
+                                  th:placeholder="${mensaje.respuesta != null ? 'Actualizar respuesta...' : 'Escribe tu respuesta...'}"></textarea>
+                        <button type="submit" class="btn btn-sm btn-primary text-nowrap">
+                            <span th:text="${mensaje.respuesta != null ? 'Actualizar' : 'Responder'}">Responder</span>
+                        </button>
+                    </form>
+                </div>
+
+                <a th:href="@{/propiedad/{id}(id=${mensaje.propiedadId})}" class="btn btn-sm btn-outline-primary mt-2">Ver propiedad</a>
             </div>
         </div>
     </div>

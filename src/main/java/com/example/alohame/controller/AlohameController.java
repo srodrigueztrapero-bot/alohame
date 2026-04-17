@@ -568,6 +568,20 @@ public class AlohameController {
     /* =========================
        MENSAJE
     ========================= */
+    @PostMapping("/propietario/mensajes/responder")
+    public String responderMensaje(@RequestParam Long mensajeId,
+                                   @RequestParam String respuesta,
+                                   HttpSession session) {
+        if (!esTipoUsuario(session, "propietario")) {
+            return "redirect:/login";
+        }
+        if (respuesta == null || respuesta.trim().isEmpty()) {
+            return "redirect:/propietario/mensajes?error=respuesta_vacia";
+        }
+        mensajeService.responder(mensajeId, respuesta.trim());
+        return "redirect:/propietario/mensajes?success=1";
+    }
+
     @PostMapping("/mensajes/enviar")
     public String enviarMensaje(@RequestParam String contenido,
                                 @RequestParam Long propiedadId,

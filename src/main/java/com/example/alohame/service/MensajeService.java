@@ -24,4 +24,8 @@ public class MensajeService {
     public List<Mensaje> obtenerPorPropietarioYPropiedad(Long idPropietario, Long idPropiedad) {
         return mensajeDAO.obtenerPorPropietarioYPropiedad(idPropietario, idPropiedad);
     }
+
+    public void responder(Long id, String respuesta) {
+        mensajeDAO.responder(id, respuesta);
+    }
 }

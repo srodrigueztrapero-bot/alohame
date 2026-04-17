@@ -30,7 +30,7 @@
 
 <div class="container mt-4">
 
-    <h2 class="mb-4">🏡 Propiedades disponibles</h2>
+    <h2 class="mb-4">Propiedades disponibles</h2>
 
     <div class="row">
 
@@ -54,7 +54,7 @@
                         📍 <span th:text="${propiedad['ubicacion']}"></span>
                     </p>
 
-                    <p class="fw-bold text-danger fs-5"
+                    <p class="fw-bold fs-5 precio-noche"
                        th:text="${propiedad['precio_noche']} + ' € / noche'"></p>
 
                     <a th:href="@{'/propiedad/' + ${propiedad['id']}}"

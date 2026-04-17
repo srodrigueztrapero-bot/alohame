@@ -59,6 +59,10 @@
 .page-index h2.mb-4 {
   font-size: clamp(1.5rem, 2vw, 1.95rem);
   margin-bottom: 1.2rem !important;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #0f766e;
+  letter-spacing: -0.01em;
 }
 
 .page-index .card {
@@ -86,6 +90,11 @@
 
 .page-index .btn.btn-dark {
   background: linear-gradient(135deg, #0f172a, #1f2937);
+}
+
+.page-index .precio-noche {
+  color: #0f766e;
+  font-weight: 600;
 }
 
 @media (max-width: 992px) {

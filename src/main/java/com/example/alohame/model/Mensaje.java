@@ -9,6 +9,8 @@ public class Mensaje {
     private LocalDateTime fecha;
     private Long propiedadId;
     private String propiedadTitulo;
+    private String respuesta;
+    private LocalDateTime fechaRespuesta;
 
     public Mensaje() {}
 
@@ -50,5 +52,21 @@ public class Mensaje {
 
     public void setPropiedadTitulo(String propiedadTitulo) {
         this.propiedadTitulo = propiedadTitulo;
+    }
+
+    public String getRespuesta() {
+        return respuesta;
+    }
+
+    public void setRespuesta(String respuesta) {
+        this.respuesta = respuesta;
+    }
+
+    public LocalDateTime getFechaRespuesta() {
+        return fechaRespuesta;
+    }
+
+    public void setFechaRespuesta(LocalDateTime fechaRespuesta) {
+        this.fechaRespuesta = fechaRespuesta;
     }
 }
