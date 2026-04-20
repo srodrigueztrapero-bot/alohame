@@ -12,3 +12,54 @@
   letter-spacing: 0.2px;
 }
 
+/* Cuadrícula de comodidades */
+.comodidades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.comodidad-check {
+  display: none;
+}
+
+.comodidad-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: #374151;
+  background: #fff;
+  transition: all 0.18s ease;
+  text-align: center;
+  user-select: none;
+}
+
+.comodidad-label i {
+  font-size: 1.5rem;
+  color: #9ca3af;
+  transition: color 0.18s ease;
+}
+
+.comodidad-label:hover {
+  border-color: #0f766e;
+  background: #f0fdf8;
+}
+
+.comodidad-check:checked + .comodidad-label {
+  border-color: #0f766e;
+  background: #f0fdf8;
+  color: #0f766e;
+  font-weight: 600;
+}
+
+.comodidad-check:checked + .comodidad-label i {
+  color: #0f766e;
+}
+

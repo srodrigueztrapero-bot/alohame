@@ -5,6 +5,7 @@
     <title>Editar Propiedad</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/editarpropiedad.css}">
 </head>
 <body>
@@ -54,6 +55,25 @@
         <div class="mb-3">
             <label class="form-label">Añadir nuevas imágenes</label>
             <input type="file" name="imagenes" multiple accept="image/*" class="form-control">
+        </div>
+
+        <!-- COMODIDADES -->
+        <div class="mb-4">
+            <label class="form-label fw-semibold">Comodidades</label>
+            <div class="comodidades-grid">
+                <div th:each="c : ${todasComodidades}" class="comodidad-item">
+                    <input type="checkbox"
+                           name="comodidades"
+                           th:value="${c['id']}"
+                           th:id="'com-' + ${c['id']}"
+                           th:checked="${comodidadesSeleccionadas.contains(c['id'])}"
+                           class="comodidad-check">
+                    <label th:for="'com-' + ${c['id']}" class="comodidad-label">
+                        <i th:class="'bi ' + ${c['icono']}"></i>
+                        <span th:text="${c['nombre']}"></span>
+                    </label>
+                </div>
+            </div>
         </div>
 
         <button type="submit" class="btn btn-dark w-100">

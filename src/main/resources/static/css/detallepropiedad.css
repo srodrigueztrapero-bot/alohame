@@ -144,3 +144,28 @@
   }
 }
 
+
+/* Comodidades en detalle de propiedad */
+.comodidades-detalle {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.comodidad-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #374151;
+  background: #fff;
+}
+
+.comodidad-badge i {
+  font-size: 1.25rem;
+  color: #0f766e;
+  flex-shrink: 0;
+}

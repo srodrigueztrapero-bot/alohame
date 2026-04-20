@@ -43,6 +43,7 @@ public class AlohameController {
     @Autowired private PropiedadDAO propiedadDAO;   // Consultas sobre propiedades
     @Autowired private ImagenDAO imagenDAO;          // Consultas sobre imágenes
     @Autowired private MensajeDAO mensajeDAO;        // Consultas sobre mensajes
+    @Autowired private ComodidadDAO comodidadDAO;   // Comodidades de propiedades
 
     /* =========================
        Services (lógica de negocio delegada)
@@ -308,6 +309,7 @@ public class AlohameController {
 
             List<Mensaje> mensajes = mensajeDAO.obtenerPorPropiedad((long) id);
             model.addAttribute("mensajes", mensajes);
+            model.addAttribute("comodidades", comodidadDAO.obtenerPorPropiedad(id));
 
             return "detallepropiedad";
         } catch (Exception e) {
@@ -359,6 +361,11 @@ public class AlohameController {
     @GetMapping("/editarPropiedad/{id}")
     public String editarPropiedad(@PathVariable int id, Model model) {
         model.addAttribute("propiedad", propiedadDAO.obtenerPorId(id));
+        model.addAttribute("todasComodidades", comodidadDAO.obtenerTodas());
+        model.addAttribute("comodidadesSeleccionadas",
+                comodidadDAO.obtenerPorPropiedad(id).stream()
+                        .map(c -> ((Number) c.get("id")).longValue())
+                        .toList());
         return "editarpropiedad";
     }
 
@@ -369,10 +376,12 @@ public class AlohameController {
                                       @RequestParam double precio,
                                       @RequestParam String ubicacion,
                                       @RequestParam int capacidad,
+                                      @RequestParam(value = "comodidades", required = false) List<Long> comodidades,
                                       @RequestParam("imagenes") MultipartFile[] imagenes,
                                       Model model) {
 
         propiedadDAO.actualizarPropiedad(id, titulo, descripcion, precio, ubicacion, capacidad);
+        comodidadDAO.guardarParaPropiedad(id, comodidades);
 
         try {
             propiedadImagenService.actualizarImagenesPropiedad(id, imagenes);
