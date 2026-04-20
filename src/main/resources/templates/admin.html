@@ -1,70 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zona Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
-<div class="container mt-5 admin-wrapper">
+<main class="container mt-5 admin-wrapper">
 
-    <div class="text-center mb-4 admin-header">
+    <header class="text-center mb-4 admin-header">
         <h1 class="fw-bold admin-title">👑 Panel de Administración</h1>
         <p class="text-muted admin-subtitle">Bienvenido, Admin Alohame</p>
-    </div>
+    </header>
 
-    <div class="text-center mb-4 admin-actions">
+    <nav class="text-center mb-4 admin-actions" aria-label="Acciones de administrador">
         <a th:href="@{/}" class="btn btn-outline-secondary rounded-pill px-4 me-2">
             ⬅ Inicio
         </a>
         <a th:href="@{/logout}" class="btn btn-outline-danger rounded-pill px-4">
             🚪 Cerrar sesión
         </a>
-    </div>
+    </nav>
 
-    <div class="row text-center g-4">
+    <section aria-label="Secciones de administración">
+        <div class="row text-center g-4">
 
-        <div class="col-md-3">
-            <a th:href="@{/usuarios}" class="text-decoration-none admin-link-card">
-                <div class="card p-4 shadow-sm h-100 admin-card">
-                    <h3>👤</h3>
-                    <h5>Usuarios</h5>
-                </div>
-            </a>
+            <div class="col-md-3">
+                <a th:href="@{/usuarios}" class="text-decoration-none admin-link-card">
+                    <div class="card p-4 shadow-sm h-100 admin-card">
+                        <p aria-hidden="true">👤</p>
+                        <h2 class="h5">Usuarios</h2>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a th:href="@{/propiedades}" class="text-decoration-none admin-link-card">
+                    <div class="card p-4 shadow-sm h-100 admin-card">
+                        <p aria-hidden="true">🏠</p>
+                        <h2 class="h5">Propiedades</h2>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a th:href="@{/reservas}" class="text-decoration-none admin-link-card">
+                    <div class="card p-4 shadow-sm h-100 admin-card">
+                        <p aria-hidden="true">📅</p>
+                        <h2 class="h5">Reservas</h2>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a th:href="@{/comentarios}" class="text-decoration-none admin-link-card">
+                    <div class="card p-4 shadow-sm h-100 admin-card">
+                        <p aria-hidden="true">💬</p>
+                        <h2 class="h5">Comentarios</h2>
+                    </div>
+                </a>
+            </div>
+
         </div>
+    </section>
 
-        <div class="col-md-3">
-            <a th:href="@{/propiedades}" class="text-decoration-none admin-link-card">
-                <div class="card p-4 shadow-sm h-100 admin-card">
-                    <h3>🏠</h3>
-                    <h5>Propiedades</h5>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-md-3">
-            <a th:href="@{/reservas}" class="text-decoration-none admin-link-card">
-                <div class="card p-4 shadow-sm h-100 admin-card">
-                    <h3>📅</h3>
-                    <h5>Reservas</h5>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-md-3">
-            <a th:href="@{/comentarios}" class="text-decoration-none admin-link-card">
-                <div class="card p-4 shadow-sm h-100 admin-card">
-                    <h3>💬</h3>
-                    <h5>Comentarios</h5>
-                </div>
-            </a>
-        </div>
-
-    </div>
-
-</div>
+</main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

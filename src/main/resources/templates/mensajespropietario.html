@@ -10,7 +10,7 @@
 
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container mt-4 mb-5 mensajes-wrapper">
+<main class="container mt-4 mb-5 mensajes-wrapper">
     <div class="d-flex justify-content-between align-items-center mb-3 mensajes-topbar">
         <h2 class="mb-0">Mensajes de tus propiedades</h2>
         <a th:href="@{/propietario}" class="btn btn-outline-secondary">Volver a mis propiedades</a>
@@ -70,7 +70,9 @@
                 <div th:id="'form-' + ${mensaje.id}">
                     <form th:action="@{/propietario/mensajes/responder}" method="post" class="d-flex gap-2 align-items-start mt-2">
                         <input type="hidden" name="mensajeId" th:value="${mensaje.id}">
-                        <textarea name="respuesta" class="form-control form-control-sm"
+                        <label th:for="'respuesta-' + ${mensaje.id}" class="visually-hidden">Respuesta</label>
+                        <textarea th:id="'respuesta-' + ${mensaje.id}"
+                                  name="respuesta" class="form-control form-control-sm"
                                   rows="2"
                                   th:placeholder="${mensaje.respuesta != null ? 'Actualizar respuesta...' : 'Escribe tu respuesta...'}"></textarea>
                         <button type="submit" class="btn btn-sm btn-primary text-nowrap">
@@ -83,7 +85,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

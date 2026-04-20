@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alohame</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/index.css}">
@@ -9,14 +11,15 @@
 
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<!-- BUSCADOR FUNCIONAL -->
-<div class="bg-light py-5 border-bottom search-hero-section">
+<!-- BUSCADOR -->
+<header class="bg-light py-5 border-bottom search-hero-section">
     <div class="container">
         <h1 class="text-center mb-4 index-hero-title">Encuentra tu alojamiento perfecto</h1>
 
         <form th:action="@{/propiedades}" method="get" class="row g-3 justify-content-center hero-search-form">
             <div class="col-md-6">
-                <input type="text" name="ciudad" class="form-control form-control-lg hero-search-input"
+                <label for="ciudad" class="visually-hidden">¿A dónde viajas?</label>
+                <input type="text" id="ciudad" name="ciudad" class="form-control form-control-lg hero-search-input"
                        placeholder="¿A dónde viajas?" required>
             </div>
             <div class="col-md-2">
@@ -26,20 +29,22 @@
             </div>
         </form>
     </div>
-</div>
+</header>
 
-<div class="container mt-4">
+<main class="container mt-4">
 
     <h2 class="mb-4">Propiedades disponibles</h2>
 
-    <div class="row">
+    <section aria-label="Lista de propiedades">
+        <div class="row">
 
         <div class="col-12 col-md-6 col-lg-4 mb-4" th:each="propiedad : ${propiedades}">
 
-            <div class="card h-100 shadow-sm position-relative">
+            <article class="card h-100 shadow-sm position-relative">
 
                 <img th:if="${propiedad['url'] != null}"
                      th:src="@{'/' + ${propiedad['url']}}"
+                     th:alt="${'Imagen de ' + propiedad['titulo']}"
                      class="card-img-top index-card-image">
 
 
@@ -65,13 +70,14 @@
 
                 </div>
 
-            </div>
+            </article>
 
         </div>
 
     </div>
+    </section>
 
-</div>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

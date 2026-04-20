@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalle propiedad</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -11,7 +13,7 @@
 
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container mt-4">
+<main class="container mt-4">
 
   <div class="d-flex gap-2 mb-3">
     <a th:href="@{/}" class="btn btn-outline-dark">Inicio</a>
@@ -19,15 +21,15 @@
     <a th:href="@{/favoritos}" class="btn btn-outline-danger">Mis favoritos <span class="badge text-bg-light ms-1" id="favoritos-count" th:text="${favoritosCount}">0</span></a>
   </div>
 
-  <div class="header-detalle">
-    <h2 class="fw-bold mb-3" th:text="${propiedad['titulo']}"></h2>
+  <header class="header-detalle">
+    <h1 class="h2 fw-bold mb-3" th:text="${propiedad['titulo']}"></h1>
     <button class="btn-favorito-grande"
             th:id="'favorito-detalle-' + ${propiedad['id']}"
             th:onclick="'toggleFavoritoDetalle(' + ${propiedad['id']} + ')'"
             title="Agregar a favoritos">
       ♡
     </button>
-  </div>
+  </header>
 
   <!-- GALERIA DE IMAGENES -->
   <div class="foto-grid mb-4 position-relative" th:classappend="${imagenes.size() == 1} ? 'foto-grid--single'">
@@ -137,9 +139,11 @@
             <input type="hidden" name="id_propiedad" th:value="${propiedad['id']}">
             <input type="hidden" name="id_usuario" th:value="${session.usuario['id']}">
 
-            <textarea name="comentario" class="form-control mb-2" placeholder="Tu comentario..." required></textarea>
+            <label for="comentario" class="visually-hidden">Tu comentario</label>
+            <textarea id="comentario" name="comentario" class="form-control mb-2" placeholder="Tu comentario..." required></textarea>
 
-            <select name="puntuacion" class="form-select mb-2">
+            <label for="puntuacion" class="visually-hidden">Puntuación</label>
+            <select id="puntuacion" name="puntuacion" class="form-select mb-2">
               <option value="1">1 estrella</option>
               <option value="2">2 estrellas</option>
               <option value="3">3 estrellas</option>
@@ -191,7 +195,8 @@
         <input type="hidden" name="propiedadId" th:value="${propiedad['id']}">
 
         <div class="mb-3">
-          <textarea name="contenido" class="form-control" placeholder="Escribe tu mensaje..." required></textarea>
+          <label for="contenido" class="visually-hidden">Escribe tu mensaje</label>
+        <textarea id="contenido" name="contenido" class="form-control" placeholder="Escribe tu mensaje..." required></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">
@@ -224,7 +229,7 @@
       </div>
 
       <!-- PROPIEDADES RECOMENDADAS -->
-      <div class="mt-4">
+      <aside class="mt-4">
         <h5>Propiedades similares</h5>
         <div class="list-group">
           <a th:each="prop : ${propiedades}"
@@ -245,11 +250,11 @@
             </div>
           </a>
         </div>
-      </div>
+      </aside>
     </div>
   </div>
 
-</div>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
