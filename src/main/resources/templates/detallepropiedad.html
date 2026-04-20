@@ -30,38 +30,54 @@
   </div>
 
   <!-- GALERIA DE IMAGENES -->
-  <div id="carouselPropiedad" class="carousel slide mb-4">
+  <div class="foto-grid mb-4 position-relative" th:classappend="${imagenes.size() == 1} ? 'foto-grid--single'">
 
-    <div class="carousel-inner">
-
-      <div th:each="img, iterStat : ${imagenes}"
-           th:class="'carousel-item ' + (${iterStat.index} == 0 ? 'active' : '')">
-
-        <img th:src="@{'/' + ${img['url']}}"
-             class="d-block w-100 rounded"
-             style="height:400px; object-fit:cover;">
-      </div>
-
+    <div class="foto-main">
+      <img th:if="${imagenes.size() > 0}"
+           th:src="@{'/' + ${imagenes[0]['url']}}"
+           alt="Imagen principal" class="foto-img">
     </div>
 
-    <!-- BOTON ANTERIOR -->
-    <button class="carousel-control-prev" type="button"
-            data-bs-target="#carouselPropiedad" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
+    <div class="foto-side" th:if="${imagenes.size() > 1}">
+      <div th:each="img, i : ${imagenes}"
+           th:if="${i.index >= 1 and i.index <= 4}"
+           class="foto-side-item">
+        <img th:src="@{'/' + ${img['url']}}" th:alt="${'Foto ' + i.index}" class="foto-img">
+      </div>
+    </div>
+
+    <button class="btn-ver-fotos" onclick="abrirModal()">
+      <i class="bi bi-grid-3x3-gap-fill me-1"></i>Ver todas las fotos
     </button>
 
-    <!-- BOTON SIGUIENTE -->
-    <button class="carousel-control-next" type="button"
-            data-bs-target="#carouselPropiedad" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
-    <div class="carousel-indicators">
-      <button th:each="img, iterStat : ${imagenes}"
-              type="button"
-              data-bs-target="#carouselPropiedad"
-              th:attr="data-bs-slide-to=${iterStat.index}"
-              th:classappend="${iterStat.index == 0} ? 'active'">
-      </button>
+  </div>
+
+  <!-- MODAL GALERIA COMPLETA -->
+  <div class="modal fade" id="modalGaleria" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-0">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="carouselModal" class="carousel slide">
+            <div class="carousel-inner">
+              <div th:each="img, i : ${imagenes}"
+                   th:class="'carousel-item ' + (${i.index == 0} ? 'active' : '')">
+                <img th:src="@{'/' + ${img['url']}}"
+                     class="d-block mx-auto"
+                     style="max-height:75vh; max-width:100%; object-fit:contain;">
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselModal" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselModal" data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -336,6 +352,10 @@ function eliminarDeFavoritosDetalle(idPropiedad) {
         }
     })
     .catch(() => showToast('Error de red al eliminar favorito', 'error'));
+}
+
+function abrirModal() {
+    new bootstrap.Modal(document.getElementById('modalGaleria')).show();
 }
 
 // Cargar estado de favorito al cargar la pagina
