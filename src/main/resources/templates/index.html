@@ -48,7 +48,7 @@
                      class="card-img-top index-card-image">
 
 
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
 
                     <h5 class="card-title" th:text="${propiedad['titulo']}"></h5>
 
@@ -64,7 +64,7 @@
                        th:text="${propiedad['precio_noche']} + ' € / noche'"></p>
 
                     <a th:href="@{'/propiedad/' + ${propiedad['id']}}"
-                       class="btn btn-dark w-100 rounded-pill py-2">
+                       class="btn btn-dark w-100 rounded-pill py-2 mt-auto">
                         Ver detalle
                     </a>
 
