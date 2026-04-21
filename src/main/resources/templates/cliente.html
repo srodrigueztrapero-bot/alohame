@@ -75,6 +75,13 @@
 
                         <a th:href="@{/propiedad/{id}(id=${r['id_propiedad']})}"
                            class="btn btn-primary btn-sm mt-3 w-100">Ver propiedad</a>
+
+                        <form th:if="${r['estado'] == 'confirmada'}"
+                              th:action="@{/cliente/cancelar/{id}(id=${r['id']})}"
+                              method="get"
+                              onsubmit="return confirm('¿Seguro que quieres cancelar esta reserva?')">
+                            <button type="submit" class="btn btn-outline-danger btn-sm mt-2 w-100">Cancelar reserva</button>
+                        </form>
                     </div>
                 </article>
             </div>

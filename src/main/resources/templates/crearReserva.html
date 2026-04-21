@@ -16,7 +16,7 @@
 <main class="container mt-4 crearreserva-wrapper">
   <h1>Nueva Reserva</h1>
 
-  <form th:action="@{/guardarReserva}" method="post" class="crearreserva-form">
+  <form th:action="@{/guardarReserva}" method="post" class="crearreserva-form" id="reservaForm">
 
     <input type="hidden" name="id_propiedad" th:value="${id_propiedad}">
 
@@ -28,6 +28,9 @@
     <div class="mb-3">
       <label for="fecha_fin" class="form-label">Fecha fin:</label>
       <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" required>
+      <div id="fecha-warning" class="alert alert-warning mt-2 d-none">
+        La fecha de fin debe ser posterior a la fecha de inicio.
+      </div>
     </div>
 
     <div class="crearreserva-actions">
@@ -44,5 +47,43 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const hoy = new Date().toISOString().split('T')[0];
+  const inputInicio = document.getElementById('fecha_inicio');
+  const inputFin = document.getElementById('fecha_fin');
+  const warning = document.getElementById('fecha-warning');
+
+  inputInicio.min = hoy;
+  inputFin.min = hoy;
+
+  inputInicio.addEventListener('change', function () {
+    if (this.value) {
+      const diaAfter = new Date(this.value);
+      diaAfter.setDate(diaAfter.getDate() + 1);
+      inputFin.min = diaAfter.toISOString().split('T')[0];
+      if (inputFin.value && inputFin.value <= this.value) {
+        inputFin.value = '';
+      }
+    }
+    validarFechas();
+  });
+
+  inputFin.addEventListener('change', validarFechas);
+
+  function validarFechas() {
+    if (inputInicio.value && inputFin.value && inputFin.value <= inputInicio.value) {
+      warning.classList.remove('d-none');
+    } else {
+      warning.classList.add('d-none');
+    }
+  }
+
+  document.getElementById('reservaForm').addEventListener('submit', function (e) {
+    if (inputFin.value && inputInicio.value && inputFin.value <= inputInicio.value) {
+      e.preventDefault();
+      warning.classList.remove('d-none');
+    }
+  });
+</script>
 </body>
 </html>

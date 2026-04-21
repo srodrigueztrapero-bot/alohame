@@ -414,6 +414,17 @@ public class AlohameController {
         return "redirect:/reservas";
     }
 
+    @GetMapping("/cliente/cancelar/{id}")
+    public String cancelarReservaCliente(@PathVariable int id, HttpSession session) {
+        Map<String, Object> usuario = getUsuarioSesion(session);
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        reservaService.cancelarReserva(id);
+        return "redirect:/cliente";
+    }
+
     /* =========================
        RESERVAS
     ========================= */
@@ -464,6 +475,20 @@ public class AlohameController {
         Integer idUsuarioSesion = obtenerIdUsuario(usuario);
         if (idUsuarioSesion == null) {
             return "redirect:/login";
+        }
+
+        try {
+            java.time.LocalDate inicio = java.time.LocalDate.parse(fecha_inicio);
+            java.time.LocalDate fin = java.time.LocalDate.parse(fecha_fin);
+            if (!fin.isAfter(inicio)) {
+                model.addAttribute("error", "❌ La fecha de fin debe ser posterior a la fecha de inicio");
+                model.addAttribute("id_propiedad", id_propiedad);
+                return "crearReserva";
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "❌ Formato de fechas no válido");
+            model.addAttribute("id_propiedad", id_propiedad);
+            return "crearReserva";
         }
 
         if (!reservaService.guardarReservaSiDisponible(idUsuarioSesion, id_propiedad, fecha_inicio, fecha_fin)) {
