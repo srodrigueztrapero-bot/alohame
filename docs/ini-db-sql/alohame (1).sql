@@ -3,15 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-04-2026 a las 15:12:03
+-- Tiempo de generación: 22-04-2026 a las 17:28:21
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
-
-CREATE DATABASE IF NOT EXISTS alohame
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
-
-USE alohame;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -26,6 +20,9 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `alohame`
 --
+DROP DATABASE IF EXISTS alohame;
+CREATE DATABASE alohame;
+USE alohame;
 
 -- --------------------------------------------------------
 
@@ -48,7 +45,9 @@ CREATE TABLE `comentarios` (
 
 INSERT INTO `comentarios` (`id`, `id_usuario`, `id_propiedad`, `comentario`, `puntuacion`, `fecha`) VALUES
 (1, 2, 1, 'Muy buena experiencia', 5, '2026-03-29 18:53:22'),
-(2, 3, 13, 'Perfecta para relajarse, nuestro anfitrión nos dejó desayuno para todos los dias', 5, '2026-04-10 15:15:44');
+(2, 3, 13, 'Perfecta para relajarse, nuestro anfitrión nos dejó desayuno para todos los dias', 5, '2026-04-10 15:15:44'),
+(3, 2, 1, 'muy contentos con el anfitrión, nos dejó guías del lugar, el único problema es que al ser céntrico hay bastante ruido', 5, '2026-04-20 17:01:58'),
+(4, 3, 9, 'Hace falta limpieza en esta casa, el aire acondicionado no funcionaba y el dueño no nos hacia caso', 2, '2026-04-21 15:13:41');
 
 -- --------------------------------------------------------
 
@@ -102,11 +101,14 @@ CREATE TABLE `favoritos` (
 
 INSERT INTO `favoritos` (`id`, `id_usuario`, `id_propiedad`) VALUES
 (1, 2, 1),
+(8, 2, 2),
+(9, 2, 3),
 (5, 3, 8),
 (6, 3, 13),
 (2, 7, 2),
 (3, 7, 3),
-(4, 7, 6);
+(4, 7, 6),
+(10, 8, 11);
 
 -- --------------------------------------------------------
 
@@ -271,7 +273,14 @@ INSERT INTO `mensaje` (`id`, `contenido`, `fecha`, `propiedad_id`, `id_usuario`,
 (1, 'Hola estoy interesado en esta casa', '2026-04-14 17:21:19', NULL, NULL, NULL),
 (3, 'hola', '2026-04-15 18:42:38', 6, NULL, NULL),
 (4, 'hola estaría interesado en esta propiedad', '2026-04-15 18:52:16', 4, NULL, NULL),
-(5, 'se me ha olvidado consultar si puedo llevar mascotas', '2026-04-17 15:38:58', 6, NULL, NULL);
+(5, 'se me ha olvidado consultar si puedo llevar mascotas', '2026-04-17 15:38:58', 6, NULL, NULL),
+(6, 'estoy interesada en esta propiedad pero no veo que se indique que tiene calefacción, hay opción de reserva en epoca de invierno', '2026-04-20 16:08:09', 2, NULL, NULL),
+(7, 'aceptan mascotas?', '2026-04-20 16:08:46', 5, NULL, NULL),
+(8, 'estoy interesado', '2026-04-20 16:45:58', 3, NULL, NULL),
+(9, 'Hola, no veo que indiquen si tienen cuna, sería posible??', '2026-04-22 16:13:02', 10, 7, NULL),
+(10, 'Ahora mismo no está disponible', '2026-04-22 16:38:45', 10, 4, 9),
+(11, 'dime las fechas en las que quieres reservar', '2026-04-22 17:06:25', 3, 5, 8),
+(12, 'ahora mismo está disponible en todo el año', '2026-04-22 17:09:08', 4, 5, 4);
 
 -- --------------------------------------------------------
 
@@ -447,7 +456,10 @@ CREATE TABLE `reservas` (
 INSERT INTO `reservas` (`id`, `id_usuario`, `id_propiedad`, `fecha_inicio`, `fecha_fin`, `estado`) VALUES
 (1, 2, 1, '2026-04-01', '2026-04-05', 'confirmada'),
 (2, 7, 6, '2026-05-10', '2026-05-20', 'confirmada'),
-(3, 3, 13, '2026-05-15', '2026-05-25', 'confirmada');
+(3, 3, 13, '2026-05-15', '2026-05-25', 'confirmada'),
+(4, 3, 9, '2026-05-04', '2026-05-12', 'confirmada'),
+(5, 8, 11, '2026-06-01', '2026-04-17', 'cancelada'),
+(6, 8, 11, '2026-04-27', '2026-05-03', 'confirmada');
 
 -- --------------------------------------------------------
 
@@ -476,7 +488,8 @@ INSERT INTO `usuarios` (`id`, `nombre`, `email`, `password`, `telefono`, `fecha_
 (4, 'Daniel Garcia', 'danituri@gmail.com', '332445', '655455621', '2026-03-29 18:53:22', 'propietario'),
 (5, 'Carlos Ruiz', 'carlos@gmail.com', '899422', '600222333', '2026-03-29 18:53:22', 'propietario'),
 (6, 'Paula Navarro', 'paula@gmail.com', '990800', '600777888', '2026-03-29 18:53:22', 'propietario'),
-(7, 'Rafael', 'rafael@gmail.com', '12345', '655445556', '2026-04-09 19:32:45', 'cliente');
+(7, 'Rafael', 'rafael@gmail.com', '12345', '655445556', '2026-04-09 19:32:45', 'cliente'),
+(8, 'Sofia garcia', 'sofia@gmail.com', '444555', '915566998', '2026-04-21 15:14:54', 'cliente');
 
 --
 -- Índices para tablas volcadas
@@ -557,7 +570,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `comentarios`
 --
 ALTER TABLE `comentarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `comodidad`
@@ -569,7 +582,7 @@ ALTER TABLE `comodidad`
 -- AUTO_INCREMENT de la tabla `favoritos`
 --
 ALTER TABLE `favoritos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `imagenes`
@@ -581,7 +594,7 @@ ALTER TABLE `imagenes`
 -- AUTO_INCREMENT de la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `propiedades`
@@ -593,13 +606,13 @@ ALTER TABLE `propiedades`
 -- AUTO_INCREMENT de la tabla `reservas`
 --
 ALTER TABLE `reservas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
@@ -629,9 +642,9 @@ ALTER TABLE `imagenes`
 -- Filtros para la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
+  ADD CONSTRAINT `fk_mensaje_padre` FOREIGN KEY (`id_mensaje_padre`) REFERENCES `mensaje` (`id`),
   ADD CONSTRAINT `fk_mensaje_propiedades` FOREIGN KEY (`propiedad_id`) REFERENCES `propiedades` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_mensaje_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
-  ADD CONSTRAINT `fk_mensaje_padre` FOREIGN KEY (`id_mensaje_padre`) REFERENCES `mensaje` (`id`);
+  ADD CONSTRAINT `fk_mensaje_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
 
 --
 -- Filtros para la tabla `propiedades`
