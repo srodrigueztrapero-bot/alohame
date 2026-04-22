@@ -27,44 +27,63 @@ public class MensajeDAO {
                     contenido TEXT NOT NULL,
                     fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     propiedad_id INT NOT NULL,
-                    respuesta TEXT DEFAULT NULL,
-                    fecha_respuesta DATETIME DEFAULT NULL,
+                    id_usuario INT DEFAULT NULL,
+                    id_mensaje_padre BIGINT DEFAULT NULL,
                     PRIMARY KEY (id),
                     KEY idx_mensaje_propiedad (propiedad_id),
                     CONSTRAINT fk_mensaje_propiedad
                         FOREIGN KEY (propiedad_id) REFERENCES propiedades(id)
-                        ON DELETE CASCADE
+                        ON DELETE CASCADE,
+                    CONSTRAINT fk_mensaje_usuario
+                        FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+                    CONSTRAINT fk_mensaje_padre
+                        FOREIGN KEY (id_mensaje_padre) REFERENCES mensaje(id)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
                 """;
         jdbcTemplate.execute(sql);
 
-        // Añadir columnas si la tabla ya existía sin ellas
+        // Migrar columnas si la tabla ya existía con la estructura antigua
         try {
-            jdbcTemplate.execute("ALTER TABLE mensaje ADD COLUMN respuesta TEXT DEFAULT NULL");
+            jdbcTemplate.execute("ALTER TABLE mensaje ADD COLUMN id_usuario INT DEFAULT NULL");
         } catch (Exception ignored) {}
         try {
-            jdbcTemplate.execute("ALTER TABLE mensaje ADD COLUMN fecha_respuesta DATETIME DEFAULT NULL");
+            jdbcTemplate.execute("ALTER TABLE mensaje ADD COLUMN id_mensaje_padre BIGINT DEFAULT NULL");
+        } catch (Exception ignored) {}
+        try {
+            jdbcTemplate.execute("ALTER TABLE mensaje DROP COLUMN respuesta");
+        } catch (Exception ignored) {}
+        try {
+            jdbcTemplate.execute("ALTER TABLE mensaje DROP COLUMN fecha_respuesta");
+        } catch (Exception ignored) {}
+        try {
+            jdbcTemplate.execute("ALTER TABLE mensaje ADD CONSTRAINT fk_mensaje_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)");
+        } catch (Exception ignored) {}
+        try {
+            jdbcTemplate.execute("ALTER TABLE mensaje ADD CONSTRAINT fk_mensaje_padre FOREIGN KEY (id_mensaje_padre) REFERENCES mensaje(id)");
         } catch (Exception ignored) {}
     }
 
     public void guardar(Mensaje mensaje) {
-        String sql = "INSERT INTO mensaje (contenido, fecha, propiedad_id) VALUES (?, ?, ?)";
-
+        String sql = "INSERT INTO mensaje (contenido, fecha, propiedad_id, id_usuario, id_mensaje_padre) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 mensaje.getContenido(),
                 Timestamp.valueOf(mensaje.getFecha()),
-                mensaje.getPropiedadId()
+                mensaje.getPropiedadId(),
+                mensaje.getIdUsuario(),
+                mensaje.getIdMensajePadre()
         );
     }
 
-    public void responder(Long id, String respuesta) {
-        String sql = "UPDATE mensaje SET respuesta = ?, fecha_respuesta = ? WHERE id = ?";
-        jdbcTemplate.update(sql, respuesta, Timestamp.valueOf(java.time.LocalDateTime.now()), id);
+    public void responder(Long mensajePadreId, String contenido, Integer idUsuario) {
+        Long propiedadId = jdbcTemplate.queryForObject(
+                "SELECT propiedad_id FROM mensaje WHERE id = ?", Long.class, mensajePadreId);
+        String sql = "INSERT INTO mensaje (contenido, fecha, propiedad_id, id_usuario, id_mensaje_padre) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, contenido, Timestamp.valueOf(java.time.LocalDateTime.now()),
+                propiedadId, idUsuario, mensajePadreId);
     }
 
     public List<Mensaje> obtenerPorPropiedad(Long propiedadId) {
-        String sql = "SELECT id, contenido, fecha, propiedad_id, respuesta, fecha_respuesta FROM mensaje WHERE propiedad_id = ? ORDER BY fecha DESC";
-
+        String sql = "SELECT id, contenido, fecha, propiedad_id, id_usuario, id_mensaje_padre FROM mensaje WHERE propiedad_id = ? ORDER BY fecha DESC";
         return jdbcTemplate.query(sql, (rs, rowNum) -> mapMensajeBase(rs), propiedadId);
     }
 
@@ -74,15 +93,14 @@ public class MensajeDAO {
                        m.contenido,
                        m.fecha,
                        m.propiedad_id,
-                       m.respuesta,
-                       m.fecha_respuesta,
+                       m.id_usuario,
+                       m.id_mensaje_padre,
                        p.titulo AS propiedad_titulo
                 FROM mensaje m
                 INNER JOIN propiedades p ON p.id = m.propiedad_id
                 WHERE p.id_usuario = ?
                 ORDER BY m.fecha DESC
                 """;
-
         return jdbcTemplate.query(sql, (rs, rowNum) -> mapMensajeConPropiedad(rs), idPropietario);
     }
 
@@ -92,15 +110,14 @@ public class MensajeDAO {
                        m.contenido,
                        m.fecha,
                        m.propiedad_id,
-                       m.respuesta,
-                       m.fecha_respuesta,
+                       m.id_usuario,
+                       m.id_mensaje_padre,
                        p.titulo AS propiedad_titulo
                 FROM mensaje m
                 INNER JOIN propiedades p ON p.id = m.propiedad_id
                 WHERE p.id_usuario = ? AND p.id = ?
                 ORDER BY m.fecha DESC
                 """;
-
         return jdbcTemplate.query(sql, (rs, rowNum) -> mapMensajeConPropiedad(rs), idPropietario, idPropiedad);
     }
 
@@ -116,9 +133,10 @@ public class MensajeDAO {
         m.setContenido(rs.getString("contenido"));
         m.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
         m.setPropiedadId(rs.getLong("propiedad_id"));
-        m.setRespuesta(rs.getString("respuesta"));
-        Timestamp tr = rs.getTimestamp("fecha_respuesta");
-        if (tr != null) m.setFechaRespuesta(tr.toLocalDateTime());
+        int idUsuario = rs.getInt("id_usuario");
+        if (!rs.wasNull()) m.setIdUsuario(idUsuario);
+        long idPadre = rs.getLong("id_mensaje_padre");
+        if (!rs.wasNull()) m.setIdMensajePadre(idPadre);
         return m;
     }
 }

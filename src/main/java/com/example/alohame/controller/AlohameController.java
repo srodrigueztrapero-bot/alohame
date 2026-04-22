@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +83,28 @@ public class AlohameController {
             return null;
         }
         return Integer.parseInt(usuario.get("id").toString());
+    }
+
+    /** Agrupa mensajes en hilos: devuelve solo los mensajes raíz con sus respuestas anidadas. */
+    private List<Mensaje> agruparMensajes(List<Mensaje> todos) {
+        Map<Long, Mensaje> porId = new LinkedHashMap<>();
+        List<Mensaje> raices = new ArrayList<>();
+        for (Mensaje m : todos) {
+            porId.put(m.getId(), m);
+        }
+        for (Mensaje m : todos) {
+            if (m.getIdMensajePadre() == null) {
+                raices.add(m);
+            } else {
+                Mensaje padre = porId.get(m.getIdMensajePadre());
+                if (padre != null) {
+                    padre.addRespuesta(m);
+                } else {
+                    raices.add(m);
+                }
+            }
+        }
+        return raices;
     }
 
     /** Consulta el número de favoritos del usuario en sesión para el contador del navbar. */
@@ -223,12 +247,12 @@ public class AlohameController {
                 }
 
                 model.addAttribute("idPropiedadSeleccionada", idPropiedad);
-                model.addAttribute("mensajes", mensajeService.obtenerPorPropietarioYPropiedad(idUsuario.longValue(), idPropiedad.longValue()));
+                model.addAttribute("mensajes", agruparMensajes(mensajeService.obtenerPorPropietarioYPropiedad(idUsuario.longValue(), idPropiedad.longValue())));
             } catch (Exception e) {
                 return "redirect:/propietario/mensajes?error=propiedad_no_encontrada";
             }
         } else {
-            model.addAttribute("mensajes", mensajeService.obtenerPorPropietario(idUsuario.longValue()));
+            model.addAttribute("mensajes", agruparMensajes(mensajeService.obtenerPorPropietario(idUsuario.longValue())));
         }
 
         return "mensajespropietario";
@@ -307,7 +331,7 @@ public class AlohameController {
             model.addAttribute("propiedades", propiedadDAO.listarPropiedadesConMedia());
             agregarContadorFavoritos(model, session);
 
-            List<Mensaje> mensajes = mensajeDAO.obtenerPorPropiedad((long) id);
+            List<Mensaje> mensajes = agruparMensajes(mensajeDAO.obtenerPorPropiedad((long) id));
             model.addAttribute("mensajes", mensajes);
             model.addAttribute("comodidades", comodidadDAO.obtenerPorPropiedad(id));
 
@@ -606,13 +630,14 @@ public class AlohameController {
     public String responderMensaje(@RequestParam Long mensajeId,
                                    @RequestParam String respuesta,
                                    HttpSession session) {
+        Map<String, Object> usuario = getUsuarioSesion(session);
         if (!esTipoUsuario(session, "propietario")) {
             return "redirect:/login";
         }
         if (respuesta == null || respuesta.trim().isEmpty()) {
             return "redirect:/propietario/mensajes?error=respuesta_vacia";
         }
-        mensajeService.responder(mensajeId, respuesta.trim());
+        mensajeService.responder(mensajeId, respuesta.trim(), obtenerIdUsuario(usuario));
         return "redirect:/propietario/mensajes?success=1";
     }
 
@@ -645,6 +670,7 @@ public class AlohameController {
             mensaje.setContenido(contenido.trim());
             mensaje.setFecha(LocalDateTime.now());
             mensaje.setPropiedadId(propiedadId);
+            mensaje.setIdUsuario(obtenerIdUsuario(usuario));
 
             mensajeService.guardar(mensaje);
 

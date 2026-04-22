@@ -62,13 +62,15 @@
                 </div>
                 <p class="card-text mb-3" th:text="${mensaje.contenido}">Contenido del mensaje</p>
 
-                <!-- Respuesta existente -->
-                <div th:if="${mensaje.respuesta != null}" class="alert alert-success py-2 mb-3">
-                    <small class="fw-semibold d-block mb-1">Tu respuesta
-                        <span th:if="${mensaje.fechaRespuesta != null}" class="text-muted fw-normal"
-                              th:text="'· ' + ${#temporals.format(mensaje.fechaRespuesta, 'dd/MM/yyyy HH:mm')}"></span>
-                    </small>
-                    <span th:text="${mensaje.respuesta}"></span>
+                <!-- Respuestas anidadas -->
+                <div th:if="${!mensaje.respuestas.isEmpty()}" class="vstack gap-2 mb-3">
+                    <div class="alert alert-success py-2 mb-0" th:each="resp : ${mensaje.respuestas}">
+                        <small class="fw-semibold d-block mb-1">
+                            Tu respuesta
+                            <span class="text-muted fw-normal" th:text="'· ' + ${#temporals.format(resp.fecha, 'dd/MM/yyyy HH:mm')}"></span>
+                        </small>
+                        <span th:text="${resp.contenido}"></span>
+                    </div>
                 </div>
 
                 <!-- Formulario de respuesta -->
@@ -79,9 +81,9 @@
                         <textarea th:id="'respuesta-' + ${mensaje.id}"
                                   name="respuesta" class="form-control form-control-sm"
                                   rows="2"
-                                  th:placeholder="${mensaje.respuesta != null ? 'Actualizar respuesta...' : 'Escribe tu respuesta...'}"></textarea>
+                                  th:placeholder="${mensaje.respuestas.isEmpty() ? 'Escribe tu respuesta...' : 'Añadir otra respuesta...'}"></textarea>
                         <button type="submit" class="btn btn-sm btn-primary text-nowrap">
-                            <span th:text="${mensaje.respuesta != null ? 'Actualizar' : 'Responder'}">Responder</span>
+                            <span th:text="${mensaje.respuestas.isEmpty() ? 'Responder' : 'Responder de nuevo'}">Responder</span>
                         </button>
                     </form>
                 </div>

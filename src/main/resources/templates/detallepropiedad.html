@@ -226,14 +226,14 @@
           <p class="mb-1" th:text="${mensaje.contenido}"></p>
           <small class="text-muted" th:text="${#temporals.format(mensaje.fecha, 'dd/MM/yyyy HH:mm')}"></small>
 
-          <!-- Respuesta del propietario -->
-          <div th:if="${mensaje.respuesta != null}"
+          <!-- Respuestas del propietario -->
+          <div th:if="${not #lists.isEmpty(mensaje.respuestas)}"
                class="mt-2 ps-3 border-start border-success">
             <small class="fw-semibold text-success d-block">Respuesta del propietario</small>
-            <p class="mb-0 mt-1" th:text="${mensaje.respuesta}"></p>
-            <small class="text-muted"
-                   th:if="${mensaje.fechaRespuesta != null}"
-                   th:text="${#temporals.format(mensaje.fechaRespuesta, 'dd/MM/yyyy HH:mm')}"></small>
+            <div th:each="resp : ${mensaje.respuestas}">
+              <p class="mb-0 mt-1" th:text="${resp.contenido}"></p>
+              <small class="text-muted" th:text="${#temporals.format(resp.fecha, 'dd/MM/yyyy HH:mm')}"></small>
+            </div>
           </div>
         </div>
       </div>

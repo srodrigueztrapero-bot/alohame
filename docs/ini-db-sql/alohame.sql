@@ -259,19 +259,19 @@ CREATE TABLE `mensaje` (
   `contenido` text NOT NULL,
   `fecha` datetime NOT NULL,
   `propiedad_id` int(11) DEFAULT NULL,
-  `respuesta` text DEFAULT NULL,
-  `fecha_respuesta` datetime DEFAULT NULL
+  `id_usuario` int(11) DEFAULT NULL,
+  `id_mensaje_padre` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `mensaje`
 --
 
-INSERT INTO `mensaje` (`id`, `contenido`, `fecha`, `propiedad_id`, `respuesta`, `fecha_respuesta`) VALUES
+INSERT INTO `mensaje` (`id`, `contenido`, `fecha`, `propiedad_id`, `id_usuario`, `id_mensaje_padre`) VALUES
 (1, 'Hola estoy interesado en esta casa', '2026-04-14 17:21:19', NULL, NULL, NULL),
 (3, 'hola', '2026-04-15 18:42:38', 6, NULL, NULL),
 (4, 'hola estaría interesado en esta propiedad', '2026-04-15 18:52:16', 4, NULL, NULL),
-(5, 'se me ha olvidado consultar si puedo llevar mascotas', '2026-04-17 15:38:58', 6, 'Hola no hay problema siempre que el animal no sea ruidoso y la casa se mantenga limpia', '2026-04-17 15:47:16');
+(5, 'se me ha olvidado consultar si puedo llevar mascotas', '2026-04-17 15:38:58', 6, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -516,7 +516,9 @@ ALTER TABLE `imagenes`
 --
 ALTER TABLE `mensaje`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_mensaje_propiedades` (`propiedad_id`);
+  ADD KEY `fk_mensaje_propiedades` (`propiedad_id`),
+  ADD KEY `fk_mensaje_usuario` (`id_usuario`),
+  ADD KEY `fk_mensaje_padre` (`id_mensaje_padre`);
 
 --
 -- Indices de la tabla `propiedades`
@@ -627,7 +629,9 @@ ALTER TABLE `imagenes`
 -- Filtros para la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
-  ADD CONSTRAINT `fk_mensaje_propiedades` FOREIGN KEY (`propiedad_id`) REFERENCES `propiedades` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_mensaje_propiedades` FOREIGN KEY (`propiedad_id`) REFERENCES `propiedades` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_mensaje_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
+  ADD CONSTRAINT `fk_mensaje_padre` FOREIGN KEY (`id_mensaje_padre`) REFERENCES `mensaje` (`id`);
 
 --
 -- Filtros para la tabla `propiedades`

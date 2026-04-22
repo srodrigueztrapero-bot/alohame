@@ -2,6 +2,8 @@ package com.example.alohame.model;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Mensaje {
     private Long id;
@@ -9,8 +11,9 @@ public class Mensaje {
     private LocalDateTime fecha;
     private Long propiedadId;
     private String propiedadTitulo;
-    private String respuesta;
-    private LocalDateTime fechaRespuesta;
+    private Integer idUsuario;
+    private Long idMensajePadre;
+    private List<Mensaje> respuestas = new ArrayList<>();
 
     public Mensaje() {}
 
@@ -54,19 +57,27 @@ public class Mensaje {
         this.propiedadTitulo = propiedadTitulo;
     }
 
-    public String getRespuesta() {
-        return respuesta;
+    public Integer getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setRespuesta(String respuesta) {
-        this.respuesta = respuesta;
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
-    public LocalDateTime getFechaRespuesta() {
-        return fechaRespuesta;
+    public Long getIdMensajePadre() {
+        return idMensajePadre;
     }
 
-    public void setFechaRespuesta(LocalDateTime fechaRespuesta) {
-        this.fechaRespuesta = fechaRespuesta;
+    public void setIdMensajePadre(Long idMensajePadre) {
+        this.idMensajePadre = idMensajePadre;
+    }
+
+    public List<Mensaje> getRespuestas() {
+        return respuestas;
+    }
+
+    public void addRespuesta(Mensaje respuesta) {
+        this.respuestas.add(respuesta);
     }
 }
