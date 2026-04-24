@@ -15,10 +15,10 @@
 
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container mt-5 crearpropiedad-wrapper">
+<main class="container mt-5 crearpropiedad-wrapper">
 
   <div class="d-flex justify-content-between align-items-center mb-4 crearpropiedad-header">
-    <h2 class="mb-0">🏡 Añadir nueva propiedad</h2>
+    <h1 class="h2 mb-0">🏡 Añadir nueva propiedad</h1>
     <a th:href="@{/propietario}" class="btn btn-outline-secondary">⬅ Volver</a>
   </div>
 
@@ -27,35 +27,35 @@
   <form th:action="@{/guardarPropiedad}" method="post" enctype="multipart/form-data" class="card p-4 shadow crearpropiedad-card">
 
     <div class="mb-3">
-      <label class="form-label">Título</label>
-      <input type="text" name="titulo" class="form-control" required>
+      <label for="titulo" class="form-label">Título</label>
+      <input type="text" id="titulo" name="titulo" class="form-control" required>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Descripción</label>
-      <textarea name="descripcion" class="form-control" rows="4"></textarea>
+      <label for="descripcion" class="form-label">Descripción</label>
+      <textarea id="descripcion" name="descripcion" class="form-control" rows="4"></textarea>
     </div>
 
     <div class="row">
       <div class="col-md-6 mb-3">
-        <label class="form-label">Precio por noche (€)</label>
-        <input type="number" name="precio" class="form-control" required>
+        <label for="precio" class="form-label">Precio por noche (€)</label>
+        <input type="number" id="precio" name="precio" class="form-control" required>
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-label">Capacidad</label>
-        <input type="number" name="capacidad" class="form-control" required>
+        <label for="capacidad" class="form-label">Capacidad</label>
+        <input type="number" id="capacidad" name="capacidad" class="form-control" required>
       </div>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Ubicación</label>
-      <input type="text" name="ubicacion" class="form-control" required>
+      <label for="ubicacion" class="form-label">Ubicación</label>
+      <input type="text" id="ubicacion" name="ubicacion" class="form-control" required>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Imágenes</label>
-      <input type="file" name="imagenes" multiple accept="image/*" class="form-control">
+      <label for="imagenes" class="form-label">Imágenes</label>
+      <input type="file" id="imagenes" name="imagenes" multiple accept="image/*" class="form-control">
     </div>
 
     <button type="submit" class="btn btn-dark w-100">
@@ -64,7 +64,7 @@
 
   </form>
 
-</div>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

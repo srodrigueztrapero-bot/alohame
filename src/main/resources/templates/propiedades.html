@@ -69,7 +69,7 @@
                     <img th:if="${propiedad['url']}"
                          th:src="@{'/' + ${propiedad['url']}}"
                          class="propiedad-imagen"
-                         alt="Imagen de propiedad" />
+                         th:alt="${'Imagen de ' + propiedad['titulo']}" />
                     <div th:if="${propiedad['url'] == null}" class="propiedad-imagen bg-light d-flex align-items-center justify-content-center">
                         <span class="text-muted">Sin imagen</span>
                     </div>

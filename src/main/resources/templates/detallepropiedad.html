@@ -43,7 +43,7 @@
     <div class="foto-main">
       <img th:if="${imagenes.size() > 0}"
            th:src="@{'/' + ${imagenes[0]['url']}}"
-           alt="Imagen principal" class="foto-img">
+           th:alt="${'Imagen principal de ' + propiedad['titulo']}" class="foto-img">
     </div>
 
     <div class="foto-side" th:if="${imagenes.size() > 1}">

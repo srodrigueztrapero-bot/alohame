@@ -17,10 +17,10 @@
 
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
-<div class="container mt-5 editarpropiedad-wrapper">
+<main class="container mt-5 editarpropiedad-wrapper">
 
     <div class="d-flex justify-content-between align-items-center mb-4 editarpropiedad-header">
-        <h2 class="mb-0">✏️ Editar propiedad</h2>
+        <h1 class="h2 mb-0">✏️ Editar propiedad</h1>
         <a th:href="@{/propietario}" class="btn btn-outline-secondary">⬅ Volver</a>
     </div>
 
@@ -31,35 +31,35 @@
         <input type="hidden" name="id" th:value="${propiedad.id}">
 
         <div class="mb-3">
-            <label class="form-label">Título</label>
-            <input type="text" name="titulo" th:value="${propiedad.titulo}" class="form-control" required>
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" id="titulo" name="titulo" th:value="${propiedad.titulo}" class="form-control" required>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Descripción</label>
-            <textarea name="descripcion" class="form-control" rows="4" th:text="${propiedad.descripcion}"></textarea>
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea id="descripcion" name="descripcion" class="form-control" rows="4" th:text="${propiedad.descripcion}"></textarea>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label">Precio (€)</label>
-                <input type="number" name="precio" th:value="${propiedad.precio_noche}" class="form-control" required>
+                <label for="precio" class="form-label">Precio (€)</label>
+                <input type="number" id="precio" name="precio" th:value="${propiedad.precio_noche}" class="form-control" required>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label class="form-label">Capacidad</label>
-                <input type="number" name="capacidad" th:value="${propiedad.capacidad}" class="form-control" required>
+                <label for="capacidad" class="form-label">Capacidad</label>
+                <input type="number" id="capacidad" name="capacidad" th:value="${propiedad.capacidad}" class="form-control" required>
             </div>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Ubicación</label>
-            <input type="text" name="ubicacion" th:value="${propiedad.ubicacion}" class="form-control" required>
+            <label for="ubicacion" class="form-label">Ubicación</label>
+            <input type="text" id="ubicacion" name="ubicacion" th:value="${propiedad.ubicacion}" class="form-control" required>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Añadir nuevas imágenes</label>
-            <input type="file" name="imagenes" multiple accept="image/*" class="form-control">
+            <label for="imagenes" class="form-label">Añadir nuevas imágenes</label>
+            <input type="file" id="imagenes" name="imagenes" multiple accept="image/*" class="form-control">
         </div>
 
         <!-- COMODIDADES -->
@@ -87,7 +87,7 @@
 
     </form>
 
-</div>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
